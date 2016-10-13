@@ -9,6 +9,7 @@ SRC =	ft_lstadd.c \
 		get_players.c \
 		main.c \
 		op.c \
+		print_fct.c \
 		vm_init.c
 
 WFLAGS = -Wall -Werror -Wextra

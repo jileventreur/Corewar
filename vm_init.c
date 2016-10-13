@@ -37,7 +37,7 @@ static void		proc_cycle_init(t_list *lst, unsigned char *mem)
 {
 	while (lst)
 	{
-		get_cycle(lst->content, mem);
+		get_proc_cycle(lst->content, mem);
 		lst = lst->next;
 	}
 }

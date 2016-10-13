@@ -6,122 +6,7 @@ void	ft_error_exit(const char *exit_message)
 	exit(1);
 }
 
-// int		dont_overflow(char *arg)
-// {
-// 	long int			nb;
-// 	int					sign;
-
-// 	sign = 1;
-// 	nb = 0;
-// 	while (ft_isspace(*arg))
-// 		arg++;
-// 	if (*arg == '+' || *arg == '-')
-// 		sign = (*(arg++) == '-') ? -1 : 1;
-// 	while (*arg && nb * sign <= INT_MAX && nb * sign >= INT_MIN)
-// 	{
-// 		nb = nb * 10 + *arg - '0';
-// 		arg++;
-// 	}
-// 	return (nb * sign <= INT_MAX && nb * sign >= INT_MIN);
-// }
-
-// int				ft_strisint(char *arg)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	if (!arg[i])
-// 		return (0);
-// 	while (ft_isspace(arg[i]))
-// 		i++;
-// 	if (arg[i] == '+' || arg[i] == '-')
-// 		i++;
-// 	while (arg[i])
-// 	{
-// 		if (!ft_isdigit(arg[i]))
-// 			return (0);
-// 		i++;
-// 	}
-// 	return (dont_overflow(arg));
-// }
-
-// int		ft_validchar(char *str, char *valid_char)
-// {
-// 	int	i;
-
-// 	while (*str)
-// 	{
-// 		i = 0;
-// 		while (valid_char[i] != *str)
-// 		{
-// 			if (!valid_char[i])
-// 				return (0);
-// 			++i;
-// 		}
-// 		++str;
-// 	}
-// 	return (1);
-// }
-
-void	print_memory(unsigned char *mem, unsigned int size)
-{
-	unsigned int 	i;
-	unsigned char	c;
-
-	i = 0;
-	while (i < size)
-	{
-		c = mem[i];
-		printf("%2.2x%c%c", c, (i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % 64) == 0 || i == (size - 1) ? '\n' : 0);
-		++i;
-	}
-}
-
-
-void	print_champions(t_champion *tab)
-{
-	int	i;
-
-	i = 0;
-	while (i < MAX_PLAYERS)
-	{
-		if (!ft_memisset(&tab[i], sizeof(t_champion), 0))
-		{
-			printf("----- CHAMPION %d -----\n", i + 1);
-			printf("NAME = %s\nCOMMENT = %s\n", tab[i].header.prog_name, tab[i].header.comment);
-			printf("PROGRAMME:\n");
-			print_memory(tab[i].prog, tab[i].header.prog_size);
-			printf("-----------------------\n");
-		}
-		++i;
-	}
-}
-
-void	print_procs(t_list *lst)
-{
-	int	i;
-	t_proc *tmp;
-
-	printf("----- PROCS -----\n");
-	while (lst)
-	{
-		tmp = (t_proc *)lst->content;
-		
-		i = 0;
-		while (i < REG_NUMBER)
-		{
-			printf("REG[%d]: %d\n", i, *(int *)tmp->reg[i]);
-			++i;
-		}
-		printf("PC = %d\n", tmp->pc);
-		printf("CARRY = %d\n", (int)tmp->carry);
-		printf("CYCLE TO WAIT = %u\n", (int)tmp->cycle_to_wait);
-		lst = lst->next;
-		printf("-----------------\n");
-	}
-}
-
-void	get_cycle(t_proc *proc, unsigned char *mem)
+void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
 	unsigned char	c;
 	extern t_op		op_tab[17];
@@ -129,7 +14,7 @@ void	get_cycle(t_proc *proc, unsigned char *mem)
 	c = mem[proc->pc] - 1;
 	if (c > 16)
 	{
-		// printf("%u (0x%x) n'est pas une instruction\n",c + 1,c + 1 );
+		// 2f("%u (0x%x) n'est pas une instruction\n",c + 1,c + 1 );
 		proc->cycle_to_wait = 1;
 	}
 	else
@@ -138,6 +23,89 @@ void	get_cycle(t_proc *proc, unsigned char *mem)
  		// printf("ctw = %u\n", proc->cycle_to_wait);
 		// printf("l'op code 0x%2.2x correspond a l'instruction %s\n", c, op_tab[c].name);
   	}
+}
+
+void	epur_proc(t_list **lst)
+{
+	t_list	*prev;
+	t_list	*cur;
+	t_list	*tmp;
+	
+	cur = *lst;
+	prev = NULL;
+	while (cur)
+		if (!((t_proc *)cur->content)->life)
+		{
+			tmp = cur->next;
+			free(cur->content);
+			free(cur);
+			cur = tmp;
+			if (!prev)
+				*lst = tmp;
+			else
+				prev->next = cur;
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
+}
+
+void	checks_and_destroy(t_vm *vm)
+{
+	if (vm->next_live_check--)		
+		return ;
+	if (vm->live_num >= NBR_LIVE || vm->last_ctd_dec == MAX_CHECKS)
+	{
+		vm->ctd -= CYCLE_DELTA;
+		vm->last_ctd_dec = 0;
+	}
+	else
+		++vm->last_ctd_dec;
+	vm->next_live_check = vm->ctd;
+	vm->live_num = 0;
+	// ((t_proc *)vm->plst->next->content)->life = 1;
+		print_procs(vm->plst);
+	epur_proc(&vm->plst);
+	print_procs(vm->plst);
+	// exit (1);
+}
+
+void		instruction_manager(t_vm *vm, t_proc *proc)
+{
+	(void)vm;
+	(void)proc;
+}
+
+void	exec_procs(t_vm *vm)
+{
+	t_list	*tmp;
+	t_proc	*p;
+	
+	tmp = vm->plst;
+	while (tmp)
+	{
+		p = (t_proc *)tmp->content;
+		if (p->cycle_to_wait == 0)
+		{
+			instruction_manager(vm, p);
+			get_proc_cycle(p, vm->mem);
+		}
+		else
+			--p->cycle_to_wait;
+		tmp = tmp->next;
+	}
+}
+
+void	main_loop(t_vm *vm)
+{
+	while (vm->plst)
+	{
+		// printf("yo\n");
+		exec_procs(vm);
+		checks_and_destroy(vm);
+	}
 }
 
 int		main(int argc, char **argv)
@@ -152,10 +120,11 @@ int		main(int argc, char **argv)
 	++argv;
 	vm_init(&vm, argc, argv);
 	// get_champion(argv[1], &c);
-	print_champions(vm.c);
+	// print_champions(vm.c);
 	// printf("\n");
-	print_procs(vm.plst);
-	print_memory(vm.mem, MEM_SIZE);
+	// print_procs(vm.plst);
+	// print_memory(vm.mem, MEM_SIZE);
+	main_loop(&vm);
 	// lst = lst->next;
 	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);
 	return (0);

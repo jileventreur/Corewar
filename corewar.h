@@ -136,7 +136,10 @@ void		get_players(char **argv, int argc, t_champion *tab);
 void		vm_init(t_vm *vm, int argc, char **argv);
 
 void		ft_error_exit(const char *exit_message);
-void		get_cycle(t_proc *proc, unsigned char *mem);
+void		get_proc_cycle(t_proc *proc, unsigned char *mem);
 
+void		print_memory(unsigned char *mem, unsigned int size);
+void		print_champions(t_champion *tab);
+void		print_procs(t_list *lst);
 
 #endif
