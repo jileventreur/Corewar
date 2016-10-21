@@ -25,60 +25,138 @@ void	get_proc_cycle(t_proc *proc, unsigned char *mem)
   	}
 }
 
-void	epur_proc(t_list **lst)
+void print_bits(unsigned int nb, int i)
 {
-	t_list	*prev;
-	t_list	*cur;
-	t_list	*tmp;
-	
-	cur = *lst;
-	prev = NULL;
-	while (cur)
-		if (!((t_proc *)cur->content)->life)
-		{
-			tmp = cur->next;
-			free(cur->content);
-			free(cur);
-			cur = tmp;
-			if (!prev)
-				*lst = tmp;
-			else
-				prev->next = cur;
-		}
-		else
-		{
-			prev = cur;
-			cur = cur->next;
-		}
+	if (!i)
+		return ;
+	print_bits(nb >> 1, i - 1);
+	printf("%c%c", nb % 2 ? '1' : '0', i == sizeof(char) * 8 ? '\n' : 0);
 }
 
-void	checks_and_destroy(t_vm *vm)
+int		ocp_analyse(t_op *inst_op, unsigned char ocp, unsigned char *args)
 {
-	if (vm->next_live_check--)		
-		return ;
-	if (vm->live_num >= NBR_LIVE || vm->last_ctd_dec == MAX_CHECKS)
+	// extern t_op		op_tab[17];
+	unsigned char		cpt;
+
+	cpt = MAX_ARGS_NUMBER - 1;
+
+	while (cpt > inst_op->param_number - 1)
 	{
-		vm->ctd -= CYCLE_DELTA;
-		vm->last_ctd_dec = 0;
+		ocp >>= 2;
+		--cpt;
+	}
+	// printf("ocp = %x\n", ocp);
+	while (cpt < 42) // lol jsuis sur ca va marcher et jtrouve ca trop con
+	{
+		// if (inst_op->param_mask[cpt] & (1 << ((ocp & 0b11) - 1)))
+		// {
+		// 	printf("le param %d est %d\n", (int)cpt, (ocp & 0b11));
+		// }
+		// else
+		// {
+		// 	printf("le param %d est %d\n", (int)cpt, (ocp & 0b11));
+			// args[cpt] = -1;
+			// ft_error_exit("Error: BAD ARG BASTARD\n");
+		// }
+		if (!(args[cpt] = inst_op->param_mask[cpt] & (1 << ((ocp & 0b11) - 1))))
+		{
+			printf("ERROR WITH ARG %u\n", cpt);
+			return (0);
+		}
+		ocp >>= 2;
+		--cpt;
+	}
+	// printf("\n");
+	// exit (0);
+	return (1);
+}
+
+void		null_instr(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER])
+{
+	int i = 0;
+	int	ptr;
+	unsigned short int *test;
+
+	while (i < 4)
+	{
+		printf("args_type[%d] = %d\n", i, args_type[i]);
+		++i;
+	}
+	ptr = (proc->pc + 2) % MEM_SIZE;
+	test = (unsigned short int *)&vm->mem[ptr + 1];
+	printf("test = %hx\n", *test);
+	(void)vm;
+}
+
+long long unsigned int	get_arg(unsigned char *mem, unsigned int beg, unsigned int len)
+{
+	long long unsigned int	res;
+	unsigned int			cpt;
+
+	res = 0;
+	cpt = 0;
+	if (beg + len >= MEM_SIZE)
+	{
+		while (cpt < len)
+		{
+			res <<= 8;
+			res += mem[(beg + cpt) % MEM_SIZE];
+			++cpt;
+		}
 	}
 	else
-		++vm->last_ctd_dec;
-	vm->next_live_check = vm->ctd;
-	vm->live_num = 0;
-	// ((t_proc *)vm->plst->next->content)->life = 1;
-		print_procs(vm->plst);
-	epur_proc(&vm->plst);
-	print_procs(vm->plst);
-	// exit (1);
+	{
+		while (cpt < len)
+		{
+			res <<= 8;
+			res += mem[(beg + cpt) % MEM_SIZE];
+			++cpt;
+		}
+	}
+	return (res);
+}
+
+void		sti(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER])
+{
+	int i = 0;
+	int	ptr;
+	unsigned short int *test;
+	extern t_op		op_tab[17];
+
+	printf("WELCOME IN LIVE\n");
+	while (i < 4)
+	{
+		printf("args_type[%d] = %d\n", i, args_type[i]);
+		++i;
+	}
+	ptr = (proc->pc + 2) % MEM_SIZE;
+	printf("ptr = %x\n", vm->mem[ptr]);
+	test = (unsigned short int *)&vm->mem[ptr + 1];
+	printf("test = %x\n", (signed)get_arg(vm->mem, ptr, 2));
+	printf("name %s\n", op_tab[STI].name);
+	(void)vm;
 }
 
 void		instruction_manager(t_vm *vm, t_proc *proc)
 {
+	unsigned char	inst;
+	unsigned char	args[4];
+	extern t_op		op_tab[17];
+
+
+	if ((inst = vm->mem[proc->pc] - 1) > 16)
+		return ;
+	printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
+	printf("instruction is %s\n", op_tab[inst].name);
+	if(!ocp_analyse(&op_tab[inst], vm->mem[(proc->pc + 1) % MEM_SIZE], args))
+		return ;
+	op_tab[inst].f(vm, proc, args);
+	// proc->pc = (proc->pc + vm->max_arg_size[inst][MAX_ARGS_NUMBER]) % MEM_SIZE;
 	(void)vm;
 	(void)proc;
 }
 
-void	exec_procs(t_vm *vm)
+void		exec_procs(t_vm *vm)
 {
 	t_list	*tmp;
 	t_proc	*p;
@@ -90,6 +168,9 @@ void	exec_procs(t_vm *vm)
 		if (p->cycle_to_wait == 0)
 		{
 			instruction_manager(vm, p);
+			// p->pc += 7;
+			// instruction_manager(vm, p);
+			exit (1);
 			get_proc_cycle(p, vm->mem);
 		}
 		else
@@ -102,7 +183,6 @@ void	main_loop(t_vm *vm)
 {
 	while (vm->plst)
 	{
-		// printf("yo\n");
 		exec_procs(vm);
 		checks_and_destroy(vm);
 	}
@@ -123,7 +203,7 @@ int		main(int argc, char **argv)
 	// print_champions(vm.c);
 	// printf("\n");
 	// print_procs(vm.plst);
-	// print_memory(vm.mem, MEM_SIZE);
+	print_memory(vm.mem, MEM_SIZE);
 	main_loop(&vm);
 	// lst = lst->next;
 	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);

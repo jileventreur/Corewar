@@ -67,6 +67,35 @@ static t_list	*proc_init(t_champion *c)
 	return (lst);
 }
 
+void			max_arg_size_init(t_vm *vm)
+{
+	int				i;
+	int				j;
+	int				k;
+	int				sum;
+	extern t_op		op_tab[17];
+
+	i = 0;
+	while (i < 17)
+	{
+		sum = 0;
+		j = 0;
+		while (j < 3)
+		{
+			k = 1 << sizeof(char) * 8;
+			while (k && op_tab[i].param_mask[j] / k == 0)
+				k >>= 1;
+			vm->max_arg_size[i][j] = k;
+			sum += k;
+			// printf("op[%d] arg[%d], max_size = %d\n", i, j, k);
+			++j;
+		}
+		vm->max_arg_size[i][MAX_ARGS_NUMBER] = sum;
+		// printf("------------------------------\n");
+		++i;
+	}
+}
+
 void			vm_init(t_vm *vm, int argc, char **argv)
 {
 	// t_champion		c[MAX_PLAYERS];
@@ -82,4 +111,6 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	vm->live_num = 0;
 	vm->last_ctd_dec = 0;
 	vm->next_live_check = CYCLE_TO_DIE;
+	max_arg_size_init(vm);
+	// print_memory((unsigned char *)vm->max_arg_size, 17 * 4);
 }
