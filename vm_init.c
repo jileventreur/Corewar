@@ -61,6 +61,7 @@ static t_list	*proc_init(t_champion *c)
 			continue ;
 		tmp.pc = player_cpt * MEM_SIZE / player_number;
 		tmp.reg[0][0] = c[i].num;
+		// printf("tmp.reg[0][0] == %d\n", tmp.reg[0][0]);
 		ft_lstadd(&lst, ft_lstnew(&tmp, sizeof(t_proc)));
 		++player_cpt;
 	}
