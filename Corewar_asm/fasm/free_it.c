@@ -1,0 +1,42 @@
+#include "asm.h"
+
+void	free_tab(char **tab)
+{
+	int i;
+
+	i = 0;
+	while (tab && tab[i])
+	{
+		free(tab[i]);
+		++i;
+	}
+	free(tab);
+}
+
+void	free_label_octet(char **tab, char *type)
+{
+	int i;
+
+	i = 0;
+	while (type[i])
+	{
+		free(tab[i]);
+		++i;
+	}
+}
+
+//Free label_octet mieux -> valeur après un NULL
+void	free_it(t_content **list)
+{
+	t_content *next;
+
+	while (*list)
+	{
+		free((*list)->name);
+		free_tab((*list)->label);
+		free_label_octet((*list)->label_octet, (*list)->type);
+		next = (*list)->next;
+		free(*list);
+		*list = next;
+	}
+}
