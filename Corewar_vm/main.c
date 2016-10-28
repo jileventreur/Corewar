@@ -9,7 +9,7 @@ void	ft_error_exit(const char *exit_message)
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
 	unsigned char	c;
-	extern t_op		op_tab[17];
+	extern t_op		op_tab[INSTR_NUMBER + 1];
 
 	c = mem[proc->pc] - 1;
 	if (c > 16)
@@ -33,53 +33,16 @@ void print_bits(unsigned int nb, int i)
 	printf("%c%c", nb % 2 ? '1' : '0', i == sizeof(char) * 8 ? '\n' : 0);
 }
 
-int		ocp_analyse(t_op *inst_op, unsigned char ocp, unsigned char *args)
-{
-	// extern t_op		op_tab[17];
-	unsigned char		cpt;
-
-	cpt = MAX_ARGS_NUMBER - 1;
-
-	while (cpt > inst_op->param_number - 1)
-	{
-		ocp >>= 2;
-		--cpt;
-	}
-	// printf("ocp = %x\n", ocp);
-	while (cpt < 42) // lol jsuis sur ca va marcher et jtrouve ca trop con
-	{
-		// if (inst_op->param_mask[cpt] & (1 << ((ocp & 0b11) - 1)))
-		// {
-		// 	printf("le param %d est %d\n", (int)cpt, (ocp & 0b11));
-		// }
-		// else
-		// {
-		// 	printf("le param %d est %d\n", (int)cpt, (ocp & 0b11));
-			// args[cpt] = -1;
-			// ft_error_exit("Error: BAD ARG BASTARD\n");
-		// }
-		if (!(args[cpt] = inst_op->param_mask[cpt] & (1 << ((ocp & 0b11) - 1))))
-		{
-			printf("ERROR WITH ARG %u\n", cpt);
-			return (0);
-		}
-		ocp >>= 2;
-		--cpt;
-	}
-	// printf("\n");
-	// exit (0);
-	return (1);
-}
-
-void		null_instr(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER])
+void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	int i = 0;
 	int	ptr;
 	unsigned short int *test;
 
+	(void)args;
 	while (i < 4)
 	{
-		printf("args_type[%d] = %d\n", i, args_type[i]);
+		// printf("args_type[%d] = %d\n", i, args_type[i]);
 		++i;
 	}
 	ptr = (proc->pc + 2) % MEM_SIZE;
@@ -88,52 +51,23 @@ void		null_instr(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER
 	(void)vm;
 }
 
-lint	get_arg(unsigned char *mem, unsigned int beg, unsigned int len)
-{
-	lint			res;
-	unsigned int	cpt;
-
-	res = 0;
-	cpt = 0;
-	if (beg + len >= MEM_SIZE)
-	{
-		while (cpt < len)
-		{
-			res <<= 8;
-			res += mem[(beg + cpt) % MEM_SIZE];
-			++cpt;
-		}
-	}
-	else
-	{
-		while (cpt < len)
-		{
-			res <<= 8;
-			res += mem[(beg + cpt) % MEM_SIZE];
-			++cpt;
-		}
-	}
-	return (res);
-}
-
-void		print_args(unsigned char args_type[MAX_ARGS_NUMBER],
-			lint args[MAX_ARGS_NUMBER], unsigned int arg_number)
+void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 {
 	unsigned int	i;
 
 	i = 0;
 	while (i < arg_number)
 	{
-		if (args_type[i])
-		{
-			printf("arg[%d] egal %lld (0x%llx)", i, args[i], (long long unsigned int)args[i]);
-			if (args_type[i] == 1)
-				printf(" et est de type reg\n");
-			else if (args_type[i] == 2)
-				printf(" et est de type dir\n");
+		printf("arg[%d] data %lld (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
+			if ((unsigned int)args[i].type == NULL_CODE)
+				printf(" type null ");
+			if ((unsigned int)args[i].type == REG_CODE)
+				printf(" type reg ");
+			else if ((unsigned int)args[i].type == DIR_CODE)
+				printf(" type dir ");
 			else
-				printf(" et est de type ind\n");
-		}
+				printf(" type ind ");
+		printf("value %lld (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
 		++i;
 	}
 }
@@ -159,14 +93,9 @@ void		write_var(unsigned char *mem, unsigned char *var, size_t beg, size_t len)
 	}
 }
 
-void		sti(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER])
+void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
-	extern t_op			op_tab[17];
-	unsigned int		i;
-	int					ptr;
-	lint				args[MAX_ARGS_NUMBER];
-	unsigned int		dir_adr;
-	unsigned int		arg_size;
+	extern t_op			op_tab[INSTR_NUMBER + 1];
 
 	// printf("WELCOME IN LIVE\n");
 	// while (i < 4)
@@ -179,45 +108,35 @@ void		sti(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER])
 	// printf("test = %x\n", (signed)get_arg(vm->mem, ptr, 2));
 	// printf("name %s\n", op_tab[STI].name);
 	(void)vm;
-	i = 0;
-	ptr = (proc->pc + 2) % MEM_SIZE;
-	dir_adr = (op_tab[STI].direct_adr == 0) * 2;
-	while (i < op_tab[STI].param_number)
-	{
-		arg_size = (args_type[i] > 1) ? 2 + dir_adr : 1;
-		args[i] = get_arg(vm->mem, ptr, arg_size);
-		++i;
-		ptr = (ptr + arg_size) % MEM_SIZE;
-	}
-	print_args(args_type, args, 3);
-	if ((unsigned)(args[0] - 1) > 15)
-		return ;
-	printf("adr = %lld\n", (args[1] + args[2]) % MEM_SIZE);
-	printf("tmp.reg[0][0] == %d\n", proc->reg[0][0]);
+
+	// print_args(args_type, args, 3);
+	// printf("adr = %lld\n", (args[1] + args[2]) % MEM_SIZE);
+	// printf("tmp.reg[0][0] == %d\n", proc->reg[0][0]);
 	*(int *)proc->reg[0]= 0x00abcdef;
-	printf("reg contient = %d\n", *(int *)proc->reg[args[0] - 1]);
-	print_memory(vm->mem, MEM_SIZE);
-	printf("\n");
+	// printf("reg contient = %d\n", *(int *)proc->reg[args[0] - 1]);
+	print_memory(vm->mem, 30);
+	printf("COUCOU\n");
 	// *(int *)&vm->mem[(proc->pc + ((args[1] + args[2]) % IDX_MOD)) % MEM_SIZE] = *(int *)proc->reg[args[0] - 1];
-	write_var(vm->mem, (unsigned char *)proc->reg[args[0] - 1], 
-	(proc->pc + ((args[1] + args[2]) % IDX_MOD)) % MEM_SIZE, REG_SIZE); 
-	// write_var(vm->mem, (unsigned char *)proc->reg[args[0] - 1], 
-	// MEM_SIZE - 2, REG_SIZE);
-	print_memory(vm->mem, MEM_SIZE);
+	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], 
+	(proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE, REG_SIZE); 
+	print_memory(vm->mem, 30);
+	(void)vm;
+	(void)proc;
+	(void)args;
 	exit (1);
 }
 
 void		instruction_manager(t_vm *vm, t_proc *proc)
 {
+	extern t_op		op_tab[INSTR_NUMBER + 1];
 	unsigned char	inst;
-	unsigned char	args[4];
-	extern t_op		op_tab[17];
+	t_arg			args[MAX_ARGS_NUMBER];
 
-	if ((inst = vm->mem[proc->pc] - 1) > 16)
+	if ((inst = vm->mem[proc->pc] - 1) > INSTR_NUMBER)
 		return ;
-	printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
-	printf("instruction is %s\n", op_tab[inst].name);
-	if(!ocp_analyse(&op_tab[inst], vm->mem[(proc->pc + 1) % MEM_SIZE], args))
+	// printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
+	// printf("instruction is %s\n", op_tab[inst].name);
+	if (!get_args(vm, proc, args, op_tab + inst))
 		return ;
 	op_tab[inst].f(vm, proc, args);
 	// proc->pc = (proc->pc + vm->max_arg_size[inst][MAX_ARGS_NUMBER]) % MEM_SIZE;
@@ -273,6 +192,7 @@ int		main(int argc, char **argv)
 	// printf("\n");
 	// print_procs(vm.plst);
 	// print_memory(vm.mem, MEM_SIZE);
+	printf("header_t = %lu\n", sizeof(t_header));
 	main_loop(&vm);
 	// lst = lst->next;
 	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);

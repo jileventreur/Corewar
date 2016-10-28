@@ -14,6 +14,7 @@
 ** Toutes les tailles sont en octets.
 ** On part du principe qu'un int fait 32 bits. Est-ce vrai chez vous ?
 */
+
 #ifndef COREWAR_H
 #define COREWAR_H
 
@@ -28,17 +29,20 @@
 #define REG_SIZE				4
 #define IND_SIZE				4
 
-
-# define REG_CODE				1
-# define DIR_CODE				2
-# define IND_CODE				3
-
+typedef enum					e_type_code
+{
+								NULL_CODE,
+								REG_CODE,
+								DIR_CODE,
+								IND_CODE
+}								t_type_code;
 
 #define MAX_ARGS_NUMBER			4
 #define MAX_PLAYERS				4
 #define MEM_SIZE				(4*1024)
 #define IDX_MOD					(MEM_SIZE / 8) // 512
-#define CHAMP_MAX_SIZE			(MEM_SIZE / 6) 
+#define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
+#define INSTR_NUMBER			16
 
 #define COMMENT_CHAR			'#'
 #define LABEL_CHAR				':'
@@ -61,7 +65,7 @@
 **
 */
 
-typedef char	t_arg_type;
+typedef char			t_arg_type;
 
 typedef long long int	lint;
 
@@ -134,6 +138,13 @@ typedef	struct					s_vm
 	unsigned char				max_arg_size[17][MAX_ARGS_NUMBER + 1];
 }								t_vm;
 
+typedef struct					s_arg
+{
+	t_type_code					type;
+	lint						data;
+	lint						value;
+}								t_arg;
+
 typedef struct					s_op
 {
 	char						*name;
@@ -144,7 +155,7 @@ typedef struct					s_op
 	char						*desc;
 	unsigned char				activ_carry;
 	unsigned char				direct_adr;
-	void						(*f)(t_vm *, t_proc *, unsigned char [MAX_ARGS_NUMBER]);
+	void						(*f)(t_vm *, t_proc *, t_arg[MAX_ARGS_NUMBER]);
 }								t_op;
 
 t_list		*ft_lstnew(void const *content, size_t content_size);
@@ -166,9 +177,14 @@ void		print_memory(unsigned char *mem, unsigned int size);
 void		print_champions(t_champion *tab);
 void		print_procs(t_list *lst);
 
-void		null_instr(t_vm *vm, t_proc *, unsigned char args_type[MAX_ARGS_NUMBER]);
-void		sti(t_vm *vm, t_proc *proc, unsigned char args_type[MAX_ARGS_NUMBER]);
+void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
+void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number);
+
 
 void		checks_and_destroy(t_vm *vm);
+
+int			get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst);
+
 
 #endif
