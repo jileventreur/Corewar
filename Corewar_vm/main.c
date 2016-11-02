@@ -93,6 +93,13 @@ void		write_var(unsigned char *mem, unsigned char *var, size_t beg, size_t len)
 	}
 }
 
+void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
+{
+	(void)vm;	
+	(void)proc;	
+	(void)args;	
+}
+
 void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
@@ -114,12 +121,12 @@ void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	// printf("tmp.reg[0][0] == %d\n", proc->reg[0][0]);
 	*(int *)proc->reg[0]= 0x00abcdef;
 	// printf("reg contient = %d\n", *(int *)proc->reg[args[0] - 1]);
-	print_memory(vm->mem, 30);
-	printf("COUCOU\n");
+	print_memory(vm->mem, MEM_SIZE);
 	// *(int *)&vm->mem[(proc->pc + ((args[1] + args[2]) % IDX_MOD)) % MEM_SIZE] = *(int *)proc->reg[args[0] - 1];
 	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], 
 	(proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE, REG_SIZE); 
-	print_memory(vm->mem, 30);
+	printf("\n");
+	print_memory(vm->mem, MEM_SIZE);
 	(void)vm;
 	(void)proc;
 	(void)args;
@@ -192,7 +199,6 @@ int		main(int argc, char **argv)
 	// printf("\n");
 	// print_procs(vm.plst);
 	// print_memory(vm.mem, MEM_SIZE);
-	printf("header_t = %lu\n", sizeof(t_header));
 	main_loop(&vm);
 	// lst = lst->next;
 	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);

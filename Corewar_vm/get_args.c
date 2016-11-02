@@ -14,7 +14,13 @@ static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, int ptr)
 	else if (args->type == DIR_CODE)
 		args->value = args->data;
 	else
-		args->value = vm->mem[llabs((ptr + args->data - 1) % MEM_SIZE)];
+	{
+		// printf("mem[%lld] == %d\n", llabs((ptr + args->data - 1) % MEM_SIZE),
+		// (short)vm->mem[llabs((ptr + args->data - 1) % MEM_SIZE)]);
+		args->value = BSWAP_16(*(short int *)(vm->mem + llabs((ptr + args->data - 1) % MEM_SIZE)));
+		// printf("value == %llu (0x%lx)\n", args->value, (unsigned long int)args->value);
+		// printf("test %x\n", *(int *)(vm->mem));
+	}
 	return (1);
 }
 
@@ -86,7 +92,7 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 	{
 		arg_size = (args[i].type != REG_CODE) ? 2 + dir_adr : 1;
 		args[i].data = get_arg_data(vm->mem, ptr, arg_size);
-		if (!get_arg_value(vm, proc, args + i, ptr + arg_size))
+		if (!get_arg_value(vm, proc, args + i, ptr))
 			return (0);
 		++i;
 		ptr = (ptr + arg_size) % MEM_SIZE;

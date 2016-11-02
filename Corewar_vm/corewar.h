@@ -24,6 +24,7 @@
 #include <stdio.h>
 
 #define BSWAP_32(num) (((num>>24)&0xff) | ((num<<8)&0xff0000) | ((num>>8)&0xff00) | ((num<<24)&0xff000000))
+#define BSWAP_16(num) ((num>>8) | (num<<8))
 
 #define DIR_SIZE				2
 #define REG_SIZE				4
@@ -178,9 +179,10 @@ void		print_champions(t_champion *tab);
 void		print_procs(t_list *lst);
 
 void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
-void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number);
 
+void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 
 void		checks_and_destroy(t_vm *vm);
 
