@@ -66,9 +66,9 @@ typedef enum					e_type_code
 **
 */
 
-typedef char			t_arg_type;
+typedef char					t_arg_type;
 
-typedef long long int	lint;
+typedef long long int			lint;
 
 #define T_REG					1
 #define T_DIR					2
@@ -130,6 +130,7 @@ typedef	struct					s_proc
 typedef	struct					s_vm
 {
 	unsigned char				mem[MEM_SIZE];
+	unsigned char				proc_mem[MEM_SIZE];
 	t_list						*plst;
 	t_champion					c[MAX_PLAYERS];
 	unsigned int				ctd;

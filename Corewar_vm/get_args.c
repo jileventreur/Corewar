@@ -1,29 +1,5 @@
 #include "corewar.h"
 
-static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, int ptr)
-{
-	printf("%x\n", vm->mem[ptr]);
-	if (args->type == NULL_CODE)
-		return (0);
-	else if (args->type == REG_CODE)
-	{
-		if ((unsigned)args->data - 1 > 15)
-			return (0);
-		args->value = *(int *)proc->reg[args->data - 1];
-	}
-	else if (args->type == DIR_CODE)
-		args->value = args->data;
-	else
-	{
-		// printf("mem[%lld] == %d\n", llabs((ptr + args->data - 1) % MEM_SIZE),
-		// (short)vm->mem[llabs((ptr + args->data - 1) % MEM_SIZE)]);
-		args->value = BSWAP_16(*(short int *)(vm->mem + llabs((ptr + args->data - 1) % MEM_SIZE)));
-		// printf("value == %llu (0x%lx)\n", args->value, (unsigned long int)args->value);
-		// printf("test %x\n", *(int *)(vm->mem));
-	}
-	return (1);
-}
-
 static lint		get_arg_data(unsigned char *mem, unsigned int beg, unsigned int len)
 {
 	lint			res;
@@ -31,6 +7,7 @@ static lint		get_arg_data(unsigned char *mem, unsigned int beg, unsigned int len
 
 	res = 0;
 	cpt = 0;
+	// printf("BEG == %u\n", beg);
 	if (beg + len >= MEM_SIZE)
 	{
 		while (cpt < len)
@@ -50,6 +27,33 @@ static lint		get_arg_data(unsigned char *mem, unsigned int beg, unsigned int len
 		}
 	}
 	return (res);
+}
+
+static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, int ptr)
+{
+	// printf("%x\n", vm->mem[ptr]);
+	(void)ptr;
+	if (args->type == NULL_CODE)
+		return (0);
+	else if (args->type == REG_CODE)
+	{
+		if ((unsigned)args->data - 1 > 15)
+			return (0);
+		args->value = *(int *)proc->reg[args->data - 1];
+	}
+	else if (args->type == DIR_CODE)
+		args->value = args->data;
+	else
+	{	
+		// printf("data == %hd\n", (short int)args->data);
+		// printf("mem[%lld]\n", llabs((args->data) % MEM_SIZE));
+		// ()vm->mem[llabs((args->data) % MEM_SIZE)]);
+		args->value = get_arg_data(vm->mem, (short int)args->data, 4);
+		// BSWAP_32(*(int *)(vm->mem + llabs((args->data) % MEM_SIZE)));
+		// printf("value == %llu (0x%lx)\n", args->value, (unsigned long int)args->value);
+		// printf("test %x\n", *(int *)(vm->mem));
+	}
+	return (1);
 }
 
 static int		ocp_analyse(t_op *inst, unsigned char ocp, t_arg args[MAX_ARGS_NUMBER])

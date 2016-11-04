@@ -72,11 +72,13 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 	}
 }
 
-void		write_var(unsigned char *mem, unsigned char *var, size_t beg, size_t len)
+void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 {
 	size_t	cpt;			
 
 	cpt = 0;
+	if (beg < 0)
+		beg += MEM_SIZE;
 	if (beg + len >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
@@ -95,15 +97,15 @@ void		write_var(unsigned char *mem, unsigned char *var, size_t beg, size_t len)
 
 void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
-	(void)vm;	
-	(void)proc;	
-	(void)args;	
+	(void)vm;
+	(void)proc;
+	(void)args;
 }
 
 void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
-
+	lint				i;
 	// printf("WELCOME IN LIVE\n");
 	// while (i < 4)
 	// {
@@ -116,17 +118,19 @@ void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	// printf("name %s\n", op_tab[STI].name);
 	(void)vm;
 
-	// print_args(args_type, args, 3);
-	// printf("adr = %lld\n", (args[1] + args[2]) % MEM_SIZE);
-	// printf("tmp.reg[0][0] == %d\n", proc->reg[0][0]);
+	print_args(args, 3);
 	*(int *)proc->reg[0]= 0x00abcdef;
-	// printf("reg contient = %d\n", *(int *)proc->reg[args[0] - 1]);
-	print_memory(vm->mem, MEM_SIZE);
-	// *(int *)&vm->mem[(proc->pc + ((args[1] + args[2]) % IDX_MOD)) % MEM_SIZE] = *(int *)proc->reg[args[0] - 1];
-	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], 
-	(proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE, REG_SIZE); 
-	printf("\n");
-	print_memory(vm->mem, MEM_SIZE);
+	// print_memory(vm->mem, MEM_SIZE);
+	args[1].data = (short int)args[1].data;
+	args[2].data = (short int)args[2].data;
+	printf("sti r%s %lld (0x%llx) + %lld (0x%llx)\n", ft_itoa(args[0].data), args[1].value,
+	args[1].value, args[2].value, args[2].value);
+	i = (proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE;
+	// printf("I == %lld\n", i);
+	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], i, REG_SIZE); 
+	printf("-> store to %lld\n", i);
+	// printf("\n");
+	// print_memory(vm->mem, MEM_SIZE);
 	(void)vm;
 	(void)proc;
 	(void)args;
