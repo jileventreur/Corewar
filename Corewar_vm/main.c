@@ -148,15 +148,15 @@ void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	// print_memory(vm->mem, MEM_SIZE - 2);
 	args[1].data = (short int)args[1].data;
 	args[2].data = (short int)args[2].data;
-	printf("sti r%s %lld (0x%llx) + %lld (0x%llx)\n", ft_itoa(args[0].data), args[1].value,
-	args[1].value, args[2].value, args[2].value);
+	// printf("sti r%s %lld (0x%llx) + %lld (0x%llx)\n", ft_itoa(args[0].data), args[1].value,
+	// args[1].value, args[2].value, args[2].value);
 	i = (proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE;
 	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], i, REG_SIZE); 
 	printf("-> store to %lld\n", i);
 	printf("mem[0] = %x\n", vm->mem[0]);
 	printf("pc avant == %d\n", proc->pc);
-	proc->pc += args[0].size + args[1].size + args[2].size;
-	printf("pc apres == %d\n", proc->pc);
+	proc->pc += args[0].size + args[1].size + args[2].size + 1; 
+	printf("pc apres == %x\n", vm->mem[proc->pc]);
 	(void)vm;
 	(void)proc;
 	(void)args;
@@ -175,6 +175,7 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 		return ;
 	// printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
 	// printf("instruction is %s\n", op_tab[inst].name);
+	ft_bzero(args, sizeof(t_arg) * 4);
 	if (!get_args(vm, proc, args, op_tab + inst))
 		return ;
 	op_tab[inst].f(vm, proc, args);
@@ -237,7 +238,7 @@ int		main(int argc, char **argv)
 	// print_champions(vm.c);
 	// printf("\n");
 	// print_procs(vm.plst);
-	// print_memory(vm.mem, MEM_SIZE);
+	print_memory(vm.mem, MEM_SIZE);
 	// printf("\n\n");
 	main_loop(&vm);
 	// lst = lst->next;

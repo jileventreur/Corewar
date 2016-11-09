@@ -16,7 +16,7 @@ static int		get_player_number(t_champion *c)
 	return (cpt);
 }
 
-static void		mem_init(unsigned char *mem, unsigned char *proc_mem, t_champion *c)
+static void		mem_init(unsigned char mem[MEM_SIZE], unsigned char proc_mem[MEM_SIZE], t_champion *c)
 {
 	int	player_number;
 	int	i;

@@ -1,6 +1,6 @@
 #include "corewar.h"
 
-static lint		get_arg_data(unsigned char *mem, unsigned int beg, unsigned int len)
+static lint		get_arg_data(unsigned char mem[MEM_SIZE], unsigned int beg, unsigned int len)
 {
 	lint			res;
 	unsigned int	cpt;
