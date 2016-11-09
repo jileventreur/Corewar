@@ -62,6 +62,9 @@ typedef enum					e_type_code
 #define NBR_LIVE				21
 #define MAX_CHECKS				10
 
+#define BYTE_LINE_NB			32
+#define PC_BIT					0b100 
+
 /*
 **
 */
@@ -124,6 +127,7 @@ typedef	struct					s_proc
 	unsigned int				pc;
 	unsigned char				carry;
 	unsigned char				life;
+	unsigned int				num;
 	unsigned int				cycle_to_wait;
 }								t_proc;
 
@@ -134,6 +138,7 @@ typedef	struct					s_vm
 	t_list						*plst;
 	t_champion					c[MAX_PLAYERS];
 	unsigned int				ctd;
+	unsigned int				last_live;
 	unsigned int				live_num;
 	unsigned int				next_live_check;
 	unsigned int				last_ctd_dec;
@@ -143,6 +148,7 @@ typedef	struct					s_vm
 typedef struct					s_arg
 {
 	t_type_code					type;
+	unsigned int				size;
 	lint						data;
 	lint						value;
 }								t_arg;
@@ -184,6 +190,7 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number);
 
 void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 
 void		checks_and_destroy(t_vm *vm);
 

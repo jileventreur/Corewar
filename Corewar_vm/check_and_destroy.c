@@ -18,6 +18,7 @@ static void			epur_proc(t_list **lst)
 		{
 			tmp = cur->next;
 			free(cur->content);
+			cur->content = NULL;
 			free(cur);
 			cur = tmp;
 			if (!prev)
@@ -31,6 +32,7 @@ void	checks_and_destroy(t_vm *vm)
 {
 	if (vm->next_live_check--)		
 		return ;
+	// printf("ohoho\n");
 	if (vm->live_num >= NBR_LIVE || vm->last_ctd_dec == MAX_CHECKS)
 	{
 		vm->ctd -= CYCLE_DELTA;

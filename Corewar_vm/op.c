@@ -30,7 +30,7 @@ t_op    op_tab[INSTR_NUMBER + 1] =
 		"load index", 1, 1, &null_instr},
 	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25,
 		"store index", 1, 1, &sti},
-	{"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1, &null_instr},
+	{"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1, &my_fork},
 	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, "long load", 1, 0, &null_instr},
 	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
 		"long load index", 1, 1, &null_instr},

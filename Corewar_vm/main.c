@@ -6,6 +6,28 @@ void	ft_error_exit(const char *exit_message)
 	exit(1);
 }
 
+void	print_vm(t_vm *vm)
+{
+	unsigned int 	i;
+	unsigned char	c;
+	// char	color[10];
+
+	i = 0;
+	// ft_strcpy(color, "\033[31m");
+	// printf("COLOR == %c\n", color[3]);
+	while (i < MEM_SIZE)
+	{
+		c = vm->mem[i];
+		// printf("COLOR == %c\n", color[3]);
+		// color[3] = '0' + 0b11 & vm->proc_mem[i];
+		// printf("COLOR == %c\n", color[3]);
+		// printf("c == %d\n", c);
+		// printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : color, c,
+		// (i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
+		++i;
+	}
+}
+
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
 	unsigned char	c;
@@ -97,40 +119,44 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 
 void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
+	proc->life ^= 0b1;
+	vm->live_num += 1;
+	print_args(args, 1);
+	if (args[0].value < MAX_PLAYERS && !ft_memisset(&vm->c[args[0].value], sizeof(t_champion), 0))
+		vm->last_live = args[0].value;
 	(void)vm;
 	(void)proc;
 	(void)args;
+}
+
+void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
+{
+	(void)vm;
+	(void)proc;
+	(void)args;	
 }
 
 void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
 	lint				i;
-	// printf("WELCOME IN LIVE\n");
-	// while (i < 4)
-	// {
-	// 	printf("args_type[%d] = %d\n", i, args_type[i]);
-	// 	++i;
-	// }
-	// printf("ptr = %x\n", vm->mem[ptr]);
-	// test = (unsigned short int *)&vm->mem[ptr + 1];
-	// printf("test = %x\n", (signed)get_arg(vm->mem, ptr, 2));
-	// printf("name %s\n", op_tab[STI].name);
-	(void)vm;
 
-	print_args(args, 3);
-	*(int *)proc->reg[0]= 0x00abcdef;
-	// print_memory(vm->mem, MEM_SIZE);
+	// print_args(args, 3);
+	// *(int *)proc->reg[0]= 0x00abcdef;
+	// print_memory(vm->mem, 1024);
+	// print_memory(vm->mem, 1024);
+	// print_memory(vm->mem, MEM_SIZE - 2);
 	args[1].data = (short int)args[1].data;
 	args[2].data = (short int)args[2].data;
 	printf("sti r%s %lld (0x%llx) + %lld (0x%llx)\n", ft_itoa(args[0].data), args[1].value,
 	args[1].value, args[2].value, args[2].value);
 	i = (proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE;
-	// printf("I == %lld\n", i);
 	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], i, REG_SIZE); 
 	printf("-> store to %lld\n", i);
-	// printf("\n");
-	// print_memory(vm->mem, MEM_SIZE);
+	printf("mem[0] = %x\n", vm->mem[0]);
+	printf("pc avant == %d\n", proc->pc);
+	proc->pc += args[0].size + args[1].size + args[2].size;
+	printf("pc apres == %d\n", proc->pc);
 	(void)vm;
 	(void)proc;
 	(void)args;
@@ -143,6 +169,8 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 	unsigned char	inst;
 	t_arg			args[MAX_ARGS_NUMBER];
 
+	// printf("COUCOUC\n");
+	// return ;
 	if ((inst = vm->mem[proc->pc] - 1) > INSTR_NUMBER)
 		return ;
 	// printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
@@ -161,20 +189,23 @@ void		exec_procs(t_vm *vm)
 	t_proc	*p;
 	
 	tmp = vm->plst;
+	// printf("ici\n");
 	while (tmp)
 	{
 		p = (t_proc *)tmp->content;
+		// printf("p->cycle_to_wait == %d\n", p->cycle_to_wait);
 		if (p->cycle_to_wait == 0)
 		{
 			instruction_manager(vm, p);
 			// p->pc += 7;
 			// instruction_manager(vm, p);
-			exit (1);
+			// exit (1);
 			get_proc_cycle(p, vm->mem);
 		}
 		else
 			--p->cycle_to_wait;
 		tmp = tmp->next;
+		// printf("loop\n");
 	}
 }
 
@@ -182,7 +213,9 @@ void	main_loop(t_vm *vm)
 {
 	while (vm->plst)
 	{
+		// printf("la\n");
 		exec_procs(vm);
+		// printf("pas la\n");
 		checks_and_destroy(vm);
 	}
 }
@@ -197,14 +230,18 @@ int		main(int argc, char **argv)
 		// ft_error_exit("Error: too much args\n");
 	--argc;
 	++argv;
+	// printf("COUCOU toi\n");
 	vm_init(&vm, argc, argv);
+	// printf("DEAD\n");
 	// get_champion(argv[1], &c);
 	// print_champions(vm.c);
 	// printf("\n");
 	// print_procs(vm.plst);
 	// print_memory(vm.mem, MEM_SIZE);
+	// printf("\n\n");
 	main_loop(&vm);
 	// lst = lst->next;
+	ft_printf("------------ END ------------\n");
 	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);
 	return (0);
 }

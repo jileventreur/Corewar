@@ -2,18 +2,23 @@
 
 void	print_memory(unsigned char *mem, unsigned int size)
 {
-	static unsigned char prec[MEM_SIZE] = {0};
+	// static unsigned char prec[MEM_SIZE] = {0};
 	unsigned int 	i;
 	unsigned char	c;
 
 	i = 0;
+	// printf("i == %d\n", i);
 	while (i < size)
 	{
+	// printf("i == %d\n", i);
 		c = mem[i];
-		printf("%s%2.2x%c%c\033[0m", mem[i] == prec[i] ? "" : "\033[31m", c, (i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % 64) == 0 || i == (size - 1) ? '\n' : 0);
+		// ft_printf("c == %d\n", c);
+		// ft_printf("mem[%u] == %d\n", i, mem[i]);
+		ft_printf("%2.2x%c%c\033[0m", c, (i + 1) % 2 == 0 ? ' ' : 0,
+		((i + 1) % 64) == 0 || i == (size - 1) ? '\n' : 0);
 		++i;
 	}
-	ft_memcpy(prec, mem, MEM_SIZE);
+	// ft_memcpy(prec, mem, MEM_SIZE);
 }
 
 
