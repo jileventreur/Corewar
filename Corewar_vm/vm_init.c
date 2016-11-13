@@ -76,11 +76,11 @@ static t_list	*proc_init(t_champion *c)
 
 void			max_arg_size_init(t_vm *vm)
 {
+	extern t_op		op_tab[17];
 	int				i;
 	int				j;
 	int				k;
 	int				sum;
-	extern t_op		op_tab[17];
 
 	i = 0;
 	while (i < 17)
@@ -116,10 +116,10 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	proc_cycle_init(vm->plst, vm->mem);
 	vm->ctd = CYCLE_TO_DIE;
 	vm->live_num = 0;
+	vm->total_cycle = 0;
 	vm->last_ctd_dec = 0;
 	vm->next_live_check = CYCLE_TO_DIE;
 	max_arg_size_init(vm);
-
 	// print_memory(vm->proc_mem, MEM_SIZE);
 	// print_memory((unsigned char *)vm->max_arg_size, 17 * 4);
 }

@@ -65,6 +65,8 @@ typedef enum					e_type_code
 #define BYTE_LINE_NB			32
 #define PC_BIT					0b100 
 
+#define REG(num) 				(*(int *)(proc->reg[num]))
+
 /*
 **
 */
@@ -124,7 +126,7 @@ typedef struct					s_champion
 typedef	struct					s_proc
 {
 	char						reg[REG_NUMBER][REG_SIZE];
-	unsigned int				pc;
+	int							pc;
 	unsigned char				carry;
 	unsigned char				life;
 	unsigned int				num;
@@ -143,6 +145,7 @@ typedef	struct					s_vm
 	unsigned int				next_live_check;
 	unsigned int				last_ctd_dec;
 	unsigned char				max_arg_size[17][MAX_ARGS_NUMBER + 1];
+	lint						total_cycle;
 }								t_vm;
 
 typedef struct					s_arg
@@ -163,6 +166,7 @@ typedef struct					s_op
 	char						*desc;
 	unsigned char				activ_carry;
 	unsigned char				direct_adr;
+	unsigned char				long_inst;
 	void						(*f)(t_vm *, t_proc *, t_arg[MAX_ARGS_NUMBER]);
 }								t_op;
 
@@ -185,16 +189,32 @@ void		print_memory(unsigned char *mem, unsigned int size);
 void		print_champions(t_champion *tab);
 void		print_procs(t_list *lst);
 
-void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
 void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number);
 
-void		sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
-void		live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
+
+void		my_live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_ld(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_add(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_sub(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_and(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_or(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_xor(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_zjmp(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_ldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_lld(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_lldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+void		my_aff(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
+
 
 void		checks_and_destroy(t_vm *vm);
 
 int			get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst);
+lint		get_arg_data(unsigned char mem[MEM_SIZE], unsigned int beg, unsigned int len);
 
 
 #endif
