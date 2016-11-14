@@ -10,22 +10,43 @@ void	print_vm(t_vm *vm)
 {
 	unsigned int 	i;
 	unsigned char	c;
-	// char	color[10];
+	char	color[10];
+	// char	pc_color[10];
 
 	i = 0;
-	// ft_strcpy(color, "\033[31m");
+	ft_putstr(CLEAR_SCREEN);
+	ft_strcpy(color, "\033[30;40m");
+	// ft_strcpy(color, "\033[31;1m");
 	// printf("COLOR == %c\n", color[3]);
 	while (i < MEM_SIZE)
+	// while (i < 5)
 	{
 		c = vm->mem[i];
-		// printf("COLOR == %c\n", color[3]);
-		// color[3] = '0' + 0b11 & vm->proc_mem[i];
-		// printf("COLOR == %c\n", color[3]);
-		// printf("c == %d\n", c);
-		// printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : color, c,
-		// (i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
+	// ft_strcpy(color, "\033[30;40m");
+	// color[6] = '0' + (0b11 & vm->proc_mem[i]);
+	if (ISACTIV(vm->proc_mem[i], 2))
+	{
+		color[6] = '0' + (0b11 & vm->proc_mem[i]);
+		color[3] = '0';
+	}
+	else
+	{
+		color[3] = '0' + (0b11 & vm->proc_mem[i]);
+		color[6] = '0';		
+	}
+		// color[6] = ISACTIV(vm->proc_mem[i], 2) ? '7' : '0';
+		// printf("COLOR == %c\n", color[2]);
+		// exit(1);
+		// if (ISACTIV(vm->proc_mem[i], 2))
+		// 	ft_printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : pc_color, c,
+		// 	(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
+		// else
+		ft_printf("%s%2.2x\033[0m%c%c", vm->proc_mem[i] == 0 ? "" : color, c,
+		(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
 		++i;
 	}
+	// ft_printf("\n");
+	// exit(1);
 }
 
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
@@ -69,7 +90,7 @@ void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	}
 	ptr = (proc->pc + 2) % MEM_SIZE;
 	test = (unsigned short int *)&vm->mem[ptr + 1];
-	printf("test = %hx\n", *test);
+	// printf("test = %hx\n", *test);
 	(void)vm;
 }
 
@@ -80,16 +101,16 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 	i = 0;
 	while (i < arg_number)
 	{
-		printf("arg[%d] data %lld (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
+		ft_printf("arg[%d] data %lld (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
 			if ((unsigned int)args[i].type == NULL_CODE)
-				printf(" type null ");
+				ft_printf(" type null ");
 			if ((unsigned int)args[i].type == REG_CODE)
-				printf(" type reg ");
+				ft_printf(" type reg ");
 			else if ((unsigned int)args[i].type == DIR_CODE)
-				printf(" type dir ");
+				ft_printf(" type dir ");
 			else
-				printf(" type ind ");
-		printf("value %lld (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
+				ft_printf(" type ind ");
+		ft_printf("value %lld (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
 		++i;
 	}
 }
@@ -117,172 +138,23 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 	}
 }
 
-void		my_live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	proc->life ^= 0b1;
-	vm->live_num += 1;
-	print_args(args, 1);
-	if (args[0].value < MAX_PLAYERS &&
-	!ft_memisset(&vm->c[args[0].value], sizeof(t_champion), 0))
-		vm->last_live = args[0].value;
-	proc->pc += args[0].size + 1;
-	printf("proc %d is still alive\n", proc->num);
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_add(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = args[0].value + args[1].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_sub(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = args[0].value + args[1].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_or(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = args[0].value | args[1].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_and(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = args[0].value & args[1].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_xor(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = args[0].value ^ args[1].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_zjmp(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	if (proc->carry & 0b1)
-		proc->pc = (proc->pc + args[0].value) % MEM_SIZE;
-	if (proc->pc < 0)
-		proc->pc += MEM_SIZE;
-	// proc->carry ^= 0b1;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_aff(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	ft_putchar((unsigned int)args[0].value % 256);
-	proc->pc += args[0].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_lld(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[1].value) = args[0].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + 2; 
-	(void)vm;(void)proc;(void)args;
-} // same as ld, diff is in get_arg with long_inst
-
-void		my_ld(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[1].value) = args[0].value;
-	proc->carry ^= 0b1;
-	proc->pc += args[0].size + args[1].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	t_list	*new;
-
-	new = ft_lstnew(proc, sizeof(t_proc));
-	((t_proc *)new->content)->pc = (((t_proc *)new->content)->pc +
-	(args[1].value)) % MEM_SIZE;
-	ft_lstadd(&vm->plst, new);
-	proc->pc += args[0].size + 1;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	t_list	*new;
-
-	new = ft_lstnew(proc, sizeof(t_proc));
-	((t_proc *)new->content)->pc = (((t_proc *)new->content)->pc +
-	(args[1].value % IDX_MOD)) % MEM_SIZE;
-	ft_lstadd(&vm->plst, new);
-	proc->pc += args[0].size + 1;
-	(void)vm;(void)proc;(void)args;
-}
-
-void		my_sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	extern t_op			op_tab[INSTR_NUMBER + 1];
-	lint				i;
-
-	args[2].data = (short int)args[2].data;
-	i = (proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE;
-	write_var(vm->mem, (unsigned char *)proc->reg[args[0].value - 1], i, REG_SIZE); 
-	printf("-> store to %lld\n", i);
-	proc->pc += args[0].size + args[1].size + args[2].size + 2; 
-	(void)vm;(void)proc;(void)args;
-}
-
-// void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
-void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	if (args[1].type == REG_CODE)
-		REG(args[1].data) = args[0].value;
-	else
-		write_var(vm->mem, (unsigned char *)&args[0].value,
-		proc->pc + ((args[1].value) % IDX_MOD), args[0].size);
-	proc->pc += args[0].size + args[1].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
-void	 	my_lldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = get_arg_data(vm->mem,
-	proc->pc + ((args[0].value + args[1].value)), REG_SIZE); // same as ldi without idx_mod
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-void		my_ldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
-{
-	REG(args[2].data) = get_arg_data(vm->mem,
-	proc->pc + ((args[0].value + args[1].value) % IDX_MOD), REG_SIZE);
-	proc->pc += args[0].size + args[1].size + args[2].size + 2;
-	(void)vm;(void)proc;(void)args;
-}
-
 void		instruction_manager(t_vm *vm, t_proc *proc)
 {
 	extern t_op		op_tab[INSTR_NUMBER + 1];
 	unsigned char	inst;
-	t_arg			args[MAX_ARGS_NUMBER];
+	t_arg			args[MAX_ARGS_NUMBER] = {{0,0,0,0}};
 
-	// printf("COUCOUC\n");
 	// return ;
 	if ((inst = vm->mem[proc->pc] - 1) > INSTR_NUMBER)
 		return ;
 	// printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
 	// printf("instruction is %s\n", op_tab[inst].name);
-	ft_bzero(args, sizeof(t_arg) * MAX_ARGS_NUMBER);
+	// ft_bzero(args, sizeof(t_arg) * MAX_ARGS_NUMBER);
 	if (!get_args(vm, proc, args, op_tab + inst))
 		return ;
+	// print_vm(vm);
 	op_tab[inst].f(vm, proc, args);
+	exit(1);
 	// proc->pc = (proc->pc + vm->max_arg_size[inst][MAX_ARGS_NUMBER]) % MEM_SIZE;
 	(void)vm;
 	(void)proc;
@@ -316,15 +188,45 @@ void		exec_procs(t_vm *vm)
 
 void	main_loop(t_vm *vm)
 {
+	// if (vm->opt.d != -1)
+	// {
+	// 	while (vm->plst && vm->opt.d != vm->total_cycle)
+	// 	{
+	// 		exec_procs(vm);
+	// 		checks_and_destroy(vm);
+	// 	}
+	// 	print_vm(vm);
+	// 	return ;
+	// }
 	while (vm->plst)
 	{
 		// printf("la\n");
+		if (vm->opt.d == vm->total_cycle)
+		{
+			print_vm(vm);
+			exit(1);
+		}
+		if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
+			print_vm(vm);
 		exec_procs(vm);
 		// printf("pas la\n");
 		checks_and_destroy(vm);
 	}
-	printf("cycle %lld : Game is over, player number %d have win\n",vm->total_cycle,
-	vm->last_live + 1);
+	ft_printf("Constestant %u, \"%s\", has won !\n", vm->last_live + 1, vm->c[vm->last_live].header.prog_name);
+}
+
+void	introducing_contestants(t_champion *c)
+{
+	int		i;
+
+	i = -1;
+	ft_putstr("Introducing contestants...\n");
+	while (++i < MAX_PLAYERS)
+	{
+		if (ft_memisset(&c[i], sizeof(t_champion), 0))
+			continue ;
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n", c[i].num, c[i].header.prog_size, c[i].header.prog_name, c[i].header.comment);
+	}
 }
 
 int		main(int argc, char **argv)
@@ -333,22 +235,10 @@ int		main(int argc, char **argv)
 
 	if (argc == 1)
 		ft_error_exit("Error: not enough args\n");
-	// if (argc > MAX_PLAYERS + 1)
-		// ft_error_exit("Error: too much args\n");
 	--argc;
 	++argv;
-	// printf("COUCOU toi\n");
 	vm_init(&vm, argc, argv);
-	// printf("DEAD\n");
-	// get_champion(argv[1], &c);
-	// print_champions(vm.c);
-	// printf("\n");
-	// print_procs(vm.plst);
-	print_memory(vm.mem, MEM_SIZE);
-	// printf("\n\n");
+	introducing_contestants(vm.c);
 	main_loop(&vm);
-	// lst = lst->next;
-	ft_printf("------------ END ------------\n");
-	// printf("la case contient: [%x]\n", mem[((t_proc *)lst->content)->pc]);
 	return (0);
 }

@@ -62,7 +62,7 @@ typedef enum					e_type_code
 #define NBR_LIVE				21
 #define MAX_CHECKS				10
 
-#define BYTE_LINE_NB			32
+#define BYTE_LINE_NB			64 // must be 32 for main part
 #define PC_BIT					0b100 
 
 #define REG(num) 				(*(int *)(proc->reg[num]))
@@ -79,6 +79,12 @@ typedef long long int			lint;
 #define T_DIR					2
 #define T_IND					4
 #define T_LAB					8
+
+# define PROG_NAME_LENGTH		(128)
+# define COMMENT_LENGTH			(2048)
+# define COREWAR_EXEC_MAGIC		0xea83f3
+
+# define CLEAR_SCREEN			"\e[1;1H\e[2J"
 
 /*
 **
@@ -104,9 +110,16 @@ enum 							e_instruction
 								AFF
 };
 
-# define PROG_NAME_LENGTH		(128)
-# define COMMENT_LENGTH			(2048)
-# define COREWAR_EXEC_MAGIC		0xea83f3
+#define	OPTION			"adsv"
+
+typedef struct			s_opt
+{
+	char				a;
+	int					d;
+	int					s;
+	char				v;
+}						t_opt;
+
 
 typedef struct					s_header
 {
@@ -135,6 +148,7 @@ typedef	struct					s_proc
 
 typedef	struct					s_vm
 {
+	t_opt						opt;
 	unsigned char				mem[MEM_SIZE];
 	unsigned char				proc_mem[MEM_SIZE];
 	t_list						*plst;
@@ -175,10 +189,11 @@ t_list		*ft_lstnew(void const *content, size_t content_size);
 void		ft_lstadd(t_list **alst, t_list *new);
 
 int			ft_strisuint(char *arg);
+int			ft_strisint(char *arg);
 
 int			ft_memisset(void *p, size_t n, char c);
 
-void		get_players(char **argv, int argc, t_champion *tab);
+int			get_players(char **argv, int argc, t_champion *tab);
 
 void		vm_init(t_vm *vm, int argc, char **argv);
 
@@ -210,6 +225,7 @@ void		my_lldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		my_aff(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 
+void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len);
 
 void		checks_and_destroy(t_vm *vm);
 

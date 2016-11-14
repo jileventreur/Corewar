@@ -17,7 +17,7 @@ static void			epur_proc(t_list **lst)
 		}
 		else
 		{
-			printf("proc %d has been destroy\n", ((t_proc *)cur->content)->num);
+			// printf("proc %d has been destroy\n", ((t_proc *)cur->content)->num);
 			tmp = cur->next;
 			free(cur->content);
 			cur->content = NULL;

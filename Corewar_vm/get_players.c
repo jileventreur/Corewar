@@ -44,7 +44,7 @@ static int		create_champion(t_champion *tab, char **argv)
 	}
 	if (!ft_strisuint(argv[1]))
 		ft_error_exit("Error: Argument after -n is not a unsigned number\n");
-	if ((num = ft_atoi(argv[1]) -1) > MAX_PLAYERS)
+	if ((num = ft_atoi(argv[1]) -1) >= MAX_PLAYERS)
 		ft_error_exit("Error: Argument after -n is greater than max players\n");
 	if (num < 0)
 		ft_error_exit("Error: Argument after -n is smaller than 1\n");
@@ -54,14 +54,18 @@ static int		create_champion(t_champion *tab, char **argv)
 	return (3);
 }
 
-void			get_players(char **argv, int argc, t_champion *tab)
+int				get_players(char **argv, int argc, t_champion *tab)
 {
 	int			i;
+	int			cpt;
 	
 	i = 0;
+	cpt = 0;
 	ft_bzero(tab, sizeof(t_champion) * MAX_PLAYERS);
 	while (i < argc)
 	{
+		++cpt;
 		i += create_champion(tab, argv + i);
 	}
+	return (cpt);
 }

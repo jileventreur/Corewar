@@ -36,5 +36,5 @@ t_op    op_tab[INSTR_NUMBER + 1] =
 		"long load index", 1, 1, 1, &my_lldi},
 	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1, 1, &my_lfork},
 	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0, 0, &my_aff},
-	{0, 0, {0}, 0, 0, 0, 0, 0, 0, &null_instr}
+	{0, 0, {0}, 0, 0, 0, 0, 0, 0, NULL}
 };

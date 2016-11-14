@@ -33,9 +33,13 @@ static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, unsigned char lon
 {
 	// printf("%x\n", vm->mem[ptr]);
 	if (args->type == NULL_CODE)
+	{
+		// printf("oui?\n");
 		return (0);
+	}
 	else if (args->type == REG_CODE)
 	{
+		// printf("jai rien a foutre la\n");
 		if ((unsigned)args->data - 1 > 15)
 			return (0);
 		args->value = REG(args->data - 1);
@@ -71,7 +75,7 @@ static int		ocp_analyse(t_op *inst, unsigned char ocp, t_arg args[MAX_ARGS_NUMBE
 	{
 		if (!(args[cpt].type = inst->param_mask[cpt] & (1 << ((ocp & 0b11) - 1))))
 		{
-			printf("ERROR WITH ARG %u\n", cpt);
+			ft_printf("ERROR WITH ARG %u\n", cpt);
 			return (0);
 		}
 		ocp >>= 2;
@@ -88,7 +92,13 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 	
 	// printf("opcode == %d\n", inst->opcode);
 	if (inst->opcode != 1 && !ocp_analyse(inst, vm->mem[(proc->pc + 1) % MEM_SIZE], args))
+	{
 		return (0);
+	}
+	if (inst->opcode == 1)
+	{
+		args[0].type = DIR_CODE; // pour le test GERER LES INST SANS OCP
+	}
 	i = 0;
 	ptr = (proc->pc + 2) % MEM_SIZE;
 	dir_adr = (inst->direct_adr == 0) * 2;
@@ -97,7 +107,9 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 		args[i].size = (args[i].type != REG_CODE) ? 2 + dir_adr : 1;
 		args[i].data = get_arg_data(vm->mem, ptr, args[i].size);
 		if (!get_arg_value(vm, proc, args + i, inst->long_inst))
+		{
 			return (0);
+		}
 		++i;
 		ptr = (ptr + args[i].size) % MEM_SIZE;
 	}
