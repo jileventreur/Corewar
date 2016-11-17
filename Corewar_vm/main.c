@@ -94,11 +94,12 @@ void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	(void)vm;
 }
 
-void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
+void		my_print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 {
 	unsigned int	i;
 
 	i = 0;
+	// printf("coucou\n");
 	while (i < arg_number)
 	{
 		ft_printf("arg[%d] data %lld (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
@@ -112,7 +113,37 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 				ft_printf(" type ind ");
 		ft_printf("value %lld (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
 		++i;
+	}	
+}
+
+void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned char long_inst)
+{
+	unsigned int	i;
+
+	i = 0;
+	// printf("coucou\n");
+	while (i < arg_number)
+	{
+		// printf("args_type  = %d\n", args[i].type);
+			if ((unsigned int)args[i].type == NULL_CODE)
+				ft_printf("NULL");
+			if ((unsigned int)args[i].type == T_REG)
+				ft_printf("r%lld", args[i].data);
+			else if ((unsigned int)args[i].type == T_IND && long_inst)
+			{
+				ft_printf("%hd", (short int)args[i].value);
+			}
+			else if ((unsigned int)args[i].type == T_IND)
+				ft_printf("%d", (int)args[i].value);
+			else if (args[i].size == 2)
+				ft_printf("%hd", (short int)args[i].value);
+			else
+				ft_printf("%hd", (short int)args[i].value);
+		++i;
+			if (i < arg_number)
+				ft_printf(" ");
 	}
+	// printf("end\n");
 }
 
 void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
@@ -122,6 +153,7 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 	cpt = 0;
 	if (beg < 0)
 		beg += MEM_SIZE;
+	printf("BEG == %lld\n", beg);
 	if (beg + len >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
@@ -142,7 +174,7 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 {
 	extern t_op		op_tab[INSTR_NUMBER + 1];
 	unsigned char	inst;
-	t_arg			args[MAX_ARGS_NUMBER] = {{0,0,0,0}};
+	t_arg			args[MAX_ARGS_NUMBER] = {{DIR_CODE  ,0,0,0}};
 
 	// return ;
 	if ((inst = vm->mem[proc->pc] - 1) > INSTR_NUMBER)
@@ -151,7 +183,11 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 	// printf("instruction is %s\n", op_tab[inst].name);
 	// ft_bzero(args, sizeof(t_arg) * MAX_ARGS_NUMBER);
 	if (!get_args(vm, proc, args, op_tab + inst))
+	{
+	// 	printf("ERREUR\n");
+	// exit(1);
 		return ;
+	}
 	// print_vm(vm);
 	op_tab[inst].f(vm, proc, args);
 	exit(1);
@@ -208,6 +244,8 @@ void	main_loop(t_vm *vm)
 		}
 		if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
 			print_vm(vm);
+		if (ISACTIV(vm->opt.v, 1))
+			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		// printf("pas la\n");
 		checks_and_destroy(vm);

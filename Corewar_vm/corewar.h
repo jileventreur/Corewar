@@ -142,7 +142,9 @@ typedef	struct					s_proc
 	int							pc;
 	unsigned char				carry;
 	unsigned char				life;
-	unsigned int				num;
+	lint						last_live;
+	unsigned int				player_num;
+	unsigned int				proc_num;
 	unsigned int				cycle_to_wait;
 }								t_proc;
 
@@ -151,9 +153,10 @@ typedef	struct					s_vm
 	t_opt						opt;
 	unsigned char				mem[MEM_SIZE];
 	unsigned char				proc_mem[MEM_SIZE];
+	unsigned int				list_len;
 	t_list						*plst;
 	t_champion					c[MAX_PLAYERS];
-	unsigned int				ctd;
+	lint						ctd;
 	unsigned int				last_live;
 	unsigned int				live_num;
 	unsigned int				next_live_check;
@@ -181,6 +184,7 @@ typedef struct					s_op
 	unsigned char				activ_carry;
 	unsigned char				direct_adr;
 	unsigned char				long_inst;
+	unsigned char				ocp;
 	void						(*f)(t_vm *, t_proc *, t_arg[MAX_ARGS_NUMBER]);
 }								t_op;
 
@@ -204,7 +208,8 @@ void		print_memory(unsigned char *mem, unsigned int size);
 void		print_champions(t_champion *tab);
 void		print_procs(t_list *lst);
 
-void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number);
+void		print_args(t_arg args[MAX_ARGS_NUMBER],
+unsigned int arg_number, unsigned char long_inst);
 
 void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
 
@@ -230,7 +235,9 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len);
 void		checks_and_destroy(t_vm *vm);
 
 int			get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst);
-lint		get_arg_data(unsigned char mem[MEM_SIZE], unsigned int beg, unsigned int len);
+lint		get_arg_data(unsigned char mem[MEM_SIZE], int beg, unsigned int len);
+
+void		print_vm(t_vm *vm);
 
 
 #endif

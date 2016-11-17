@@ -46,7 +46,8 @@ static t_list	*proc_init(t_champion *c, int player_number)
 			continue ;
 		tmp.pc = player_cpt * MEM_SIZE / player_number;
 		tmp.reg[0][0] = c[i].num;
-		tmp.num = c[i].num;
+		tmp.player_num = c[i].num;
+		tmp.proc_num = i;
 		// printf("tmp.reg[0][0] == %d\n", tmp.reg[0][0]);
 		ft_lstadd(&lst, ft_lstnew(&tmp, sizeof(t_proc)));
 		++player_cpt;
@@ -171,6 +172,7 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	vm->total_cycle = 0; // could be rm
 	vm->last_ctd_dec = 0; // could be rm
 	vm->next_live_check = CYCLE_TO_DIE;
+	vm->list_len = player_number;
 	while (ft_memisset(&vm->c[i], sizeof(t_champion), 0))
 	--i;
 	vm->last_live = i;
