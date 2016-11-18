@@ -14,7 +14,7 @@ void	print_vm(t_vm *vm)
 	// char	pc_color[10];
 
 	i = 0;
-	ft_putstr(CLEAR_SCREEN);
+	// ft_putstr(CLEAR_SCREEN);
 	ft_strcpy(color, "\033[30;40m");
 	// ft_strcpy(color, "\033[31;1m");
 	// printf("COLOR == %c\n", color[3]);
@@ -153,7 +153,7 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 	cpt = 0;
 	if (beg < 0)
 		beg += MEM_SIZE;
-	printf("BEG == %lld\n", beg);
+	// printf("BEG == %lld\n", beg);
 	if (beg + len >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
@@ -178,7 +178,11 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 
 	// return ;
 	if ((inst = vm->mem[proc->pc] - 1) > INSTR_NUMBER)
+	{
+		printf("BAD INSTR\n");
+		exit(1);
 		return ;
+	}
 	// printf("total is %u\n", vm->max_arg_size[inst][MAX_ARGS_NUMBER]);
 	// printf("instruction is %s\n", op_tab[inst].name);
 	// ft_bzero(args, sizeof(t_arg) * MAX_ARGS_NUMBER);
@@ -190,7 +194,7 @@ void		instruction_manager(t_vm *vm, t_proc *proc)
 	}
 	// print_vm(vm);
 	op_tab[inst].f(vm, proc, args);
-	exit(1);
+	// exit(1);
 	// proc->pc = (proc->pc + vm->max_arg_size[inst][MAX_ARGS_NUMBER]) % MEM_SIZE;
 	(void)vm;
 	(void)proc;
@@ -234,6 +238,7 @@ void	main_loop(t_vm *vm)
 	// 	print_vm(vm);
 	// 	return ;
 	// }
+	print_vm(vm);
 	while (vm->plst)
 	{
 		// printf("la\n");
@@ -271,6 +276,8 @@ int		main(int argc, char **argv)
 {
 	t_vm	vm;
 
+	// printf("test = %x\n", (unsigned int)-1275068416);
+	// exit(1);
 	if (argc == 1)
 		ft_error_exit("Error: not enough args\n");
 	--argc;

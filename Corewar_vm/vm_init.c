@@ -45,7 +45,7 @@ static t_list	*proc_init(t_champion *c, int player_number)
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))
 			continue ;
 		tmp.pc = player_cpt * MEM_SIZE / player_number;
-		tmp.reg[0][0] = c[i].num;
+		*(int *)(tmp.reg[0]) = c[i].num * -1; // a voir si on laisse en -num ou pas
 		tmp.player_num = c[i].num;
 		tmp.proc_num = i;
 		// printf("tmp.reg[0][0] == %d\n", tmp.reg[0][0]);
@@ -163,7 +163,8 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	ft_bzero(vm, sizeof(t_vm));
 	get_opt(&argv, &argc, &vm->opt);
 	// printf("argv == %s argc == %d\n", *argv, argc);
-	player_number = get_players(argv, argc, vm->c);
+	if ((player_number = get_players(argv, argc, vm->c)) == 0)
+		ft_error_exit("Error: No champion\n");
 	vm->plst = proc_init(vm->c, player_number);
 	mem_init(vm->mem, vm->proc_mem, vm->c, player_number);
 	proc_cycle_init(vm->plst, vm->mem);

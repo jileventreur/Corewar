@@ -209,7 +209,7 @@ void		print_champions(t_champion *tab);
 void		print_procs(t_list *lst);
 
 void		print_args(t_arg args[MAX_ARGS_NUMBER],
-unsigned int arg_number, unsigned char long_inst);
+			unsigned int arg_number, unsigned char long_inst);
 
 void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
 

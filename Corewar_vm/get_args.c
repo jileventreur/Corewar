@@ -28,8 +28,10 @@ lint		get_arg_data(unsigned char mem[MEM_SIZE], int beg, unsigned int len)
 			res <<= 8;
 			res += mem[(beg + cpt)];
 			++cpt;
+	// printf("res == %lld\n", res);
 		}
 	}
+	// printf("fres == %lld\n", res);
 	return (res);
 }
 
@@ -57,8 +59,12 @@ static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, unsigned char lon
 		// printf("data == %hd\n", (short int)args->data);
 		// printf("mem[%lld]\n", llabs((args->data) % MEM_SIZE));
 		// ()vm->mem[llabs((args->data) % MEM_SIZE)]);
+		// args->value = get_arg_data(vm->mem,
+		// long_inst ? (short int)args->data : (short int)args->data % IDX_MOD, long_inst ? 2 : 4);
 		args->value = get_arg_data(vm->mem,
-		long_inst ? (short int)args->data : (short int)args->data % IDX_MOD, long_inst ? 2 : 4);
+		long_inst ? ((short int)args->data + proc->pc) : ((short int)args->data + proc->pc) % IDX_MOD, long_inst ? 2 : 4);
+		// print_vm(vm);exit(1);
+		// printf("long_inst %d\n", long_inst);
 		// BSWAP_32(*(int *)(vm->mem + llabs((args->data) % MEM_SIZE)));
 		// printf("value == %llu (0x%lx)\n", args->value, (unsigned long int)args->value);
 		// printf("test %x\n", *(int *)(vm->mem));
@@ -99,7 +105,7 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 	int					ptr;
 	unsigned int		dir_adr;
 	
-	print_vm(vm);
+	// print_vm(vm);
 	// printf("opcode == %d\n", inst->opcode);
 	if (inst->ocp & 0b1 && !ocp_analyse(inst, vm->mem[(proc->pc + 1) % MEM_SIZE], args))
 	{

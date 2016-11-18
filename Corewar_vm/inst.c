@@ -37,7 +37,7 @@ void		my_live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 		print_args(args, op_tab[LIVE].param_number, op_tab[LIVE].long_inst);
 		ft_printf("\n");
 	}
-	if (ISACTIV(vm->opt.v, 0) && args[0].value < MAX_PLAYERS && vm->c[args[0].value - 1].header.prog_size)
+	if (ISACTIV(vm->opt.v, 0) && args[0].value < 0 && args[0].value > -MAX_PLAYERS && vm->c[-1 * (args[0].value - 1)].header.prog_size) // voir pour le player -1
 		ft_printf("Player %d (%s) is said to be alive\n", proc->player_num, vm->c[args[0].value - 1].header.prog_name);
 	moove_pc(vm, proc, args[0].size + 1);
 	(void)vm;(void)proc;(void)args;
@@ -88,6 +88,7 @@ void		my_or(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 		ft_printf("\n");
 	}
 	moove_pc(vm, proc, args[0].size + args[1].size + args[2].size + 2);
+	// exit(1);
 	(void)vm;(void)proc;(void)args;
 }
 
@@ -260,21 +261,23 @@ void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
 
-	ft_printf("data = %x\n", args[1].data);
-	ft_printf("cible = %d\n", proc->pc + (((short int)args[1].data) % IDX_MOD));
-	if (args[1].type == T_DIR)
+	// ft_printf("data = %x\n", args[1].data);
+	// args[0].value = -1;
+	// ft_printf("size = %d\n", args[0].size);
+	// ft_printf("cible = %d\n", proc->pc + (((short int)args[1].data) % IDX_MOD));
+	if (args[1].type == T_REG)
 		REG(args[1].data) = args[0].data;
 	else
 		write_var(vm->mem, (unsigned char *)&args[0].value,
-		proc->pc + ((short int)(args[1].data) % IDX_MOD), args[0].size);
-	args[1].value = args[1].data;
+		proc->pc + ((short int)(args[1].data) % IDX_MOD), REG_SIZE);
 	if (ISACTIV(vm->opt.v, 2))
 	{
-		ft_printf("P    %u | st ", proc->player_num);
-		print_args(args, op_tab[ST].param_number, op_tab[ST].long_inst);
+		ft_printf("P    %u | st r%d %d", proc->player_num, args[0].data, args[1].data);
+		// print_args(args, op_tab[ST].param_number, 1);
 		ft_printf("\n");
 	}
 	moove_pc(vm, proc, args[0].size + args[1].size + 2);
+	// print_vm(vm);
 	(void)vm;(void)proc;(void)args;
 }
 
@@ -282,6 +285,8 @@ void	 	my_lldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
 
+	// print_vm(vm);
+	// printf("test = %x\n", 58368);
 	if (ISACTIV(vm->opt.v, 2))
 	{
 		ft_printf("P    %u | lldi ", proc->player_num);
