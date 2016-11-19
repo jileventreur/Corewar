@@ -112,13 +112,13 @@ enum 							e_instruction
 
 #define	OPTION			"adsv"
 
-typedef struct			s_opt
+typedef struct					s_opt
 {
-	char				a;
-	int					d;
-	int					s;
-	char				v;
-}						t_opt;
+	char						a;
+	int							d;
+	int							s;
+	char						v;
+}								t_opt;
 
 
 typedef struct					s_header
@@ -206,10 +206,11 @@ void		get_proc_cycle(t_proc *proc, unsigned char *mem);
 
 void		print_memory(unsigned char *mem, unsigned int size);
 void		print_champions(t_champion *tab);
-void		print_procs(t_list *lst);
-
+void		print_bits(unsigned int nb, int i);
 void		print_args(t_arg args[MAX_ARGS_NUMBER],
 			unsigned int arg_number, unsigned char long_inst);
+void		print_procs(t_vm *vm, t_list *lst, unsigned char print_reg);
+
 
 void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
 
@@ -238,6 +239,8 @@ int			get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst);
 lint		get_arg_data(unsigned char mem[MEM_SIZE], int beg, unsigned int len);
 
 void		print_vm(t_vm *vm);
+
+void		exec_vm(t_vm *vm);
 
 
 #endif

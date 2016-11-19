@@ -200,7 +200,7 @@ void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 
 	new = ft_lstnew(proc, sizeof(t_proc));
 	((t_proc *)new->content)->pc = (((t_proc *)new->content)->pc +
-	(args[1].value)) % MEM_SIZE;
+	(args[0].value)) % MEM_SIZE;
 	vm->list_len += 1;
 	((t_proc *)new->content)->proc_num = vm->list_len;
 	ft_lstadd(&vm->plst, new);
@@ -208,7 +208,7 @@ void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	{
 		ft_printf("P    %u | lfork ", proc->player_num);
 		print_args(args, op_tab[LFORK].param_number, op_tab[LFORK].long_inst);
-		ft_printf(" (%hd)\n", (short int)args[0].value);
+		ft_printf(" (%d)\n", ((t_proc *)new->content)->pc);
 	}
 	moove_pc(vm, proc, args[0].size + 1);
 	(void)vm;(void)proc;(void)args;
@@ -222,17 +222,19 @@ void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 
 	new = ft_lstnew(proc, sizeof(t_proc));
 	((t_proc *)new->content)->pc = (((t_proc *)new->content)->pc +
-	(args[1].value % IDX_MOD)) % MEM_SIZE;
-	vm->list_len += 1;
-	((t_proc *)new->content)->proc_num = vm->list_len;
+	(args[0].value % IDX_MOD)) % MEM_SIZE;
+	++vm->list_len;
+	((t_proc *)new->content)->proc_num = vm->list_len - 1;
 	ft_lstadd(&vm->plst, new);
 	if (ISACTIV(vm->opt.v, 2))
 	{
 		ft_printf("P    %u | fork ", proc->player_num);
 		print_args(args, op_tab[FORK].param_number, op_tab[FORK].long_inst);
-		ft_printf(" (%hd)\n", (short int)args[0].value % IDX_MOD);
+		ft_printf(" (%hd)\n", ((t_proc *)new->content)->pc);
 	}
 	moove_pc(vm, proc, args[0].size + 1);
+	// print_procs(vm, vm->plst, 0);
+	// exit(1);
 	(void)vm;(void)proc;(void)args;
 }
 

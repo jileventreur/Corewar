@@ -13,7 +13,8 @@ SRC =	ft_lstadd.c \
 		vm_init.c \
 		check_and_destroy.c \
 		get_args.c\
-		inst.c
+		inst.c \
+		exec_vm.c 
 
 WFLAGS = -Wall -Werror -Wextra
 
