@@ -14,21 +14,21 @@ void		my_print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 	// printf("coucou\n");
 	while (i < arg_number)
 	{
-		ft_printf("arg[%d] data %lld (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
+		printf("arg[%d] data %d (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
 			if ((unsigned int)args[i].type == NULL_CODE)
-				ft_printf(" type null ");
+				printf(" type null ");
 			if ((unsigned int)args[i].type == REG_CODE)
-				ft_printf(" type reg ");
+				printf(" type reg ");
 			else if ((unsigned int)args[i].type == DIR_CODE)
-				ft_printf(" type dir ");
+				printf(" type dir ");
 			else
-				ft_printf(" type ind ");
-		ft_printf("value %lld (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
+				printf(" type ind ");
+		printf("value %d (0x%llx)\n", args[i].value, (unsigned long long int)args[i].value);
 		++i;
 	}	
 }
 
-void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned char long_inst)
+void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned char long_inst, unsigned char dest)
 {
 	unsigned int	i;
 
@@ -38,22 +38,24 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned 
 	{
 		// printf("args_type  = %d\n", args[i].type);
 			if ((unsigned int)args[i].type == NULL_CODE)
-				ft_printf("NULL");
-			if ((unsigned int)args[i].type == T_REG)
-				ft_printf("r%lld", args[i].data);
+				printf("NULL");
+			if ((unsigned int)args[i].type == T_REG && i == dest)
+				printf("r%d", args[i].data);
+			else if ((unsigned int)args[i].type == T_REG)
+				printf("%d", args[i].value);
 			else if ((unsigned int)args[i].type == T_IND && long_inst)
 			{
-				ft_printf("%hd", (short int)args[i].value);
+				printf("%hd", (short int)args[i].value);
 			}
 			else if ((unsigned int)args[i].type == T_IND)
-				ft_printf("%d", (int)args[i].value);
+				printf("%d", (int)args[i].value);
 			else if (args[i].size == 2)
-				ft_printf("%hd", (short int)args[i].value);
+				printf("%hd", (short int)args[i].value);
 			else
-				ft_printf("%hd", (short int)args[i].value);
+				printf("%d", args[i].value);
 		++i;
 			if (i < arg_number)
-				ft_printf(" ");
+				printf(" ");
 	}
 	// printf("end\n");
 }
@@ -85,7 +87,8 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 	cpt = 0;
 	if (beg < 0)
 		beg += MEM_SIZE;
-	// printf("BEG == %lld\n", beg);
+
+	// printf("var == %d\n", *(int *)var);
 	if (beg + len >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
@@ -112,7 +115,7 @@ void	introducing_contestants(t_champion *c)
 	{
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))
 			continue ;
-		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n", c[i].num, c[i].header.prog_size, c[i].header.prog_name, c[i].header.comment);
+		printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n", c[i].num, c[i].header.prog_size, c[i].header.prog_name, c[i].header.comment);
 	}
 }
 

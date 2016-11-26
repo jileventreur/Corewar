@@ -65,7 +65,7 @@ typedef enum					e_type_code
 #define BYTE_LINE_NB			64 // must be 32 for main part
 #define PC_BIT					0b100 
 
-#define REG(num) 				(*(int *)(proc->reg[num]))
+#define REG(num) 				(*(int *)(proc->reg[num - 1]))
 
 /*
 **
@@ -159,7 +159,7 @@ typedef	struct					s_vm
 	lint						ctd;
 	unsigned int				last_live;
 	unsigned int				live_num;
-	unsigned int				next_live_check;
+	int							next_live_check;
 	unsigned int				last_ctd_dec;
 	unsigned char				max_arg_size[17][MAX_ARGS_NUMBER + 1];
 	lint						total_cycle;
@@ -169,8 +169,8 @@ typedef struct					s_arg
 {
 	t_type_code					type;
 	unsigned int				size;
-	lint						data;
-	lint						value;
+	int							data;
+	int							value;
 }								t_arg;
 
 typedef struct					s_op
@@ -206,9 +206,10 @@ void		get_proc_cycle(t_proc *proc, unsigned char *mem);
 
 void		print_memory(unsigned char *mem, unsigned int size);
 void		print_champions(t_champion *tab);
-void		print_bits(unsigned int nb, int i);
+void		print_bits(unsigned int x);
 void		print_args(t_arg args[MAX_ARGS_NUMBER],
-			unsigned int arg_number, unsigned char long_inst);
+			unsigned int arg_number, unsigned char long_inst,
+			unsigned char dest);
 void		print_procs(t_vm *vm, t_list *lst, unsigned char print_reg);
 
 

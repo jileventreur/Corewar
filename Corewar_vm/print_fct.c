@@ -63,20 +63,53 @@ void	print_procs(t_vm *vm, t_list *lst, unsigned char print_reg)
 		printf("\t\tlife is %s\n", p->life ? "OK" : "DEAD");
 		printf("\t\tlast life is %lld\n", p->last_live);
 		printf("\t------------------------------\n");
-		lst = lst->next;
+
+void	print_vm(t_vm *vm)
+{		lst = lst->next;
 	}
 	printf("--------------------------------------------------\n");
 }
 
 void	print_bits(unsigned int nb, int i)
 {
-	if (!i)
-		return ;
-	print_bits(nb >> 1, i - 1);
-	printf("%c%c", nb % 2 ? '1' : '0', i == sizeof(char) * 8 ? '\n' : 0);
+	int	i2; 
+	for(i=(sizeof(int)*8)-1; i>=0; i--)
+		(x&(1u<<i))?putchar('1'):putchar('0');
+	printf("\n");
 }
 
-void	print_vm(t_vm *vm)
+	unsigned int 	i;
+	unsigned char	c;
+	// char	pc_color[10];
+
+	i = 0;
+	// ft_putstr(CLEAR_SCREEN);
+	// ft_strcpy(color, "\033[31;1m");
+	// printf("COLOR == %c\n", color[3]);
+	while (i < MEM_SIZE)
+	// while (i < 5)
+	{
+		c = vm->mem[i];
+	// ft_strcpy(color, "\033[30;40m");
+	// color[6] = '0' + (0b11 & vm->proc_mem[i]);
+		// printf("COLOR == %c\n", color[2]);
+		// exit(1);
+		// if (ISACTIV(vm->proc_mem[i], 2))
+		// 	ft_printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : pc_color, c,
+		// 	(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
+		// else
+		if (i % BYTE_LINE_NB == 0)
+			printf("0x%.4x : ", i);
+		printf("%2.2x ", c);
+		if (((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1))
+			printf("\n");
+		++i;
+	}
+	// ft_printf("\n");
+	// exit(1);
+}
+
+void	my_print_vm(t_vm *vm)
 {
 	unsigned int 	i;
 	unsigned char	c;
@@ -111,7 +144,7 @@ void	print_vm(t_vm *vm)
 		// 	ft_printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : pc_color, c,
 		// 	(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
 		// else
-		ft_printf("%s%2.2x\033[0m%c%c", vm->proc_mem[i] == 0 ? "" : color, c,
+		printf("%s%2.2x\033[0m%c%c", vm->proc_mem[i] == 0 ? "" : color, c,
 		(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
 		++i;
 	}

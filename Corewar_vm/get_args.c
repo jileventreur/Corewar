@@ -50,7 +50,7 @@ static int		get_arg_value(t_vm *vm, t_proc *proc, t_arg *args, unsigned char lon
 		// printf("jai rien a foutre la\n");
 		if ((unsigned)args->data - 1 > 15)
 			return (0);
-		args->value = REG(args->data - 1);
+		args->value = REG(args->data);
 	}
 	else if (args->type == DIR_CODE)
 		args->value = args->data;

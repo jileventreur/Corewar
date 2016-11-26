@@ -55,14 +55,15 @@ void		exec_procs(t_vm *vm)
 {
 	t_list	*tmp;
 	t_proc	*p;
-	
+
 	tmp = vm->plst;
 	// printf("ici\n");
+	int i = 0;
 	while (tmp)
 	{
 		p = (t_proc *)tmp->content;
 		// printf("p->cycle_to_wait == %d\n", p->cycle_to_wait);
-		if (p->cycle_to_wait == 0)
+		if (--p->cycle_to_wait <= 0)
 		{
 			instruction_manager(vm, p);
 			// p->pc += 7;
@@ -71,10 +72,13 @@ void		exec_procs(t_vm *vm)
 			get_proc_cycle(p, vm->mem);
 			// print_procs(vm, vm->plst, 0);
 		}
-		else
-			--p->cycle_to_wait;
 		tmp = tmp->next;
-		// printf("loop\n");
+		// if (i == 1)
+		// {
+		// 	print_procs(vm, vm->plst, 0);
+		// 	exit(1);
+		// }
+		++i;
 	}
 }
 
@@ -94,6 +98,8 @@ void	exec_vm(t_vm *vm)
 	while (vm->plst)
 	{
 		// printf("la\n");
+		if (ISACTIV(vm->opt.v, 1))
+			printf("It is now cycle %lld\n", vm->total_cycle);
 		if (vm->opt.d == vm->total_cycle)
 		{
 			print_vm(vm);
@@ -101,11 +107,10 @@ void	exec_vm(t_vm *vm)
 		}
 		if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
 			print_vm(vm);
-		if (ISACTIV(vm->opt.v, 1))
-			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		// printf("pas la\n");
 		checks_and_destroy(vm);
+		++vm->total_cycle;
 	}
-	ft_printf("Constestant %u, \"%s\", has won !\n", vm->last_live + 1, vm->c[vm->last_live].header.prog_name);
+	printf("Contestant %u, \"%s\", has won !\n", -vm->last_live, vm->c[-vm->last_live - 1].header.prog_name);
 }

@@ -24,7 +24,7 @@ static void			epur_proc(t_vm *vm, t_list **lst)
 		else
 		{
 			if (ISACTIV(vm->opt.v, 3))
-				ft_printf("Process %u hasn't lived for %lld cycles (CTD %lld)\n", p->proc_num, 
+				printf("Process %u hasn't lived for %lld cycles (CTD %lld)\n", p->proc_num, 
 				vm->total_cycle - p->last_live, vm->ctd);
 			tmp = cur->next;
 			free(cur->content);
@@ -42,22 +42,32 @@ static void			epur_proc(t_vm *vm, t_list **lst)
 
 void	checks_and_destroy(t_vm *vm)
 {
-	++vm->total_cycle;
-	if (vm->next_live_check-- > 0)		
+	if (--vm->next_live_check > 0)
 		return ;
-	// ft_printf("next_live_check = %u\n", vm->next_live_check);
+	// if (vm->total_cycle == 26494)
+	// {
+	// 	printf("next_live_check = %u\n", vm->next_live_check);
+	// 	printf("live_num = %u\n", vm->live_num);
+	// 	printf("last_ctd_dec == %u\n", vm->last_ctd_dec);
+	// 	exit(1);
+	// }
 	if (vm->live_num >= NBR_LIVE || vm->last_ctd_dec == MAX_CHECKS)
 	{
 	 	vm->ctd -= CYCLE_DELTA;
-		vm->last_ctd_dec = 0;
+		vm->last_ctd_dec = 1;
+		// printf("HEY! vm->ctd = %lld\n", vm->ctd);
+		// printf("Cycle = %lld\n", vm->total_cycle);
+		// exit(1);
+		if (ISACTIV(vm->opt.v, 1))
+			printf("Cycle to die is now %lld\n", vm->ctd);
 	}
 	else
 		++vm->last_ctd_dec;
-	if (ISACTIV(vm->opt.v, 1))
-		ft_printf("Cycle to die is now %lld\n", vm->ctd);
 	vm->next_live_check = vm->ctd;
 	vm->live_num = 0;
 	epur_proc(vm, &vm->plst);
+	// printf("next_live_check = %u\n", vm->next_live_check);
+	// exit(1);
 	// exit(1);
 	
 }
