@@ -41,8 +41,18 @@ void	print_champions(t_champion *tab)
 	}
 }
 
+void	print_bits(unsigned int x)
+{
+	int	i;
+	for(i=(sizeof(int)*8)-1; i>=0; i--)
+		(x&(1u<<i))?putchar('1'):putchar('0');
+	printf("\n");
+}
+
 void	print_procs(t_vm *vm, t_list *lst, unsigned char print_reg)
 {
+	extern t_op			op_tab[INSTR_NUMBER + 1];
+
 	t_proc	*p;
 	int		i;
 
@@ -58,26 +68,18 @@ void	print_procs(t_vm *vm, t_list *lst, unsigned char print_reg)
 			++i;
 		}
 		printf("\t\tpc -> %d [%.2x]\n", p->pc, vm->mem[p->pc]);
-		printf("\t\tnext inst in %d cycle\n", p->cycle_to_wait);
+		printf("\t\tnext inst in %d cycle is %s\n", p->cycle_to_wait, (p->inst < INSTR_NUMBER ) ? op_tab[p->inst].name : "NULL");
 		printf("\t\tcarry %s\n",  p->carry ? "ON" : "OFF");
 		printf("\t\tlife is %s\n", p->life ? "OK" : "DEAD");
 		printf("\t\tlast life is %lld\n", p->last_live);
 		printf("\t------------------------------\n");
-
-void	print_vm(t_vm *vm)
-{		lst = lst->next;
+		lst = lst->next;
 	}
 	printf("--------------------------------------------------\n");
 }
 
-void	print_bits(unsigned int nb, int i)
+void	print_vm(t_vm *vm)
 {
-	int	i2; 
-	for(i=(sizeof(int)*8)-1; i>=0; i--)
-		(x&(1u<<i))?putchar('1'):putchar('0');
-	printf("\n");
-}
-
 	unsigned int 	i;
 	unsigned char	c;
 	// char	pc_color[10];

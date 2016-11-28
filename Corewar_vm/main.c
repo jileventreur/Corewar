@@ -110,7 +110,7 @@ void	introducing_contestants(t_champion *c)
 	int		i;
 
 	i = -1;
-	ft_putstr("Introducing contestants...\n");
+	printf("Introducing contestants...\n");
 	while (++i < MAX_PLAYERS)
 	{
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))

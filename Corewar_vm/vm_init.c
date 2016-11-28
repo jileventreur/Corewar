@@ -6,7 +6,6 @@ static void		mem_init(unsigned char mem[MEM_SIZE], unsigned char proc_mem[MEM_SI
 
 	i = -1;
 	ft_bzero(mem, MEM_SIZE);
-	// (void)proc_mem;
 	ft_bzero(proc_mem, MEM_SIZE);
 	while (++i < MAX_PLAYERS)
 	{
@@ -48,7 +47,6 @@ static t_list	*proc_init(t_champion *c, int player_number)
 		*(int *)(tmp.reg[0]) = c[i].num * -1; // a voir si on laisse en -num ou pas
 		tmp.player_num = c[i].num;
 		tmp.proc_num = ++player_cpt;
-		// ft_printf("tmp.reg[0] == %d\n", *(int *)tmp.reg[0]);
 		ft_lstadd(&lst, ft_lstnew(&tmp, sizeof(t_proc)));
 	}
 	return (lst);
@@ -144,24 +142,16 @@ void			get_opt(char ***argv_source, int *argc, t_opt *opt)
 	}
 	*argv_source = argv;
 	*argc -= i;
-	// print_opt(opt);
-	// exit (1);
-	// printf("argv == %s sec == %c\n", *argv, *(*argv + 1));
-	// (void)**argv; (void)*argc, (void)*opt;
 }
 
 void			vm_init(t_vm *vm, int argc, char **argv)
 {
-	// t_champion		c[MAX_PLAYERS];
-	// t_list			*lst;
-	// unsigned char	mem[MEM_SIZE];
 	int		player_number;
 	int		i;
 
 	i = MAX_PLAYERS -1;
 	ft_bzero(vm, sizeof(t_vm));
 	get_opt(&argv, &argc, &vm->opt);
-	// printf("argv == %s argc == %d\n", *argv, argc);
 	if ((player_number = get_players(argv, argc, vm->c)) == 0)
 		ft_error_exit("Error: No champion\n");
 	vm->plst = proc_init(vm->c, player_number);
@@ -169,14 +159,12 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	proc_cycle_init(vm->plst, vm->mem);
 	vm->ctd = CYCLE_TO_DIE;
 	vm->live_num = 0; // could be rm 
-	vm->total_cycle = 1; // could be rm
-	vm->last_ctd_dec = 1; // could be rm
+	vm->total_cycle = 1;
+	vm->last_ctd_dec = 1;
 	vm->next_live_check = CYCLE_TO_DIE;
 	vm->list_len = player_number;
 	while (ft_memisset(&vm->c[i], sizeof(t_champion), 0))
 	--i;
-	vm->last_live = i;
+	vm->last_live = -(i + 1);
 	max_arg_size_init(vm);
-	// print_memory(vm->proc_mem, MEM_SIZE);
-	// print_memory((unsigned char *)vm->max_arg_size, 17 * 4);
 }

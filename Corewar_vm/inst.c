@@ -176,7 +176,6 @@ void		my_zjmp(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
 
-	// print_vm(vm);
 	if (ISACTIV(vm->opt.v, 2))
 	{
 		printf("P%5d | zjmp ", proc->proc_num);
@@ -192,7 +191,6 @@ void		my_zjmp(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	else
 		moove_pc(vm, proc, args[0].size + 1);
 	(void)vm;(void)proc;(void)args;
-	// exit(1);
 }
 
 void		my_aff(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
@@ -310,7 +308,7 @@ void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 		proc->pc + ((short int)(args[1].data) % IDX_MOD), REG_SIZE);
 	if (ISACTIV(vm->opt.v, 2))
 	{
-		printf("P%5d | st r%d %d", proc->proc_num, args[0].data, args[1].data);
+		printf("P%5d | st r%d %d", proc->proc_num, args[0].data, (short int)args[1].data);
 		// print_args(args, op_tab[ST].param_number, 1);
 		printf("\n");
 	}
@@ -329,8 +327,8 @@ void	 	my_lldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	{
 		printf("P%5d | lldi ", proc->proc_num);
 		print_args(args, op_tab[LLDI].param_number, op_tab[LLDI].long_inst, 2);
-		printf("\n       | -> load from %d + %d = %d (with pc %d)\n", (int)args[0].value, 
-		(int)args[1].value, (int)args[0].value + (int)args[1].value, proc->pc + (((int)args[0].value + (int)args[1].value)));
+		printf("\n       | -> load from %d + %d = %d (with pc %d)\n", args[0].value, 
+		args[1].value, args[0].value + args[1].value, proc->pc + ((args[0].value + args[1].value)));
 	}
 	REG(args[2].data) = get_arg_data(vm->mem,
 	proc->pc + ((args[0].value + args[1].value)), REG_SIZE); // same as ldi without idx_mod
@@ -342,15 +340,18 @@ void		my_ldi(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	extern t_op			op_tab[INSTR_NUMBER + 1];
 
-		if (ISACTIV(vm->opt.v, 2))
-		{
-			printf("P%5d | ldi ", proc->proc_num);
-			print_args(args, op_tab[LDI].param_number, op_tab[LDI].long_inst, 2);
-			printf("\n       | -> load from %d + %d = %d (with pc and mod %d)\n", (int)args[0].value, 
-			(int)args[1].value, (int)args[0].value + (int)args[1].value, proc->pc + (((int)args[0].value + (int)args[1].value) % IDX_MOD));
-		}
+	if (ISACTIV(vm->opt.v, 2))
+	{
+		printf("P%5d | ldi ", proc->proc_num);
+		print_args(args, op_tab[LDI].param_number, op_tab[LDI].long_inst, 2);
+		printf("\n       | -> load from %d + %d = %d (with pc and mod %d)\n", args[0].value, 
+		args[1].value, args[0].value + args[1].value, proc->pc + ((args[0].value + args[1].value) % IDX_MOD));
+		// printf("args[0] == %d\n", args[0].value);
+		// printf("args[0].size == %d\n", args[0].size);
+	}
 	REG(args[2].data) = get_arg_data(vm->mem,
 	proc->pc + ((args[0].value + args[1].value) % IDX_MOD), REG_SIZE);
 	moove_pc(vm, proc, args[0].size + args[1].size + args[2].size + 2);
+	// exit(1);
 	(void)vm;(void)proc;(void)args;
 }

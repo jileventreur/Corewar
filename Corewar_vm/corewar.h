@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op.h                                               :+:      :+:    :+:   */
+/*   corewar.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2013/11/06 14:21:46 by zaz              ###   ########.fr       */
+/*   Updated: 2016/11/28 06:16:45 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 
 #define BSWAP_32(num) (((num>>24)&0xff) | ((num<<8)&0xff0000) | ((num>>8)&0xff00) | ((num<<24)&0xff000000))
 #define BSWAP_16(num) ((num>>8) | (num<<8))
@@ -40,7 +41,7 @@ typedef enum					e_type_code
 
 #define MAX_ARGS_NUMBER			4
 #define MAX_PLAYERS				4
-#define MEM_SIZE				(4*1024)
+#define MEM_SIZE				(4*1024) // 4096
 #define IDX_MOD					(MEM_SIZE / 8) // 512
 #define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
 #define INSTR_NUMBER			16
@@ -146,6 +147,7 @@ typedef	struct					s_proc
 	unsigned int				player_num;
 	unsigned int				proc_num;
 	unsigned int				cycle_to_wait;
+	unsigned char				inst;
 }								t_proc;
 
 typedef	struct					s_vm
@@ -215,6 +217,7 @@ void		print_procs(t_vm *vm, t_list *lst, unsigned char print_reg);
 
 void		null_instr(t_vm *vm, t_proc *, t_arg args[MAX_ARGS_NUMBER]);
 
+void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value);
 void		my_live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		my_ld(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
 void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER]);
