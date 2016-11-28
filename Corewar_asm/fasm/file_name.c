@@ -11,18 +11,47 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
 
-int	main(int argc, char **argv)
+char	*file_name(char *file)
 {
-	int fd;
+	char	*cpy;
+	int		i;
 
-	if (argc != 2)
-		exit_with_message("Only one argument.");
-	fd = open(argv[1], O_RDWR);
-	if (fd <= 0)
-		exit_with_message("Problème fd");
-	checking_file(argv[1], fd);
-	close(fd);
-	return (1);
+	i = 0;
+	cpy = ft_strnew(ft_strlen(file) + 3);
+	while (file[i])
+	{
+		cpy[i] = file[i];
+		++i;
+	}
+	cpy[i - 1] = 'c';
+	cpy[i] = 'o';
+	cpy[i + 1] = 'r';
+	return (cpy);
+}
+
+int		check_file_name(char *file)
+{
+	int i;
+
+	i = 0;
+	while (file[i])
+		++i;
+	if (i >= 3 && file[i - 1] == 's' && file[i - 2] == '.')
+		return (1);
+	return (-1);
+}
+
+void	new_file(char *file, t_content *list, t_header *header)
+{
+	int		new_fd;
+	char	*str;
+
+	str = file_name(file);
+	new_fd = open(str, O_CREAT | O_WRONLY, S_IRUSR |\
+	S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+	print_all(list, new_fd, header);
+	ft_printf("Writing a %s file\n", str);
+	free(str);
+	close(new_fd);
 }

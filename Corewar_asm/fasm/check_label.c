@@ -1,11 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: darabi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/11/30 19:25:25 by darabi            #+#    #+#             */
+/*   Updated: 2015/12/11 16:22:55 by darabi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 
-void		copy_label(t_content **list, char **label)
+void			copy_label(t_content **list, char **label)
 {
 	int i;
 
 	i = 0;
-		printf("copy\n");
 	if (!label || !(label[0]) || !(label[0][0]))
 	{
 		(*list)->label = NULL;
@@ -23,7 +34,7 @@ void		copy_label(t_content **list, char **label)
 	(*list)->label[i] = NULL;
 }
 
-t_content *only_label(char **tab)
+t_content		*only_label(char **tab)
 {
 	t_content *new_c;
 
@@ -42,11 +53,10 @@ t_content *only_label(char **tab)
 	return (new_c);
 }
 
-// ajoute le label au chaînon
-char	*add_label(char *str, int i)
+char			*add_label(char *str, int i)
 {
-	int j;
-	char *label;
+	int		j;
+	char	*label;
 
 	label = malloc((1 + ft_strlen(str)) * sizeof(char));
 	j = 0;
@@ -59,8 +69,7 @@ char	*add_label(char *str, int i)
 	return (label);
 }
 
-//La lettre fait partie des label_chars
-int one_of(char c)
+int				one_of(char c)
 {
 	int i;
 
@@ -74,7 +83,7 @@ int one_of(char c)
 	return (0);
 }
 
-char 	*check_label(char *str, int *i)
+char			*check_label(char *str, int *i)
 {
 	while (one_of(str[*i]))
 		++*i;
@@ -82,7 +91,7 @@ char 	*check_label(char *str, int *i)
 	{
 		++*i;
 		return (add_label(str, *i));
-	}	
+	}
 	else
 	{
 		*i = 0;

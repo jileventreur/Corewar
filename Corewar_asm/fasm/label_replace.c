@@ -1,29 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: darabi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/11/30 19:25:25 by darabi            #+#    #+#             */
+/*   Updated: 2015/12/11 16:22:55 by darabi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
 
-int		nb_octet(t_content *list)
-{
-	int i;
-	int nb;
-
-	i = 0;
-	nb = 1;
-	if (!list->type[0])
-		return (0);
-	if (list->instruct == 1)
-		return (5);
-	if (list->instruct == 12 || list->instruct == 9 || list->instruct == 1)
-		;
-	else
-		++nb;
-		while (list->type[i] && i != 3)
-	{
-		nb = nb + list->type[i] - '0';
-		++i;
-	}
-	return (nb);
-}
-
-int		to_label_octet(t_content *list, int j, int count)
+int					to_label_octet(t_content *list, int j, int count)
 {
 	int sum;
 
@@ -37,7 +26,7 @@ int		to_label_octet(t_content *list, int j, int count)
 	return (sum);
 }
 
-int 	in_a_array(char *str, char **tab)
+int					in_a_array(char *str, char **tab)
 {
 	int i;
 
@@ -51,7 +40,7 @@ int 	in_a_array(char *str, char **tab)
 	return (0);
 }
 
-int		to_label(t_content *list, char *label, int total)
+int					to_label(t_content *list, char *label, int total)
 {
 	int sum;
 
@@ -63,48 +52,48 @@ int		to_label(t_content *list, char *label, int total)
 	}
 	if (!list)
 		return (total);
-		//exit_with_message("Problème label inexistant");
 	return (sum);
 }
 
-int		looking_for(t_content **list, int i, t_content *start, int j)
+int					looking_for(t_content **list, int i,\
+					t_content *start, int j)
 {
 	int count;
 	int total;
 
 	total = 0;
 	count = 0;
-	printf("ON CHERCHE %s\n", (*list)->label_octet[i]);
 	while (start)
 	{
-		if (start->label && in_a_array((*list)->label_octet[i], start->label) == 1)
+		if (start->label &&\
+		in_a_array((*list)->label_octet[i], start->label) == 1)
 			return (to_label_octet(start, j, count));
 		else if (j == count)
-			return(to_label(start, start->label_octet[i], total));
+			return (to_label(start, start->label_octet[i], total));
 		total = total - nb_octet(*list);
 		start = start->next;
 		++count;
 	}
 	return (0);
 }
-int		label_replace(t_content **list, t_content *begin)
+
+int					label_replace(t_content **list, t_content *begin)
 {
-	int i;
-	int j;
+	t_content	*start;
+	int			i;
+	int			j;
 
 	j = 0;
-	t_content *start;
-
 	if (!*list)
 		exit_with_message("Empty file");
-	start = (begin->next)->next;
+	start = begin;
 	while (*list)
 	{
 		i = 0;
-		while (i < 3 && (*list)->type && (*list)->type[i])
+		while (i < 3 && (*list)->type[i])
 		{
 			if ((*list)->label_octet[i])
-				(*list)->arg[i] = looking_for(list, i, start, j - 2);
+				(*list)->arg[i] = looking_for(list, i, start, j);
 			++i;
 		}
 		++j;

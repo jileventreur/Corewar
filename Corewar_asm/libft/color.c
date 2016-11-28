@@ -89,8 +89,6 @@ char			*color_test(const char *format, int *i, char **arg)
 		return (ft_strdup_color("\033[34m", arg));
 	if (ft_strcmp("purple", *arg) == 0)
 		return (ft_strdup_color("\033[35m", arg));
-	if (ft_strcmp("white", *arg) == 0)
-		return (ft_strdup_color("\033[37m", arg));
 	return (color_test_second(format, i, arg));
 }
 

@@ -11,18 +11,41 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
 
-int	main(int argc, char **argv)
+char		*another_loop_comment(char **str, char **line, int fd)
 {
-	int fd;
+	if (get_next_line(fd, line) <= 0)
+		exit_with_message("Comment problem");
+	*str = realloc(*str, (3 + ft_strlen(*line) +\
+	ft_strlen(*str)) * sizeof(char));
+	ft_strcat(*str, "\n");
+	ft_strcat(*str, *line);
+	free(*line);
+	return (check_the_comment(str, 0, 0, fd));
+}
 
-	if (argc != 2)
-		exit_with_message("Only one argument.");
-	fd = open(argv[1], O_RDWR);
-	if (fd <= 0)
-		exit_with_message("Problème fd");
-	checking_file(argv[1], fd);
-	close(fd);
-	return (1);
+char		*check_the_comment(char **str, int i, int j, int fd)
+{
+	char *cmp;
+	char *line;
+
+	cmp = COMMENT_CMD_STRING;
+	starting_cmp(*str, cmp, &i, &j);
+	if (!cmp[j] && (*str)[i])
+	{
+		while ((*str)[i] == ' ' || (*str)[i] == '\t')
+			++i;
+		if ((*str)[i++] == '\"')
+		{
+			while ((*str)[i] && (*str)[i] != '\"')
+				++i;
+			if (!(*str)[i])
+			{
+				return (another_loop_comment(str, &line, fd));
+			}
+			if (good_len(*str, COMMENT_LENGTH, 2))
+				return (*str);
+		}
+	}
+	return (NULL);
 }

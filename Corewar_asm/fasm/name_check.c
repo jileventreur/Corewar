@@ -1,5 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: darabi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/11/30 19:25:25 by darabi            #+#    #+#             */
+/*   Updated: 2015/12/11 16:22:55 by darabi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "asm.h"
-int good_len(char *str, int len)
+
+int			good_len(char *str, int len, int ind)
 {
 	int i;
 	int count;
@@ -16,79 +29,68 @@ int good_len(char *str, int len)
 	}
 	if (count <= len)
 		return (1);
+	if (ind == 1)
+		exit_with_message("Bad name's length");
+	else
+		exit_with_message("Bad comment's length");
 	return (0);
 }
 
-t_content *check_the_comment (char *str)
-{	
-	char *cmp;
-	int i;
-
-	i = 0;
-	cmp = COMMENT_CMD_STRING;
-	while (cmp[i] == str[i] && str[i])
-		++i;
-	if (!cmp[i] && str[i])
-	{
-		while (str[i] == ' ' || str[i] == '\t')
-			++i;
-		if (str[i] == '\"')
-		{
-			while (str[i])
-				++i;
-			if (good_len(str, COMMENT_LENGTH))
-				return (new_content(str, 2));
-		}
-	}
-	exit_with_message("bad comment");
-	return (NULL);
-}
-
-
-//Verifier la longueur ?
-t_content	*check_the_name (char *str)
-{
-	char *cmp;
-	int i;
-
-	i = 0;
-	cmp = NAME_CMD_STRING;
-	while (cmp[i] == str[i] && str[i])
-		++i;
-	if (!cmp[i] && str[i])
-	{
-		while (str[i] == ' ' || str[i] == '\t')
-			++i;
-		if (str[i] == '\"')
-		{
-		while (str[i])
-			++i;
-		if (good_len(str, PROG_NAME_LENGTH) == 1)
-			return (new_content(str, 1));
-		}
-	}
-	exit_with_message("bad title");
-	return (NULL);
-}
-
-
-//Verifie si la ligne est vide OU si c'est un commentaire - decremente count pour le title  et commentaire
-int 	check_blank_line(char *str, int *count)
+int			check_blank_line(char *str)
 {
 	int i;
 
 	i = 0;
-	if (str[0] == COMMENT_CHAR)
-	{
-		--*count;
-		return (1);
-	}
 	while (str[i] == '\t' || str[i] == ' ')
 		++i;
-	if (!str[i])
-	{
-		--*count;
+	if (!str[i] || str[i] == COMMENT_CHAR || str[i] == AFTER_COMMENT)
 		return (1);
-	}
 	return (0);
+}
+
+void		starting_cmp(char *str, char *cmp, int *i, int *j)
+{
+	while (str[*i] && ft_isspace(str[*i]))
+		++*i;
+	while (cmp[*j] == str[*i] && str[*i])
+	{
+		++*j;
+		++*i;
+	}
+}
+
+char		*another_loop_name(char **str, char **line, int fd)
+{
+	if (get_next_line(fd, line) <= 0)
+		exit_with_message("Name problem");
+	*str = realloc(*str, (3 + ft_strlen(*line) +\
+	ft_strlen(*str)) * sizeof(char));
+	ft_strcat(*str, "\n");
+	ft_strcat(*str, *line);
+	free(*line);
+	return (check_the_name(str, 0, 0, fd));
+}
+
+char		*check_the_name(char **str, int i, int j, int fd)
+{
+	char *cmp;
+	char *line;
+
+	cmp = NAME_CMD_STRING;
+	starting_cmp(*str, cmp, &i, &j);
+	if (!cmp[j] && (*str)[i])
+	{
+		while ((*str)[i] == ' ' || (*str)[i] == '\t')
+			++i;
+		if ((*str)[i++] == '\"')
+		{
+			while ((*str)[i] && (*str)[i] != '\"')
+				++i;
+			if (!(*str)[i])
+				return (another_loop_name(str, &line, fd));
+			if (good_len(*str, PROG_NAME_LENGTH, 1) == 1)
+				return (*str);
+		}
+	}
+	return (NULL);
 }

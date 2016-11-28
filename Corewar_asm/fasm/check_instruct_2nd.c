@@ -11,18 +11,39 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
 
-int	main(int argc, char **argv)
+int		is_it_good(char c, int mask)
 {
-	int fd;
+	if (mask == 0 || !c)
+		return (0);
+	if (c == 'r' && (mask & T_REG))
+		return (REG_SIZE);
+	if (c == '%' && (mask & T_DIR))
+		return (DIR_SIZE);
+	if (c != 'r' && c != '%' && (mask & T_IND))
+		return (IND_SIZE);
+	return (-1);
+}
 
-	if (argc != 2)
-		exit_with_message("Only one argument.");
-	fd = open(argv[1], O_RDWR);
-	if (fd <= 0)
-		exit_with_message("Problème fd");
-	checking_file(argv[1], fd);
-	close(fd);
-	return (1);
+char	update_octet(unsigned char octet, int j, char c, t_content **list)
+{
+	if (j > 0)
+		octet = octet << 2;
+	if (c == '%')
+	{
+		octet = octet + DIR_CODE;
+		(*list)->type[j] = '0' + DIR_SIZE;
+	}
+	else if (c == 'r')
+	{
+		octet = octet + REG_CODE;
+		(*list)->type[j] = '0' + T_REG;
+	}
+	else
+	{
+		octet = octet + IND_CODE;
+		(*list)->type[j] = '0' + IND_SIZE;
+	}
+	(*list)->type[j + 1] = 0;
+	return (octet);
 }

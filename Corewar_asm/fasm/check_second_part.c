@@ -11,18 +11,47 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
 
-int	main(int argc, char **argv)
+void		rmvchar(char *str)
 {
-	int fd;
+	int i;
 
-	if (argc != 2)
-		exit_with_message("Only one argument.");
-	fd = open(argv[1], O_RDWR);
-	if (fd <= 0)
-		exit_with_message("Problème fd");
-	checking_file(argv[1], fd);
-	close(fd);
-	return (1);
+	i = 1;
+	while (str[i - 1])
+	{
+		str[i - 1] = str[i];
+		++i;
+	}
+}
+
+char		*allocate_new(char *str, int nb)
+{
+	char	*new_str;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (nb == 1)
+		new_str = ft_strnew(PROG_NAME_LENGTH + 1);
+	else
+		new_str = ft_strnew(COMMENT_LENGTH + 1);
+	while (str[i] && str[i] != '\"')
+		++i;
+	++i;
+	while (str[i] && str[i] != '\"')
+	{
+		new_str[j] = str[i];
+		++i;
+		++j;
+	}
+	return (new_str);
+}
+
+t_content	*check_this_line(char *str, int i)
+{
+	if (check_blank_line(str))
+		return (NULL);
+	return (check_instruct(str, i, 0));
+	return (NULL);
 }

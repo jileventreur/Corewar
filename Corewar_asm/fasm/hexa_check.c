@@ -12,49 +12,59 @@
 
 #include "asm.h"
 
-int				ft_isspace(char c)
+int		hexa_reg_check(char c, int value)
 {
-	if (c == ' ' || c == '\t')
+	if (c != '1')
 		return (1);
+	if (value >= 0 && value <= REG_NUMBER)
+		return (1);
+	exit_with_message("Problem with hexa REG");
 	return (0);
 }
 
-static int		dont_overflow(char *arg)
+int		good_return(int c, int mult)
 {
-	long int			nb;
-	int					sign;
-
-	sign = 1;
-	nb = 0;
-	while (ft_isspace(*arg))
-		arg++;
-	if (*arg == '+' || *arg == '-')
-		sign = (*(arg++) == '-') ? -1 : 1;
-	while (*arg && nb * sign <= INT_MAX && nb * sign >= INT_MIN)
-	{
-		nb = nb * 10 + *arg - '0';
-		arg++;
-	}
-	return (nb * sign <= INT_MAX && nb * sign >= INT_MIN);
+	if (c >= '0' && c <= '9')
+		return ((c - '0') * mult);
+	if (c >= 'A' && c <= 'F')
+		return ((c - 'A' + 10) * mult);
+	if (c >= 'a' && c <= 'f')
+		return ((c - 'a' + 10) * mult);
+	exit_with_message("Bad character");
+	return (0);
 }
 
-int				ft_strisint(char *arg)
+int		hexa_atoi(char *str)
 {
+	int count;
+	int mult;
+	int j;
 	int i;
 
 	i = 0;
-	if (!arg[i])
-		return (0);
-	while (ft_isspace(arg[i]))
-		i++;
-	if (arg[i] == '+' || arg[i] == '-')
-		i++;
-	while (arg[i])
+	mult = 1;
+	if (str[1] == '-' || str[i] == '+')
 	{
-		if (!ft_isdigit(arg[i]))
-			return (0);
-		i++;
+		if (str[1] == '-')
+			mult = -1;
+		i = 1;
 	}
-	return (1);
-	return (dont_overflow(arg));
+	count = 0;
+	j = ft_strlen(str) - 1;
+	while (j != i)
+	{
+		count = good_return(str[j], mult) + count;
+		mult = mult * 16;
+		--j;
+	}
+	ft_printf("{green}%s{eoc} {red}%d{eoc}\n", str, count);
+	return (count);
+}
+
+int		check_arg_hexa(int j, char **cpy, t_content **list, int count)
+{
+	j = hexa_atoi(*cpy);
+	hexa_reg_check((*list)->type[count], j);
+	free(*cpy);
+	return (j);
 }

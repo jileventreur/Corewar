@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_memdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: darabi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/01 13:48:44 by darabi            #+#    #+#             */
-/*   Updated: 2015/12/01 17:24:26 by darabi           ###   ########.fr       */
+/*   Created: 2015/11/30 19:25:25 by darabi            #+#    #+#             */
+/*   Updated: 2015/12/11 16:22:55 by darabi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "asm.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+unsigned int		nb_octet(t_content *list)
 {
-	char	*mix;
-	int		i1;
-	int		i2;
+	unsigned int i;
+	unsigned int nb;
 
-	i1 = 0;
-	mix = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!mix)
-		return (NULL);
-	while (s1[i1])
+	i = 0;
+	nb = 1;
+	if (!list->type[0])
+		return (0);
+	if (list->instruct == 1)
+		return (5);
+	if (list->instruct == 12 || list->instruct == 9 ||\
+	list->instruct == 1 || list->instruct == 15)
+		;
+	else
+		++nb;
+	while (list->type[i] && i != 3)
 	{
-		mix[i1] = s1[i1];
-		i1++;
+		nb = nb + list->type[i] - '0';
+		++i;
 	}
-	i2 = 0;
-	while (s2[i2])
-	{
-		mix[i1] = s2[i2];
-		i1++;
-		i2++;
-	}
-	mix[i1] = '\0';
-	return (mix);
+	return (nb);
 }

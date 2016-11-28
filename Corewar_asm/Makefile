@@ -11,7 +11,16 @@ SRC =	fasm/main.c\
 		fasm/ft_strisuint.c\
 		fasm/label_replace.c\
 		fasm/name_check.c\
-		fasm/print_it.c
+		fasm/print_it.c\
+		fasm/header_init.c\
+		fasm/check_second_part.c\
+		fasm/file_name.c\
+		fasm/good_check.c\
+		fasm/check_instruct_2nd.c\
+		fasm/comment_check.c\
+		fasm/hexa_check.c\
+		fasm/nb_octet.c\
+		fasm/op.c\
 
 OBJ = $(SRC:.c=.o)
 
@@ -21,10 +30,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft
-	gcc -o $(NAME) $(OBJ) -L libft -lft
+	gcc $(GCCF) -o $(NAME) $(OBJ) -L libft -lft
 
 %.o: %.c libft/libft.h
-	gcc -c -I libft $< -o $@
+	gcc $(GCCF) -c -I libft $< -o $@
 
 .PHONY: clean fclean re
 
