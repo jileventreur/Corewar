@@ -83,6 +83,7 @@ void	exec_vm(t_vm *vm)
 		checks_and_destroy(vm);
 		if (vm->opt.d == vm->total_cycle)
 		{
+			// print_procs(vm, vm->plst, 0);
 			print_vm(vm);
 			// print_procs(vm, vm->plst, 0);
 			exit(1);

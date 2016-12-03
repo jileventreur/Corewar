@@ -66,6 +66,10 @@ static int		ocp_analyse(t_op *inst, unsigned char ocp, t_arg args[MAX_ARGS_NUMBE
 		ocp >>= 2;
 		--cpt;
 	}
+<<<<<<< HEAD
+	// printf("ocp == %d\n", ocp);
+=======
+>>>>>>> 355e5bdf229bb0ee9413993246298feed24f93a8
 	while (cpt < 42) // quick & dirty
 	{
 		args[cpt].type = ocp & 0b11;
@@ -101,7 +105,7 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 	{
 		if (args[i].type == T_REG)
 			args[i].size = T_REG;
-		else 
+		else if (args[i].type != NULL_CODE)
 			args[i].size = (args[i].type == T_DIR) ? T_DIR + dir_adr : 2;
 		args[i].data = get_arg_data(vm->mem, ptr, args[i].size);
 		valid_inst &= get_arg_value(vm, proc, args + i, inst->long_inst);

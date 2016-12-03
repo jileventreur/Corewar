@@ -184,7 +184,9 @@ void		my_zjmp(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	}
 	if (proc->carry & 0b1)
 	{
-		proc->pc = (proc->pc + args[0].value) % MEM_SIZE;
+		proc->pc = (proc->pc + (args[0].value % IDX_MOD)) % MEM_SIZE;
+		// printf("pc = %d\n", proc->pc);
+		// exit(1);
 		if (proc->pc < 0)
 			proc->pc += MEM_SIZE;
 	}

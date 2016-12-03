@@ -35,7 +35,7 @@ static void			epur_proc(t_vm *vm, t_list **lst)
 				*lst = tmp;
 			else
 				prev->next = cur;
-			--vm->list_len;
+			// --vm->list_len;
 		}
 	}
 }
@@ -51,6 +51,7 @@ void	checks_and_destroy(t_vm *vm)
 	// 	printf("last_ctd_dec == %u\n", vm->last_ctd_dec);
 	// 	exit(1);
 	// }
+	epur_proc(vm, &vm->plst);
 	if (vm->live_num >= NBR_LIVE || vm->last_ctd_dec == MAX_CHECKS)
 	{
 	 	vm->ctd -= CYCLE_DELTA;
@@ -65,7 +66,6 @@ void	checks_and_destroy(t_vm *vm)
 		++vm->last_ctd_dec;
 	vm->next_live_check = vm->ctd;
 	vm->live_num = 0;
-	epur_proc(vm, &vm->plst);
 	// printf("next_live_check = %u\n", vm->next_live_check);
 	// exit(1);
 	// exit(1);
