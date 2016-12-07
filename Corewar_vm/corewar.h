@@ -6,18 +6,8 @@
 /*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2016/12/03 13:41:01 by cadam            ###   ########.fr       */
-=======
-/*   Updated: 2016/11/28 06:16:45 by cadam            ###   ########.fr       */
->>>>>>> 355e5bdf229bb0ee9413993246298feed24f93a8
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-** Toutes les tailles sont en octets.
-** On part du principe qu'un int fait 32 bits. Est-ce vrai chez vous ?
-*/
 
 #ifndef COREWAR_H
 #define COREWAR_H

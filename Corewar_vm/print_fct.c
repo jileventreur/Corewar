@@ -67,11 +67,7 @@ void	print_procs(t_vm *vm, t_list *lst, unsigned char print_reg)
 			printf("\t\treg[%d] = %d (%#x)\n", i + 1, i, *(int *)p->reg[i]);
 			++i;
 		}
-<<<<<<< HEAD
 		printf("\t\tpc -> 0x%.4x [%.2x]\n", p->pc, vm->mem[p->pc]);
-=======
-		printf("\t\tpc -> %d [%.2x]\n", p->pc, vm->mem[p->pc]);
->>>>>>> 355e5bdf229bb0ee9413993246298feed24f93a8
 		printf("\t\tnext inst in %d cycle is %s\n", p->cycle_to_wait, (p->inst < INSTR_NUMBER ) ? op_tab[p->inst].name : "NULL");
 		printf("\t\tcarry %s\n",  p->carry ? "ON" : "OFF");
 		printf("\t\tlife is %s\n", p->life ? "OK" : "DEAD");

@@ -59,24 +59,18 @@ static int		ocp_analyse(t_op *inst, unsigned char ocp, t_arg args[MAX_ARGS_NUMBE
 
 	cpt = MAX_ARGS_NUMBER - 1;
 
-	// printf("Opcode = %d\n", ZJMP);
 	ret = 0;
 	while (cpt > inst->param_number - 1)
 	{
 		ocp >>= 2;
 		--cpt;
 	}
-<<<<<<< HEAD
-	// printf("ocp == %d\n", ocp);
-=======
->>>>>>> 355e5bdf229bb0ee9413993246298feed24f93a8
 	while (cpt < 42) // quick & dirty
 	{
 		args[cpt].type = ocp & 0b11;
 		if (!(inst->param_mask[cpt] & (1 << ((args[cpt].type) - 1))))
 		{
 			ret |= 0b1;
-			// printf("ERROR WITH ARG %u\n", cpt);
 		}
 		ocp >>= 2;
 		--cpt;
@@ -93,7 +87,6 @@ int				get_args(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER], t_op *inst)
 	
 	if (inst->ocp & 0b1 && ocp_analyse(inst, vm->mem[(proc->pc + 1) % MEM_SIZE], args))
 	{
-		// printf("YO\n");
 		valid_inst = 0;
 	}
 	else

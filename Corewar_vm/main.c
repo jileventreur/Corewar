@@ -11,7 +11,6 @@ void		my_print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number)
 	unsigned int	i;
 
 	i = 0;
-	// printf("coucou\n");
 	while (i < arg_number)
 	{
 		printf("arg[%d] data %d (0x%llx)", i, args[i].data, (unsigned long long int)args[i].data);
@@ -33,10 +32,8 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned 
 	unsigned int	i;
 
 	i = 0;
-	// printf("coucou\n");
 	while (i < arg_number)
 	{
-		// printf("args_type  = %d\n", args[i].type);
 			if ((unsigned int)args[i].type == NULL_CODE)
 				printf("NULL");
 			if ((unsigned int)args[i].type == T_REG && i == dest)
@@ -57,7 +54,6 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned 
 			if (i < arg_number)
 				printf(" ");
 	}
-	// printf("end\n");
 }
 
 
@@ -70,13 +66,10 @@ void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	(void)args;
 	while (i < 4)
 	{
-		// printf("args_type[%d] = %d\n", i, args_type[i]);
 		++i;
 	}
 	ptr = (proc->pc + 2) % MEM_SIZE;
 	test = (unsigned short int *)&vm->mem[ptr + 1];
-	// printf("test = %hx\n", *test);
-	(void)vm;
 }
 
 
@@ -87,8 +80,6 @@ void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
 	cpt = 0;
 	if (beg < 0)
 		beg += MEM_SIZE;
-
-	// printf("var == %d\n", *(int *)var);
 	if (beg + len >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
@@ -123,8 +114,6 @@ int		main(int argc, char **argv)
 {
 	t_vm	vm;
 
-	// printf("test = %x\n", (unsigned int)-1275068416);
-	// exit(1);
 	if (argc == 1)
 		ft_error_exit("Error: not enough args\n");
 	--argc;
