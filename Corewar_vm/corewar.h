@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <curses.h>
+#include "window.h"
 
 
 #define BSWAP_32(num) (((num>>24)&0xff) | ((num<<8)&0xff0000) | ((num>>8)&0xff00) | ((num<<24)&0xff000000))
@@ -160,6 +162,13 @@ typedef	struct					s_vm
 	unsigned char				max_arg_size[17][MAX_ARGS_NUMBER + 1];
 	lint						total_cycle;
 }								t_vm;
+/*
+ *     afficher couleur du joueur
+ *     pourcentage de processus par joueur
+ *     afficher total_cycle
+ *     aff next_live_check (barre chargement)
+ *     accelerer/ralentir (exec_vm.c l70)
+ */
 
 typedef struct					s_arg
 {
@@ -238,6 +247,5 @@ lint		get_arg_data(unsigned char mem[MEM_SIZE], int beg, unsigned int len);
 void		print_vm(t_vm *vm);
 
 void		exec_vm(t_vm *vm);
-
 
 #endif

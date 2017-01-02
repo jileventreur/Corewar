@@ -11,10 +11,10 @@ void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 		proc->cycle_to_wait = 1;
 	}
 	else
- 	{
+	{
 		proc->cycle_to_wait = op_tab[c].cycle;
-  	}
-  	proc->inst = c;
+	}
+	proc->inst = c;
 }
 
 void		instruction_manager(t_vm *vm, t_proc *proc)
@@ -62,11 +62,17 @@ void	exec_vm(t_vm *vm)
 		checks_and_destroy(vm);
 		if (vm->opt.d == vm->total_cycle)
 		{
-			print_vm(vm);
+			nprint_procs(vm);
 			exit(1);
 		}
+
 		if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
-			print_vm(vm);
+			nprint_procs(vm);
+		if (vm->total_cycle % 100 == 0)
+		{
+			nprint_procs(vm);
+		}
+		usleep(5000);
 		++vm->total_cycle;
 	}
 	printf("Contestant %u, \"%s\", has won !\n", -vm->last_live, vm->c[-vm->last_live - 1].header.prog_name);

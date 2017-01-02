@@ -14,11 +14,12 @@ SRC =	ft_lstadd.c \
 		check_and_destroy.c \
 		get_args.c\
 		inst.c \
-		exec_vm.c 
+		exec_vm.c \
+		window.c
 
 WFLAGS = -Wall -Werror -Wextra
 
-LFLAGS = -L libft/ -lft
+LFLAGS = -L libft/ -lft -lncurses
 
 CC = gcc -g
 
