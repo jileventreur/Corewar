@@ -82,36 +82,18 @@ void	print_vm(t_vm *vm)
 {
 	unsigned int 	i;
 	unsigned char	c;
-	// char	pc_color[10];
 
 	i = 0;
-	// ft_putstr(CLEAR_SCREEN);
-	// ft_strcpy(color, "\033[31;1m");
-	// printf("COLOR == %c\n", color[3]);
 	while (i < MEM_SIZE)
-	// while (i < 5)
 	{
 		c = vm->mem[i];
-	// ft_strcpy(color, "\033[30;40m");
-	// color[6] = '0' + (0b11 & vm->proc_mem[i]);
-		// printf("COLOR == %c\n", color[2]);
-		// exit(1);
-		// if (ISACTIV(vm->proc_mem[i], 2))
-		// 	ft_printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : pc_color, c,
-		// 	(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
-		// else
 		if (i % BYTE_LINE_NB == 0)
 			printf("0x%.4x : ", i);
-		// if ((*(t_proc *)vm->plst->content).pc == (int)i)
-		// 	printf("\33[32m%2.2x\33[0m ", c);
-		// else
 			printf("%2.2x ", c);
 		if (((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1))
 			printf("\n");
 		++i;
 	}
-	// ft_printf("\n");
-	// exit(1);
 }
 
 void	my_print_vm(t_vm *vm)
@@ -119,19 +101,12 @@ void	my_print_vm(t_vm *vm)
 	unsigned int 	i;
 	unsigned char	c;
 	char	color[10];
-	// char	pc_color[10];
 
 	i = 0;
-	// ft_putstr(CLEAR_SCREEN);
 	ft_strcpy(color, "\033[30;40m");
-	// ft_strcpy(color, "\033[31;1m");
-	// printf("COLOR == %c\n", color[3]);
 	while (i < MEM_SIZE)
-	// while (i < 5)
 	{
 		c = vm->mem[i];
-	// ft_strcpy(color, "\033[30;40m");
-	// color[6] = '0' + (0b11 & vm->proc_mem[i]);
 	if (ISACTIV(vm->proc_mem[i], 2))
 	{
 		color[6] = '0' + (0b11 & vm->proc_mem[i]);
@@ -142,19 +117,10 @@ void	my_print_vm(t_vm *vm)
 		color[3] = '0' + (0b11 & vm->proc_mem[i]);
 		color[6] = '0';		
 	}
-		// color[6] = ISACTIV(vm->proc_mem[i], 2) ? '7' : '0';
-		// printf("COLOR == %c\n", color[2]);
-		// exit(1);
-		// if (ISACTIV(vm->proc_mem[i], 2))
-		// 	ft_printf("%s%2.2x%c%c\033[0m", vm->proc_mem[i] == 0 ? "" : pc_color, c,
-		// 	(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
-		// else
 		printf("%s%2.2x\033[0m%c%c", vm->proc_mem[i] == 0 ? "" : color, c,
 		(i + 1) % 2 == 0 ? ' ' : 0, ((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1) ? '\n' : 0);
 		++i;
 	}
-	// ft_printf("\n");
-	// exit(1);
 }
 
 // void	print_procs(t_list *lst)

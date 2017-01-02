@@ -72,11 +72,9 @@ void			max_arg_size_init(t_vm *vm)
 				k >>= 1;
 			vm->max_arg_size[i][j] = k;
 			sum += k;
-			// printf("op[%d] arg[%d], max_size = %d\n", i, j, k);
 			++j;
 		}
 		vm->max_arg_size[i][MAX_ARGS_NUMBER] = sum;
-		// printf("------------------------------\n");
 		++i;
 	}
 }
