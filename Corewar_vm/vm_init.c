@@ -156,6 +156,7 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	mem_init(vm->mem, vm->proc_mem, vm->c, player_number);
 	proc_cycle_init(vm->plst, vm->mem);
 	vm->ctd = CYCLE_TO_DIE;
+	vm->procs_death_nb = 0; // could be rm 
 	vm->live_num = 0; // could be rm 
 	vm->total_cycle = 1;
 	vm->last_ctd_dec = 1;

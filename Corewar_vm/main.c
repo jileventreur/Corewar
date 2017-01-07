@@ -73,25 +73,27 @@ void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 }
 
 
-void		write_var(unsigned char *mem, unsigned char *var, lint beg, size_t len)
-{
+void		write_var(t_vm *vm, t_proc *proc, unsigned char *var, lint beg)	// UPDATE FOR GRAPHICS: now proc_mem should be update 
+{																			// during the game
 	size_t	cpt;			
 
 	cpt = 0;
 	if (beg < 0)
 		beg += MEM_SIZE;
-	if (beg + len >= MEM_SIZE)
+	if (beg + REG_SIZE >= MEM_SIZE)
 	{
 		while (beg + cpt < MEM_SIZE)
 		{
-			mem[beg + cpt] = var[len - cpt - 1];
+			vm->mem[beg + cpt] = var[REG_SIZE - cpt - 1];
+			vm->proc_mem[beg + cpt] = proc->player_num;
 			++cpt;
 		}
 		beg = -cpt;
 	}
-	while (cpt < len)
+	while (cpt < REG_SIZE)
 	{
-		mem[beg + cpt] = var[len - cpt - 1];
+		vm->mem[beg + cpt] = var[REG_SIZE - cpt - 1];
+		vm->proc_mem[beg + cpt] = proc->player_num;
 		++cpt;
 	}
 }

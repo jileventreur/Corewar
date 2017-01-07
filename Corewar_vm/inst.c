@@ -242,7 +242,7 @@ void		my_sti(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 
 	args[2].data = (short int)args[2].data;
 	i = (proc->pc + ((args[1].value + args[2].value) % IDX_MOD)) % MEM_SIZE;
-	write_var(vm->mem, (unsigned char *)&args[0].value, i, REG_SIZE); 
+	write_var(vm, proc, (unsigned char *)&args[0].value, i); 
 	if (ISACTIV(vm->opt.v, 2))
 	{
 		printf("P%5d | sti ", proc->proc_num);
@@ -261,8 +261,8 @@ void		my_st(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	if (args[1].type == T_REG)
 		REG(args[1].data) = args[0].data;
 	else
-		write_var(vm->mem, (unsigned char *)&args[0].value,
-		proc->pc + ((short int)(args[1].data) % IDX_MOD), REG_SIZE);
+		write_var(vm, proc, (unsigned char *)&args[0].value,
+		proc->pc + ((short int)(args[1].data) % IDX_MOD));
 	if (ISACTIV(vm->opt.v, 2))
 	{
 		printf("P%5d | st r%d %d", proc->proc_num, args[0].data, (short int)args[1].data);
