@@ -131,6 +131,8 @@ typedef struct					s_champion
 	t_header					header;
 	unsigned char				prog[CHAMP_MAX_SIZE + 1];
 	unsigned int				num;
+	unsigned int				procs;
+	unsigned int				mem;
 }								t_champion;
 
 typedef	struct					s_proc
@@ -153,6 +155,7 @@ typedef	struct					s_vm
 	unsigned char				proc_mem[MEM_SIZE];
 	unsigned int				list_len;
 	t_list						*plst;
+	unsigned int				n_players;
 	t_champion					c[MAX_PLAYERS];
 	lint						ctd;
 	unsigned int				procs_death_nb; // UPDATE FOR GRAPHICS: to see how many procs are dead
@@ -163,14 +166,6 @@ typedef	struct					s_vm
 	unsigned char				max_arg_size[17][MAX_ARGS_NUMBER + 1];
 	lint						total_cycle;
 }								t_vm;
-
-/*
- *     afficher couleur du joueur
- *     pourcentage de processus par joueur
- *     afficher total_cycle
- *     aff next_live_check (barre chargement)
- *     accelerer/ralentir (exec_vm.c l70)
- */
 
 typedef struct					s_arg
 {

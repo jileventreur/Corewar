@@ -162,6 +162,7 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	vm->last_ctd_dec = 1;
 	vm->next_live_check = CYCLE_TO_DIE;
 	vm->list_len = player_number;
+	vm->n_players = player_number;
 	while (ft_memisset(&vm->c[i], sizeof(t_champion), 0))
 	--i;
 	vm->last_live = -(i + 1);
