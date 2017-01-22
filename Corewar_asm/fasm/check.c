@@ -47,7 +47,7 @@ int				checking_size(t_content *list, t_header *header)
 	if ((i = total_octet(list)) <= CHAMP_MAX_SIZE)
 		(*header).prog_size = bitswap_32(i);
 	else
-		exit_with_message("Prog is too long");
+		exit_with_message("Prog is too long.");
 	return (1);
 }
 
@@ -79,7 +79,7 @@ void			checking_file(char *file, int fd)
 		line = NULL;
 	}
 	if (i < 3)
-		exit_with_message("Not enough lines");
+		exit_with_message("Not enough lines.");
 	next_to(&list, check_instruct(NULL, 1, 0));
 	label_replace(&list, list);
 	checking_size(list, &header);

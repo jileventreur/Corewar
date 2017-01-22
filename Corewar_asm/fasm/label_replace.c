@@ -85,7 +85,7 @@ int					label_replace(t_content **list, t_content *begin)
 
 	j = 0;
 	if (!*list)
-		exit_with_message("Empty file");
+		exit_with_message("Empty file.");
 	start = begin;
 	while (*list)
 	{

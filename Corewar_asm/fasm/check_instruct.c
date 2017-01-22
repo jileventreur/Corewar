@@ -60,7 +60,7 @@ int			check_good_instruct(char *str, int *i, t_op *tab)
 		++nb;
 	}
 	ft_printf("{red}%s{eoc}\n", str);
-	exit_with_message("Bad command");
+	exit_with_message("Bad command.");
 	return (1);
 }
 
