@@ -69,7 +69,7 @@ void	exec_vm(t_vm *vm)
 				endwin();
 				exit(1);
 			}
-			else if (ch == '=' && refresh_speed > 1000)
+			else if (ch == '=' && refresh_speed > 2000)
 			{
 				refresh_speed -= 100;
 			}

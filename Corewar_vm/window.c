@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/20 14:09:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/01/25 20:44:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,21 @@
  *		v
  */
 
-int			find_player(t_list *plst, int i_cell)
+void		fill_cell_player(t_list *plst, int array[][2])
 {
 	t_list	*tmp;
+	int		i;
 
+	i = 0;
 	tmp = plst;
 	while (tmp)
 	{
-		if (((t_proc *)(tmp->content))->pc == i_cell)
-			return (((t_proc *)(tmp->content))->player_num);
+		array[i][0] = ((t_proc *)(tmp->content))->pc;
+		array[i][1] = ((t_proc *)(tmp->content))->player_num;
 		tmp = tmp->next;
+		i++;
 	}
-	return (0);
+	
 }
 
 int			valid_proc_window(int *col)
@@ -40,14 +43,83 @@ int			valid_proc_window(int *col)
 
 	getmaxyx(stdscr, line, *col);
 
-//	line -= INFO_HEIGHT;
-//	col -= INFO_WIDTH;
+	line = (INFO_HEIGHT < line) ? line - INFO_HEIGHT : 0;
 	if (line * (*col) < MEM_SIZE * CELL_LEN)
 	{
-		mvprintw(line / 2, (*col) / 2, "Window too small.");
+		mvprintw(line / 2, (*col) / 2, "Window too small to print processes.");
 		return (FALSE);
 	}
 	return (TRUE);
+}
+
+int			find_player(t_vm *vm, int i_cell)
+{
+	t_list	*tmp;
+
+	tmp = vm->plst;
+	while (tmp)
+	{
+		if (((t_proc *)(tmp->content))->pc == i_cell)
+			return (((t_proc *)(tmp->content))->player_num + 10);
+		tmp = tmp->next;
+	}
+	return (vm->proc_mem[i_cell]);
+}
+
+void		nprint_procs(t_vm *vm)
+{
+	int		col;
+	int		y_max;
+	int		x_max;
+	int		board;
+//	int		cell_player[vm->list_len][2];
+	int 	i;
+	int 	j;
+	int		i_cell;
+	int		color;
+	int		new_color;
+
+	clear();
+	board = MEM_SIZE * CELL_LEN;
+	color = 0;
+	if (!valid_proc_window(&col))
+	{
+		refresh();
+		return ;
+	}
+	else
+	{
+//		fill_cell_player(vm->plst, cell_player);
+
+		if (col % CELL_LEN != 0)
+			col -= col % CELL_LEN;
+		y_max = board / col;
+		if (board % col != 0)
+			y_max++;
+		j = -1;
+		while (++j < y_max)
+		{
+			if (j == y_max - 1 && (x_max = board % col) == 0)
+				x_max = 0;
+			i = 0;
+			while (i < x_max)
+			{
+				i_cell = (j * col + i) / CELL_LEN;
+				new_color = find_player(vm, i_cell);
+				if (new_color != color)
+				{
+					wattroff(stdscr, COLOR_PAIR(color));
+					color = new_color;
+					wattron(stdscr, COLOR_PAIR(color));
+				}
+
+				mvprintw(j, i, "%02x", vm->mem[i_cell]);
+				i += CELL_LEN;
+				
+			}
+		}
+	}
+	refresh();
 }
 
 int			is_player_alive(t_list *plst, int player)
@@ -64,72 +136,43 @@ int			is_player_alive(t_list *plst, int player)
 	}
 	return (0);
 }
-
-void		nprint_procs(t_vm *vm)
-{
-	int		col;
-	int		y_max;
-	int		x_max;
-
-	static int i;
-
-	i++;
-	clear();
-	if (!valid_proc_window(&col))
-	{
-		refresh();
-		return ;
-	}
-	else
-	{
-//		col -= INFO_WIDTH;
-		if (col % CELL_LEN != 0)
-			col -= col % CELL_LEN;
-		y_max = (MEM_SIZE * CELL_LEN) / col;
-		if ((MEM_SIZE * CELL_LEN) % col != 0)
-			y_max++;
-		int j = -1;
-		while (++j < y_max)
-		{
-			if (j == y_max - 1 && (MEM_SIZE * CELL_LEN) % col != 0)
-				x_max = (MEM_SIZE * CELL_LEN) % col;
-			else
-				x_max = col;
-			int	i = 0;
-			while (i < x_max)
-			{
-				int i_cell = (j * col + i) / CELL_LEN;
-				int	color = find_player(vm->plst, i_cell);
-				if (color)
-					wattron(stdscr, COLOR_PAIR(color + 10));
-				else
-					wattron(stdscr, COLOR_PAIR(vm->proc_mem[i_cell]));
-				mvprintw(j, i, "%02x", vm->mem[i_cell]);
-				if (color)
-					wattroff(stdscr, COLOR_PAIR(color + 10));
-				else
-					wattroff(stdscr, COLOR_PAIR(vm->proc_mem[i_cell]));
-				i += CELL_LEN;
-				
-			}
-		}
-	}
-	refresh();
-}
-
 int			valid_infos_window(void)
 {
+	int		i;
 	int		col;
 	int		line;
 
+	i = -1;
 	getmaxyx(stdscr, line, col);
 	if (col < INFO_WIDTH || line < INFO_HEIGHT)
 	{
 		wresize(g_scr_infos, line, col);
-		mvwprintw(g_scr_infos, line / 2, col / 2, "Window too small.");
+		line = (INFO_HEIGHT < line) ? line - INFO_HEIGHT : 0;
+		mvwin(g_scr_infos, line, 0);
+		i = -1;
+		while (++i < col)
+			mvwprintw(g_scr_infos, 0, i, "_");
+
+		mvwprintw(g_scr_infos, INFO_HEIGHT / 2, col / 2, "Window too small to print infos.");
 		return (FALSE);
 	}
 	return (TRUE);
+}
+
+int			get_prog_max_len(t_vm * vm)
+{
+	int		i;
+	int		max;
+	int		curr_len;
+
+	i = -1;
+	max = 0;
+	while (++i < (int)vm->n_players)
+	{
+		if ((curr_len = ft_strlen(vm->c[i].header.prog_name)) > max)
+			max = curr_len;
+	}
+	return (max);
 }
 
 void		nprint_infos(t_vm *vm)
@@ -148,11 +191,12 @@ void		nprint_infos(t_vm *vm)
 		return ;
 	}
 	getmaxyx(stdscr, line, col);
-	wresize(g_scr_infos, INFO_HEIGHT, INFO_WIDTH);
+	wresize(g_scr_infos, INFO_HEIGHT, col);
+	mvwin(g_scr_infos, (line - INFO_HEIGHT) >= 0 ? line - INFO_HEIGHT : 0, 0);
 	getmaxyx(g_scr_infos, col, line);
 
 /*******************************************/
-	int		p[MAX_PLAYERS];
+	int		p[vm->n_players];
 	int		all_procs;
 
 	i = -1;
@@ -177,36 +221,40 @@ void		nprint_infos(t_vm *vm)
 	while (++i < line)
 		mvwprintw(g_scr_infos, 0, i, "_");
 
-	t_list	*tmp;
+//	t_list	*tmp;
 	int j;
 	int	procs;
+	int	prog_max_len;
+	
+	prog_max_len = get_prog_max_len(vm) + 5;
 
-	tmp = vm->plst;
-	i = 0;
+//	tmp = vm->plst;
+	i = -1;
 
-	while (++i <= (int)vm->n_players)
+	while (++i < (int)vm->n_players)
 	{
-		wattron(g_scr_infos, COLOR_PAIR(i));
-		mvwprintw(g_scr_infos, i * 2 - 1, 0, "PLAYER %d", i);
-		wattroff(g_scr_infos, COLOR_PAIR(i));
-		mvwprintw(g_scr_infos, i * 2 - 1, 9, "_ process : [");
-		procs = p[i - 1] * 20 / all_procs;
+		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 0, "%d :", i + 1);
+		wattron(g_scr_infos, COLOR_PAIR(i + 1));
+		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 4, "%s", vm->c[i].header.prog_name);
+		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
+		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, prog_max_len, "_ memory  : [");
+		procs = p[i] * 20 / all_procs;
 		j = -1;
-		wattron(g_scr_infos, COLOR_PAIR(i));
+		wattron(g_scr_infos, COLOR_PAIR(i + 1));
 		while (++j < procs)
-			mvwprintw(g_scr_infos, i * 2 - 1, 22 + j, "_");
-		wattroff(g_scr_infos, COLOR_PAIR(i));
-		mvwprintw(g_scr_infos, i * 2 - 1, 42, "] %d%%", p[i -1] * 100 / all_procs);
-		if (is_player_alive(vm->plst, i))
+			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 13 + prog_max_len	+ j, "_");
+		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
+		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 33 + prog_max_len, "] %d%%", p[i] * 100 / all_procs);
+		if (is_player_alive(vm->plst, i + 1))
 		{
 			wattron(g_scr_infos, COLOR_PAIR(2));
-			mvwprintw(g_scr_infos, i * 2 - 1, 49, " ALIVE");
+			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 40 + prog_max_len, " ALIVE");
 			wattroff(g_scr_infos, COLOR_PAIR(2));
 		}
 		else
 		{
 			wattron(g_scr_infos, COLOR_PAIR(3));
-			mvwprintw(g_scr_infos, i * 2 - 1, 49, " DEAD");
+			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 40 + prog_max_len, " DEAD");
 			wattroff(g_scr_infos, COLOR_PAIR(3));
 		}
 	}
@@ -227,8 +275,11 @@ void		nprint_infos(t_vm *vm)
 	wattroff(g_scr_infos, COLOR_PAIR(16));
 	mvwprintw(g_scr_infos, 3, line / 2 + 19 + 10, "]");
 
-
-	mvwprintw(g_scr_infos, 7, line / 2, "n_list : %d", vm->n_players);
+	i = -1;
+	while (++i < (int)(vm->n_players))
+	{
+		mvwprintw(g_scr_infos, 7, line / 2  + i * 10, "proc : %d", vm->c[i].mem);
+	}
 /*******************************************/
 
 	wrefresh(g_scr_infos);
