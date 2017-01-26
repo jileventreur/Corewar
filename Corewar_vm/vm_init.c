@@ -12,7 +12,7 @@ static void		mem_init(unsigned char mem[MEM_SIZE], unsigned char proc_mem[MEM_SI
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))
 			continue ;
 		ft_memcpy(mem, c[i].prog, c[i].header.prog_size);
-		*proc_mem = c[i].num | PC_BIT;
+		*proc_mem = c[i].num | (1u << PC_BIT);
 		ft_memset(proc_mem + 1, c[i].num, c[i].header.prog_size - 1);
 		mem += MEM_SIZE / player_number;
 		proc_mem += MEM_SIZE / player_number;
@@ -82,6 +82,7 @@ void			max_arg_size_init(t_vm *vm)
 void			print_opt(t_opt *opt)
 {
 	printf("opt->a is %s\n", opt->a ? "ON" : "OFF");
+	printf("opt->g is %s\n", opt->g ? "ON" : "OFF");
 	printf("opt->d is %d\n", opt->d);
 	printf("opt->s is %d\n", opt->s);
 	printf("opt->v is %d\n", opt->v);
@@ -105,6 +106,8 @@ void			get_opt(char ***argv_source, int *argc, t_opt *opt)
 			ft_error_exit("Error: incompatible option\n");
 		if (*(*argv + 1) == 'a' && (*(*argv + 2)) == '\0')
 			opt->a = 1;
+		else if (*(*argv + 1) == 'g' && (*(*argv + 2)) == '\0')
+			opt->g = 1;
 		else if (*(*argv + 1) == 'd' || !ft_strcmp("-dump", *argv))
 		{
 			if (i + 1 >= *argc)

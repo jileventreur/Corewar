@@ -173,7 +173,7 @@ void		nprint_infos(t_vm *vm)
 	mvwprintw(g_scr_infos, 3, line / 2, "next live check : ");
 	i = -1;
 	if (vm->next_live_check != 0)
-		next_live = (vm->next_live_check * 10) / CYCLE_TO_DIE;
+		next_live = (vm->next_live_check * 10) / vm->ctd; // ma modif
 	else
 		next_live  = 0;
 	wattron(g_scr_infos, COLOR_PAIR(17));

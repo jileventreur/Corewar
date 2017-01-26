@@ -21,6 +21,8 @@ static void			epur_proc(t_vm *vm, t_list **lst)
 		else
 		{
 			++vm->procs_death_nb;
+			--vm->c[p->player_num - 1].procs; // PROCS CPT UPDT
+			// exit(1);
 			if (ISACTIV(vm->opt.v, 3))
 				printf("Process %u hasn't lived for %lld cycles (CTD %lld)\n", p->proc_num, 
 				vm->total_cycle - p->last_live, vm->ctd);
@@ -36,6 +38,7 @@ static void			epur_proc(t_vm *vm, t_list **lst)
 		}
 	}
 }
+
 
 void	checks_and_destroy(t_vm *vm)
 {

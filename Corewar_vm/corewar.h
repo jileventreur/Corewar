@@ -60,7 +60,7 @@ typedef enum					e_type_code
 #define MAX_CHECKS				10
 
 #define BYTE_LINE_NB			64 // must be 32 for main part
-#define PC_BIT					0b100 
+#define PC_BIT					2 
 
 #define REG(num) 				(*(int *)(proc->reg[num - 1]))
 
@@ -107,11 +107,12 @@ enum 							e_instruction
 								AFF
 };
 
-#define	OPTION			"adsv"
+#define	OPTION			"adgsv"
 
 typedef struct					s_opt
 {
 	char						a;
+	char						g; // graphic option
 	int							d;
 	int							s;
 	char						v;
@@ -132,7 +133,6 @@ typedef struct					s_champion
 	unsigned char				prog[CHAMP_MAX_SIZE + 1];
 	unsigned int				num;
 	unsigned int				procs;
-	unsigned int				mem;
 }								t_champion;
 
 typedef	struct					s_proc

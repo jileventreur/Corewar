@@ -26,6 +26,8 @@ static void		get_champion(char *filename, t_champion *champ, int champ_num)
 	champ->header = *p;
 	ft_memcpy(champ->prog, buf + sizeof(t_header), ret - sizeof(t_header));
 	champ->num = champ_num + 1;
+	champ->procs = 1; // PROCS CPT UPDT
+
 }
 
 static int		create_champion(t_champion *tab, char **argv)
@@ -50,7 +52,7 @@ static int		create_champion(t_champion *tab, char **argv)
 		ft_error_exit("Error: Argument after -n is smaller than 1\n");
 	if (!ft_memisset(&tab[num], sizeof(t_champion), 0))
 		ft_error_exit("Error: Player number already taken\n");
-	get_champion(argv[2], &tab[num], num);
+	get_champion(argv[2], tab + num, num);
 	return (3);
 }
 

@@ -15,7 +15,9 @@ void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value)
 		}
 		printf("\n");
 	}
-	proc->pc += value;
+	DESACTIV_BIT(vm->proc_mem[proc->pc], PC_BIT);
+	proc->pc = (proc->pc + value) % MEM_SIZE;
+	ACTIV_BIT(vm->proc_mem[proc->pc], PC_BIT);
 }
 
 void		my_live(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
@@ -197,8 +199,8 @@ void		my_lfork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	if (new_pc < 0)
 		new_pc += MEM_SIZE;
 	((t_proc *)new->content)->pc = new_pc;
-	vm->list_len += 1;
-	((t_proc *)new->content)->proc_num = vm->list_len;
+	((t_proc *)new->content)->proc_num = ++vm->list_len;
+	++vm->c[((t_proc *)new->content)->player_num - 1].procs; // PROCS CPT UPDT
 	get_proc_cycle(new->content, vm->mem);
 	ft_lstadd(&vm->plst, new);
 	if (ISACTIV(vm->opt.v, 2))
@@ -222,8 +224,8 @@ void		my_fork(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 	if (new_pc < 0)
 		new_pc += MEM_SIZE;
 	((t_proc *)new->content)->pc = new_pc;
-	++vm->list_len;
-	((t_proc *)new->content)->proc_num = vm->list_len;
+	((t_proc *)new->content)->proc_num = ++vm->list_len;
+	++vm->c[((t_proc *)new->content)->player_num - 1].procs; // PROCS CPT UPDT
 	get_proc_cycle(new->content, vm->mem);
 	ft_lstadd(&vm->plst, new);
 	if (ISACTIV(vm->opt.v, 2))

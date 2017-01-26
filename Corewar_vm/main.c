@@ -56,7 +56,6 @@ void		print_args(t_arg args[MAX_ARGS_NUMBER], unsigned int arg_number, unsigned 
 	}
 }
 
-
 void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 {
 	int i = 0;
@@ -73,8 +72,8 @@ void		null_instr(t_vm *vm, t_proc *proc, t_arg args[MAX_ARGS_NUMBER])
 }
 
 
-void		write_var(t_vm *vm, t_proc *proc, unsigned char *var, lint beg)	// UPDATE FOR GRAPHICS: now proc_mem should be update 
-{																			// during the game
+void		write_var(t_vm *vm, t_proc *proc, unsigned char *var, lint beg)
+{
 	size_t	cpt;			
 
 	cpt = 0;
