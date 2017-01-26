@@ -65,18 +65,13 @@ void	exec_vm(t_vm *vm)
 		{
 			if (ch == 'q')
 			{
-			//	nprint_procs(vm);
 				endwin();
 				exit(1);
 			}
 			else if (ch == '=' && refresh_speed > 2000)
-			{
 				refresh_speed -= 100;
-			}
 			else if (ch == '-' && refresh_speed < 10000)
-			{
 				refresh_speed += 100;
-			}
 		}
 		if (ISACTIV(vm->opt.v, 1))
 			printf("It is now cycle %lld\n", vm->total_cycle);
@@ -84,24 +79,15 @@ void	exec_vm(t_vm *vm)
 		checks_and_destroy(vm);
 		if (vm->opt.d == vm->total_cycle)
 		{
-		//	nprint_procs(vm);
 			endwin();
 			exit(1);
 		}
-
 		if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
 			nprint_procs(vm);
 		if (vm->total_cycle % 100 == 0)
-		{
 			nprint_procs(vm);
-		}
-//	wclear(g_scr_infos);
-//		mvwprintw(g_scr_infos, 3, 3, "%d", refresh_speed);
-//	wrefresh(g_scr_infos);
 		if (vm->total_cycle % 20 == 0)
-		{
 			nprint_infos(vm);
-		}
 		usleep(refresh_speed);
 		++vm->total_cycle;
 	}

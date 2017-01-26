@@ -15,7 +15,8 @@ SRC =	ft_lstadd.c \
 		get_args.c\
 		inst.c \
 		exec_vm.c \
-		window.c
+		window.c \
+		print_procs.c
 
 WFLAGS = -Wall -Werror -Wextra
 
