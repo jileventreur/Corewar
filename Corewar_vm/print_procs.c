@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/26 17:40:44 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/26 20:18:07 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/01/28 20:37:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ int			valid_proc_window(int *col)
 	line = (INFO_HEIGHT < line) ? line - INFO_HEIGHT : 0;
 	if (line * (*col) < MEM_SIZE * CELL_LEN)
 	{
+		if (valid_window == TRUE)
+			clear();
 		valid_window = FALSE;
-		clear();
 		mvprintw(line / 2, (*col) / 2, "Window too small to print processes.");
 		refresh();
 		return (FALSE);
 	}
-	if (*col != old_col || line != old_line || valid_window == FALSE)
+	valid_window = TRUE;
+	if (*col != old_col || line != old_line)
 		clear();
-	if (valid_window == FALSE)
-		valid_window = TRUE;
 	old_col = *col;
 	old_line = line;
 	return (TRUE);
@@ -96,11 +96,11 @@ void		print_last_line(t_vm *vm, int *color_array, int col, int y_max)
 	color = 16;
 	while (i < col)
 	{
-		i_cell = (y_max * col + i) / CELL_LEN;
+		i_cell = (y_max + i) / CELL_LEN;
 		if (color_array[i_cell] != color)
 		{
 			wattroff(stdscr, COLOR_PAIR(color));
-			color = color_array[i_cell];
+  			color = color_array[i_cell];
 			wattron(stdscr, COLOR_PAIR(color));
 		}
 		mvprintw(y_max, i, "%02x", vm->mem[i_cell]);
@@ -131,7 +131,7 @@ void		nprint_procs(t_vm *vm)
 		print_board(vm, color_array, col, y_max - 1);
 		col = board % col;
 		if (col != 0)
-			print_last_line(vm, color_array, col, y_max - 1);
+			print_last_line(vm, color_array, col, MEM_SIZE - col);
 		free(color_array);
 	}
 	refresh();

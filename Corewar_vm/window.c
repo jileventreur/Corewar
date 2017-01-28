@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/26 20:22:20 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/01/28 20:38:43 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,22 @@ void		clear_and_resize(int line, int col)
 
 	if (col != old_col || line != old_line)
 	{
+		old_col = col;
+		old_line = line;
+		wclear(g_scr_infos);
 		wresize(g_scr_infos, INFO_HEIGHT, line);
 		mvwin(g_scr_infos, (col - INFO_HEIGHT) >= 0 ? col - INFO_HEIGHT : 0, 0);
 		getmaxyx(g_scr_infos, col, line);
 	}
-	old_col = col;
-	old_line = line;
+	else
+	{
+		old_col = col;
+		old_line = line;
+	}
 	i = -1;
 	while (++i < line)
 		mvwprintw(g_scr_infos, 0, i, "_");
+	mvwprintw(g_scr_infos, 0, 10, " '+' : faster _ '-' : slower _ ' ' : pause _ 'q' : quit ");
 }
 
 int			valid_infos_window(int *line)
@@ -112,47 +119,77 @@ void		print_players(t_vm *vm, int all_procs, int *p)
 //	t_list	*tmp;
 	int i;
 	int j;
-	int	procs;
+	int	player_line;
+	int	memory;
 	int	prog_max_len;
+	int	processes;
+	int	total_processes;
 	
 	prog_max_len = get_prog_max_len(vm) + 5;
 
 //	tmp = vm->plst;
 	i = -1;
-
+	player_line = 2;
+	total_processes = 0;
 	while (++i < (int)vm->n_players)
-	{
-		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 0, "%d :", i + 1);
-		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, prog_max_len, "_ memory  : [");
-		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 33 + prog_max_len, "] %d%%", p[i] * 100 / all_procs);
-	}
+		total_processes += vm->c[i].procs;
 	i = -1;
 	while (++i < (int)vm->n_players)
 	{
+		mvwprintw(g_scr_infos, player_line, 0, "%d :", i + 1);
+		mvwprintw(g_scr_infos, player_line, prog_max_len, "_ memory     : [");
+		mvwprintw(g_scr_infos, player_line, 37 + prog_max_len, "] %d%%", p[i] * 100 / all_procs);
+		mvwprintw(g_scr_infos, player_line + 2, prog_max_len, "_ processes  : [");
+		mvwprintw(g_scr_infos, player_line + 2, 37 + prog_max_len, "] %d%%", vm->c[i].procs * 100 / total_processes);
+		player_line += 4;
+	}
+	i = -1;
+	player_line = 2;
+	while (++i < (int)vm->n_players)
+	{
 		wattron(g_scr_infos, COLOR_PAIR(i + 1));
-		mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 4, "%s", vm->c[i].header.prog_name);
-		procs = p[i] * 20 / all_procs;
-		j = -1;
-		while (++j < procs)
-			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 13 + prog_max_len + j, "_");
-		while (++j < 20)
-			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 13 + prog_max_len + j, " ");
+		mvwprintw(g_scr_infos, player_line, 4, "%s", vm->c[i].header.prog_name);
+		memory = p[i] * 20 / all_procs;
+		j = 0;
+		while (j < memory)
+		{
+			mvwprintw(g_scr_infos, player_line, 17 + prog_max_len + j, "=");
+			j++;
+		}
+		while (j < 20)
+		{
+			mvwprintw(g_scr_infos, player_line, 17 + prog_max_len + j, " ");
+			j++;
+		}
+		processes = vm->c[i].procs * 20 / total_processes;
+		j = 0;
+		while (j < processes)
+		{
+			mvwprintw(g_scr_infos, player_line + 2, 17 + prog_max_len + j, "=");
+			j++;
+		}
+		while (j < 20)
+		{
+			mvwprintw(g_scr_infos, player_line + 2, 17 + prog_max_len + j, " ");
+			j++;
+		}
 		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
 		if (is_player_alive(vm->plst, i + 1))
 		{
 			wattron(g_scr_infos, COLOR_PAIR(2));
-			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 40 + prog_max_len, " ALIVE");
+			mvwprintw(g_scr_infos, player_line, 44 + prog_max_len, " ALIVE");
 			wattroff(g_scr_infos, COLOR_PAIR(2));
 		}
 		else
 		{
 			wattron(g_scr_infos, COLOR_PAIR(3));
-			mvwprintw(g_scr_infos, (i + 1) * 2 - 1, 40 + prog_max_len, " DEAD ");
+			mvwprintw(g_scr_infos, player_line, 44 + prog_max_len, " DEAD ");
 			wattroff(g_scr_infos, COLOR_PAIR(3));
 		}
+		player_line += 4;
 	}
 }
-void		nprint_infos(t_vm *vm)
+void		nprint_infos(t_vm *vm, int fps)
 {
 	int		line;
 	int		p[vm->n_players];
@@ -169,20 +206,24 @@ void		nprint_infos(t_vm *vm)
 	}
 	process_per_player(vm, p, &all_procs);
 	print_players(vm, all_procs, p);
-	mvwprintw(g_scr_infos, 1, line / 2, "total cycle : %d", vm->total_cycle);
-	mvwprintw(g_scr_infos, 3, line / 2, "next live check : ");
-	i = -1;
+	mvwprintw(g_scr_infos, 2, line / 2, "total cycle : %d", vm->total_cycle);
+	mvwprintw(g_scr_infos, 4, line / 2, "next live check : ");
+	i = 0;
 	if (vm->next_live_check != 0)
-		next_live = (vm->next_live_check * 10) / vm->ctd; // ma modif
+		next_live = (vm->next_live_check * 10) / CYCLE_TO_DIE;
 	else
 		next_live  = 0;
-	wattron(g_scr_infos, COLOR_PAIR(17));
-	while (++i < next_live)
-		mvwprintw(g_scr_infos, 3, line / 2 + 19 + i, " ");
+	wattron(g_scr_infos, COLOR_PAIR(16));
+	while (i < next_live)
+	{
+		mvwprintw(g_scr_infos, 4, line / 2 + 19 + i, "=");
+		i++;
+	}
 	wattroff(g_scr_infos, COLOR_PAIR(16));
 	while (++i < 10)
-		mvwprintw(g_scr_infos, 3, line / 2 + 19 + i, " ");
+		mvwprintw(g_scr_infos, 4, line / 2 + 19 + i, " ");
 	wrefresh(g_scr_infos);
+	mvwprintw(g_scr_infos, 8, line / 2, "fps - infos : %d  - visual : %d  ", (1000000 / (fps * 20)), (1000000 / (fps * 50)));
 }
 
 void		init_ncurses()
@@ -216,22 +257,17 @@ void		init_ncurses()
 
 void		nprint_vm(t_vm * vm)
 {
-//	int		ch = -1;	// Key pressed ID
-	int		col = 0, line = 0;
+	int		col;
+	int		line;
 
+	col = 0;
+	line = 0;
 	init_ncurses();
 	getmaxyx(stdscr, col, line);
 	g_scr_infos = newwin(INFO_HEIGHT, line, col - INFO_HEIGHT, 0);
 	getmaxyx(g_scr_infos, col, line);
-//	while (ch != 'q')
-//	{
-		clear();
-		nprint_procs(vm);
-		exec_vm(vm);
-//		cbreak();
-//		wtimeout(stdscr, 5000);
-//		ch = getch();
-//		refresh();
-//	}
+	clear();
+	nprint_procs(vm);
+	exec_vm(vm);
 	endwin();
 }

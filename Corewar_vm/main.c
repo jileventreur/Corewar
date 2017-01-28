@@ -121,7 +121,9 @@ int		main(int argc, char **argv)
 	++argv;
 	vm_init(&vm, argc, argv);
 	introducing_contestants(vm.c);
-	nprint_vm(&vm);
-	exec_vm(&vm);
+	if (vm.opt.g)
+		nprint_vm(&vm);
+	else
+		exec_vm(&vm);
 	return (0);
 }
