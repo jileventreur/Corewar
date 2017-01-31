@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_vm.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/31 15:01:17 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/01/31 17:57:04 by nbelouni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "corewar.h"
 
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
@@ -54,60 +66,25 @@ void		exec_procs(t_vm *vm)
 
 void	exec_vm(t_vm *vm)
 {
-	int	ch = -1;
-	int	refresh_speed;
+	int		ch;
+	int		refresh_speed;
+	char	*win;
 
+	ch = -1;
 	refresh_speed = 5000;
 	while (vm->plst)
 	{
 		if (vm->opt.g)
-		{
-			wtimeout(stdscr, 0);
-			if ((ch = getch()) != ERR)
-			{
-				if (ch == 'q')
-				{
-					endwin();
-					exit(1);
-				}
-				else if (ch == ' ')
-				{
-					while ((ch = getch()) != ' ')
-					{
-						if (ch == 'q')
-						{
-							endwin();
-							exit(1);
-						}
-					}
-				}
-				else if (ch == '=' && refresh_speed > 1000)
-					refresh_speed -= 100;
-				else if (ch == '-' && refresh_speed < 10000)
-					refresh_speed += 100;
-			}
-		}
+			get_input_and_fsp(&ch, &refresh_speed);
 		if (ISACTIV(vm->opt.v, 1))
 			printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		checks_and_destroy(vm);
 		if (vm->opt.g)
-		{
-			if (vm->opt.d == vm->total_cycle)
-			{
-				endwin();
-				exit(1);
-			}
-			if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
-				nprint_procs(vm);
-			if (vm->total_cycle % 50 == 0)
-				nprint_procs(vm);
-			if (vm->total_cycle % 20 == 0)
-				nprint_infos(vm, refresh_speed);
-			usleep(refresh_speed);
-		}
+			print_all(vm, refresh_speed);
 		++vm->total_cycle;
 	}
 	endwin();
-	printf("Contestant %u, \"%s\", has won !\n", -vm->last_live, vm->c[-vm->last_live - 1].header.prog_name);
+	win = vm->c[-vm->last_live - 1].header.prog_name;
+	printf("Contestant %u, \"%s\", has won !\n", -vm->last_live, win);
 }

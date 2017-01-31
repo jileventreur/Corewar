@@ -6,90 +6,11 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/28 20:38:43 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/01/31 18:01:48 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
-
-int			is_player_alive(t_list *plst, int player)
-{
-	t_list	*tmp;
-
-	tmp = plst;
-	while (tmp)
-	{
-		if (((t_proc *)(tmp->content))->player_num == (unsigned int)player ||
-			((t_proc *)(tmp->content))->player_num == (unsigned int)player + MAX_PLAYERS)
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-void		clear_and_resize(int line, int col)
-{
-	static int	old_line;
-	static int	old_col;
-	int			i;
-
-	if (col != old_col || line != old_line)
-	{
-		old_col = col;
-		old_line = line;
-		wclear(g_scr_infos);
-		wresize(g_scr_infos, INFO_HEIGHT, line);
-		mvwin(g_scr_infos, (col - INFO_HEIGHT) >= 0 ? col - INFO_HEIGHT : 0, 0);
-		getmaxyx(g_scr_infos, col, line);
-	}
-	else
-	{
-		old_col = col;
-		old_line = line;
-	}
-	i = -1;
-	while (++i < line)
-		mvwprintw(g_scr_infos, 0, i, "_");
-	mvwprintw(g_scr_infos, 0, 10, " '+' : faster _ '-' : slower _ ' ' : pause _ 'q' : quit ");
-}
-
-int			valid_infos_window(int *line)
-{
-	int			col;
-	static int	valid_window;
-
-	getmaxyx(stdscr, col, *line);
-	if (*line < INFO_WIDTH || col < INFO_HEIGHT)
-	{
-		wclear(g_scr_infos);
-		clear_and_resize(*line, col);
-		mvwprintw(g_scr_infos, INFO_HEIGHT / 2, (*line) / 2, "Window too small to print infos.");
-		return (FALSE);
-	}
-	if (valid_window == FALSE)
-	{
-		wclear(g_scr_infos);
-		valid_window = TRUE;
-	}
-	clear_and_resize(*line, col);
-	return (TRUE);
-}
-
-int			get_prog_max_len(t_vm * vm)
-{
-	int		i;
-	int		max;
-	int		curr_len;
-
-	i = -1;
-	max = 0;
-	while (++i < (int)vm->n_players)
-	{
-		if ((curr_len = ft_strlen(vm->c[i].header.prog_name)) > max)
-			max = curr_len;
-	}
-	return (max);
-}
 
 void		process_per_player(t_vm *vm, int *p, int *all_procs)
 {
@@ -111,108 +32,19 @@ void		process_per_player(t_vm *vm, int *p, int *all_procs)
 			*all_procs += 1;
 		}
 	}
-
 }
 
-void		print_players(t_vm *vm, int all_procs, int *p)
+void		print_next_check(t_vm *vm, int line)
 {
-//	t_list	*tmp;
-	int i;
-	int j;
-	int	player_line;
-	int	memory;
-	int	prog_max_len;
-	int	processes;
-	int	total_processes;
-	
-	prog_max_len = get_prog_max_len(vm) + 5;
-
-//	tmp = vm->plst;
-	i = -1;
-	player_line = 2;
-	total_processes = 0;
-	while (++i < (int)vm->n_players)
-		total_processes += vm->c[i].procs;
-	i = -1;
-	while (++i < (int)vm->n_players)
-	{
-		mvwprintw(g_scr_infos, player_line, 0, "%d :", i + 1);
-		mvwprintw(g_scr_infos, player_line, prog_max_len, "_ memory     : [");
-		mvwprintw(g_scr_infos, player_line, 37 + prog_max_len, "] %d%%", p[i] * 100 / all_procs);
-		mvwprintw(g_scr_infos, player_line + 2, prog_max_len, "_ processes  : [");
-		mvwprintw(g_scr_infos, player_line + 2, 37 + prog_max_len, "] %d%%", vm->c[i].procs * 100 / total_processes);
-		player_line += 4;
-	}
-	i = -1;
-	player_line = 2;
-	while (++i < (int)vm->n_players)
-	{
-		wattron(g_scr_infos, COLOR_PAIR(i + 1));
-		mvwprintw(g_scr_infos, player_line, 4, "%s", vm->c[i].header.prog_name);
-		memory = p[i] * 20 / all_procs;
-		j = 0;
-		while (j < memory)
-		{
-			mvwprintw(g_scr_infos, player_line, 17 + prog_max_len + j, "=");
-			j++;
-		}
-		while (j < 20)
-		{
-			mvwprintw(g_scr_infos, player_line, 17 + prog_max_len + j, " ");
-			j++;
-		}
-		processes = vm->c[i].procs * 20 / total_processes;
-		j = 0;
-		while (j < processes)
-		{
-			mvwprintw(g_scr_infos, player_line + 2, 17 + prog_max_len + j, "=");
-			j++;
-		}
-		while (j < 20)
-		{
-			mvwprintw(g_scr_infos, player_line + 2, 17 + prog_max_len + j, " ");
-			j++;
-		}
-		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
-		if (is_player_alive(vm->plst, i + 1))
-		{
-			wattron(g_scr_infos, COLOR_PAIR(2));
-			mvwprintw(g_scr_infos, player_line, 44 + prog_max_len, " ALIVE");
-			wattroff(g_scr_infos, COLOR_PAIR(2));
-		}
-		else
-		{
-			wattron(g_scr_infos, COLOR_PAIR(3));
-			mvwprintw(g_scr_infos, player_line, 44 + prog_max_len, " DEAD ");
-			wattroff(g_scr_infos, COLOR_PAIR(3));
-		}
-		player_line += 4;
-	}
-}
-void		nprint_infos(t_vm *vm, int fps)
-{
-	int		line;
-	int		p[vm->n_players];
-	int		all_procs;
 	int		i;
 	int		next_live;
 
-	(void)vm;
-	line = 0;
-	if (!valid_infos_window(&line))
-	{
-		wrefresh(g_scr_infos);
-		return ;
-	}
-	process_per_player(vm, p, &all_procs);
-	print_players(vm, all_procs, p);
-	mvwprintw(g_scr_infos, 2, line / 2, "total cycle : %d", vm->total_cycle);
 	mvwprintw(g_scr_infos, 4, line / 2, "next live check : ");
 	i = 0;
 	if (vm->next_live_check != 0)
 		next_live = (vm->next_live_check * 10) / CYCLE_TO_DIE;
 	else
-		next_live  = 0;
+		next_live = 0;
 	wattron(g_scr_infos, COLOR_PAIR(16));
 	while (i < next_live)
 	{
@@ -222,13 +54,34 @@ void		nprint_infos(t_vm *vm, int fps)
 	wattroff(g_scr_infos, COLOR_PAIR(16));
 	while (++i < 10)
 		mvwprintw(g_scr_infos, 4, line / 2 + 19 + i, " ");
-	wrefresh(g_scr_infos);
-	mvwprintw(g_scr_infos, 8, line / 2, "fps - infos : %d  - visual : %d  ", (1000000 / (fps * 20)), (1000000 / (fps * 50)));
 }
 
-void		init_ncurses()
+void		nprint_infos(t_vm *vm, int fps)
 {
+	int		line;
+	int		p[vm->n_players];
+	int		all_procs;
+	int		frames;
 
+	line = 0;
+	if (!valid_infos_window(&line))
+	{
+		wrefresh(g_scr_infos);
+		return ;
+	}
+	process_per_player(vm, p, &all_procs);
+	print_players(vm, all_procs, p);
+	mvwprintw(g_scr_infos, 2, line / 2, "total cycle : %d", vm->total_cycle);
+	print_next_check(vm, line);
+	frames = (1000000 / (fps * 20));
+	mvwprintw(g_scr_infos, 8, line / 2, "fps - infos : %d ", frames);
+	frames = (1000000 / (fps * 50));
+	mvwprintw(g_scr_infos, 8, line / 2 + 17, "- visual : %d ", frames);
+	wrefresh(g_scr_infos);
+}
+
+void		init_ncurses(void)
+{
 	initscr();
 	keypad(stdscr, TRUE);
 	curs_set(0);
@@ -255,7 +108,7 @@ void		init_ncurses()
 	init_pair(17, COLOR_BLACK, COLOR_CYAN);
 }
 
-void		nprint_vm(t_vm * vm)
+void		nprint_vm(t_vm *vm)
 {
 	int		col;
 	int		line;

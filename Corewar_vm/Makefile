@@ -16,8 +16,10 @@ SRC =	ft_lstadd.c \
 		inst.c \
 		exec_vm.c \
 		window.c \
-		print_procs.c
-
+		print_procs.c \
+		graphic_vm.c \
+		manage_infos.c \
+		print_players.c
 WFLAGS = -Wall -Werror -Wextra
 
 LFLAGS = -L libft/ -lft -lncurses

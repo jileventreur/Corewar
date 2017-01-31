@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/26 17:40:44 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/28 20:37:19 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/01/31 18:00:16 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void		print_last_line(t_vm *vm, int *color_array, int col, int y_max)
 		if (color_array[i_cell] != color)
 		{
 			wattroff(stdscr, COLOR_PAIR(color));
-  			color = color_array[i_cell];
+			color = color_array[i_cell];
 			wattron(stdscr, COLOR_PAIR(color));
 		}
 		mvprintw(y_max, i, "%02x", vm->mem[i_cell]);
