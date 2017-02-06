@@ -2,24 +2,30 @@ NAME =	corewar
 
 INCLUDES = libft/includes/
 
-SRC =	ft_lstadd.c \
-		ft_lstnew.c \
-		ft_memisset.c \
-		ft_strisuint.c \
-		get_players.c \
-		main.c \
-		op.c \
-		print_fct.c \
-		vm_init.c \
+SRC =	aff.c \
+		calculation_instructions.c \
 		check_and_destroy.c \
-		get_args.c\
-		inst.c \
 		exec_vm.c \
-		window.c \
-		print_procs.c \
+		fork_and_lfork.c \
+		ft_lstadd.c \
+		ft_lstnew.c \
+		get_args.c \
+		get_opt.c \
+		get_players.c \
 		graphic_vm.c \
+		ld_and_lld.c \
+		ldi_and_lldi.c \
+		live.c \
+		main.c \
 		manage_infos.c \
-		print_players.c
+		moove_pc.c \
+		op.c \
+		print_players.c \
+		print_procs.c \
+		st_and_sti.c \
+		vm_init.c \
+		window.c \
+		zjmp.c
 WFLAGS = -Wall -Werror -Wextra
 
 LFLAGS = -L libft/ -lft -lncurses

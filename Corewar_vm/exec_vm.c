@@ -15,7 +15,7 @@
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
 	unsigned char	c;
-	extern t_op		op_tab[INSTR_NUMBER + 1];
+	extern t_op		g_op_tab[INSTR_NUMBER + 1];
 
 	c = mem[proc->pc] - 1;
 	if (c > 16)
@@ -24,29 +24,31 @@ void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 	}
 	else
 	{
-		proc->cycle_to_wait = op_tab[c].cycle;
+		proc->cycle_to_wait = g_op_tab[c].cycle;
 	}
 	proc->inst = c;
 }
 
-void		instruction_manager(t_vm *vm, t_proc *proc)
+void	instruction_manager(t_vm *vm, t_proc *proc)
 {
-	extern t_op		op_tab[INSTR_NUMBER + 1];
-	t_arg			args[MAX_ARGS_NUMBER] = {{DIR_CODE  ,0,0,0}};
+	extern t_op		g_op_tab[INSTR_NUMBER + 1];
+	t_arg			args[MAX_ARGS_NUMBER];
 
+	ft_bzero(args, sizeof(t_arg) * MAX_ARGS_NUMBER);
+	*args = (t_arg){DIR_CODE, 0, 0, 0};
 	if ((proc->inst) > INSTR_NUMBER)
 	{
 		++proc->pc;
 		return ;
 	}
-	if (!get_args(vm, proc, args, op_tab + proc->inst))
+	if (!get_args(vm, proc, args, g_op_tab + proc->inst))
 	{
 		return ;
 	}
-	op_tab[proc->inst].f(vm, proc, args);
+	g_op_tab[proc->inst].f(vm, proc, args);
 }
 
-void		exec_procs(t_vm *vm)
+void	exec_procs(t_vm *vm)
 {
 	t_list	*tmp;
 	t_proc	*p;
@@ -64,6 +66,26 @@ void		exec_procs(t_vm *vm)
 	}
 }
 
+void	dump_vm(t_vm *vm)
+{
+	unsigned int	i;
+	unsigned char	c;
+
+	endwin();
+	i = 0;
+	while (i < MEM_SIZE)
+	{
+		c = vm->mem[i];
+		if (i % BYTE_LINE_NB == 0)
+			ft_printf("0x%.4x : ", i);
+		ft_printf("%2.2x ", c);
+		if (((i + 1) % BYTE_LINE_NB) == 0 || i == (MEM_SIZE - 1))
+			ft_printf("\n");
+		++i;
+	}
+	exit(1);
+}
+
 void	exec_vm(t_vm *vm)
 {
 	int		ch;
@@ -76,15 +98,17 @@ void	exec_vm(t_vm *vm)
 	{
 		if (vm->opt.g)
 			get_input_and_fsp(&ch, &refresh_speed);
-		if (ISACTIV(vm->opt.v, 1))
-			printf("It is now cycle %lld\n", vm->total_cycle);
+		if (!vm->opt.g && ISACTIV(vm->opt.v, 1))
+			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		checks_and_destroy(vm);
+		if (vm->opt.d == vm->total_cycle)
+			dump_vm(vm);
 		if (vm->opt.g)
 			print_all(vm, refresh_speed);
 		++vm->total_cycle;
 	}
 	endwin();
 	win = vm->c[-vm->last_live - 1].header.prog_name;
-	printf("Contestant %u, \"%s\", has won !\n", -vm->last_live, win);
+	ft_printf("le joueur %u(%s) a gagne\n", -vm->last_live, win);
 }

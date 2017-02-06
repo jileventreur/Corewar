@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vm_init.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/31 21:33:27 by cadam             #+#    #+#             */
+/*   Updated: 2017/01/31 21:33:28 by cadam            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "corewar.h"
 
-static void		mem_init(unsigned char mem[MEM_SIZE], unsigned char proc_mem[MEM_SIZE], t_champion *c, int player_number)
+static void		mem_init(unsigned char *mem, unsigned char *proc_mem,
+				t_champion *c, int player_number)
 {
 	int	i;
 
@@ -44,7 +57,7 @@ static t_list	*proc_init(t_champion *c, int player_number)
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))
 			continue ;
 		tmp.pc = player_cpt * MEM_SIZE / player_number;
-		*(int *)(tmp.reg[0]) = c[i].num * -1; // a voir si on laisse en -num ou pas
+		*(int *)(tmp.reg[0]) = c[i].num * -1;
 		tmp.player_num = c[i].num;
 		tmp.proc_num = ++player_cpt;
 		ft_lstadd(&lst, ft_lstnew(&tmp, sizeof(t_proc)));
@@ -52,105 +65,12 @@ static t_list	*proc_init(t_champion *c, int player_number)
 	return (lst);
 }
 
-void			max_arg_size_init(t_vm *vm)
-{
-	extern t_op		op_tab[17];
-	int				i;
-	int				j;
-	int				k;
-	int				sum;
-
-	i = 0;
-	while (i < 17)
-	{
-		sum = 0;
-		j = 0;
-		while (j < 3)
-		{
-			k = 1 << sizeof(char) * 8;
-			while (k && op_tab[i].param_mask[j] / k == 0)
-				k >>= 1;
-			vm->max_arg_size[i][j] = k;
-			sum += k;
-			++j;
-		}
-		vm->max_arg_size[i][MAX_ARGS_NUMBER] = sum;
-		++i;
-	}
-}
-
-void			print_opt(t_opt *opt)
-{
-	printf("opt->a is %s\n", opt->a ? "ON" : "OFF");
-	printf("opt->g is %s\n", opt->g ? "ON" : "OFF");
-	printf("opt->d is %d\n", opt->d);
-	printf("opt->s is %d\n", opt->s);
-	printf("opt->v is %d\n", opt->v);
-}
-
-void			get_opt(char ***argv_source, int *argc, t_opt *opt)
-{
-	int		i;
-	char	**argv;
-
-	i = 0;
-	argv = *argv_source;
-	opt->d = -1;
-	while (i < *argc && **argv == '-')
-	{
-		if (ft_strlen(*argv) < 2)
-			ft_error_exit("Error: no option after -\n");
-		if (*(*argv + 1) == 'n')
-			break ;
-		if (!ft_isanyof(*(*argv + 1), OPTION))
-			ft_error_exit("Error: incompatible option\n");
-		if (*(*argv + 1) == 'a' && (*(*argv + 2)) == '\0')
-			opt->a = 1;
-		else if (*(*argv + 1) == 'g' && (*(*argv + 2)) == '\0')
-			opt->g = 1;
-		else if (*(*argv + 1) == 'd' || !ft_strcmp("-dump", *argv))
-		{
-			if (i + 1 >= *argc)
-				ft_error_exit("Error: no argument after -d\n");
-			if (!ft_strisuint(*++argv))
-				ft_error_exit("Error: argument after -d is not an unsigned number\n");
-			opt->d = ft_atoi(*argv);
-			++i;
-		}
-		else if (*(*argv + 1) == 's' && (*(*argv + 2)) == '\0')
-		{
-			if (i + 1 >= *argc)
-				ft_error_exit("Error: no argument after -d\n");
-			if (!ft_strisuint(*++argv))
-				ft_error_exit("Error: argument after -s is not an unsigned number\n");
-			if ((opt->s = ft_atoi(*argv)) == 0)
-				ft_error_exit("Error: argument after -s can't be zero\n");
-			++i;
-		}
-		else if (*(*argv + 1) == 'v' && (*(*argv + 2)) == '\0')
-		{
-			if (i + 1 >= *argc)
-				ft_error_exit("Error: no argument after -d\n");
-			if (!ft_strisuint(*++argv))
-				ft_error_exit("Error: argument after -v is not an unsigned number\n");
-			opt->v = ft_atoi(*argv);
-			++i;
-		}
-		else
-			ft_error_exit("Error: multiple option not allowed\n");
-		++argv;
-		++i;
-	}
-	*argv_source = argv;
-	*argc -= i;
-}
-
 void			vm_init(t_vm *vm, int argc, char **argv)
 {
 	int		player_number;
 	int		i;
 
-	i = MAX_PLAYERS -1;
+	i = MAX_PLAYERS - 1;
 	ft_bzero(vm, sizeof(t_vm));
 	get_opt(&argv, &argc, &vm->opt);
 	if ((player_number = get_players(argv, argc, vm->c)) == 0)
@@ -159,15 +79,14 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	mem_init(vm->mem, vm->proc_mem, vm->c, player_number);
 	proc_cycle_init(vm->plst, vm->mem);
 	vm->ctd = CYCLE_TO_DIE;
-	vm->procs_death_nb = 0; // could be rm 
-	vm->live_num = 0; // could be rm 
+	vm->procs_death_nb = 0;
+	vm->live_num = 0;
 	vm->total_cycle = 1;
 	vm->last_ctd_dec = 1;
 	vm->next_live_check = CYCLE_TO_DIE;
 	vm->list_len = player_number;
 	vm->n_players = player_number;
 	while (ft_memisset(&vm->c[i], sizeof(t_champion), 0))
-	--i;
+		--i;
 	vm->last_live = -(i + 1);
-	max_arg_size_init(vm);
 }

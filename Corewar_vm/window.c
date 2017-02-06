@@ -41,8 +41,8 @@ void		print_next_check(t_vm *vm, int line)
 
 	mvwprintw(g_scr_infos, 4, line / 2, "next live check : ");
 	i = 0;
-	if (vm->next_live_check != 0)
-		next_live = (vm->next_live_check * 10) / CYCLE_TO_DIE;
+	if (vm->next_live_check != 0 && vm->ctd != 0)
+		next_live = (vm->next_live_check * 10) / vm->ctd;
 	else
 		next_live = 0;
 	wattron(g_scr_infos, COLOR_PAIR(16));

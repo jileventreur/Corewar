@@ -12,22 +12,7 @@
 
 #include "corewar.h"
 
-// typedef struct					s_op
-// {
-// 	char						*name;
-// 	unsigned int				param_number;
-// 	unsigned char				param_mask[MAX_ARGS_NUMBER];
-// 	unsigned char				opcode;
-// 	unsigned int				cycle;
-// 	char						*desc;
-// 	unsigned char				activ_carry;
-// 	unsigned char				direct_adr;
-// 	unsigned char				long_inst;
-// 	unsigned char				ocp;
-// 	void						(*f)(t_vm *, t_proc *, t_arg[MAX_ARGS_NUMBER]);
-// }								t_op;
-
-t_op    op_tab[INSTR_NUMBER + 1] =
+t_op	g_op_tab[INSTR_NUMBER + 1] =
 {
 	{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0, 0, &my_live},
 	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 0, 0, 1, &my_ld},
@@ -48,7 +33,7 @@ t_op    op_tab[INSTR_NUMBER + 1] =
 	{"fork", 1, {T_DIR}, 12, 800, "fork", 1, 0, 0, &my_fork},
 	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, "long load", 0, 1, 1, &my_lld},
 	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
-		"long load index", 1, 1, 1, &my_lldi},	
+		"long load index", 1, 1, 1, &my_lldi},
 	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 1, 1, 0, &my_lfork},
 	{"aff", 1, {T_REG}, 16, 2, "aff", 0, 0, 1, &my_aff},
 	{0, 0, {0}, 0, 0, 0, 0, 0, 0, NULL}

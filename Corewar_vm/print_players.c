@@ -96,7 +96,7 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 	i = -1;
 	total_processes = 0;
 	line = 2;
-	len = get_len(vm) + 5;
+	len = get_prog_max_len(vm) + 5;
 	while (++i < (int)vm->n_players)
 		total_processes += vm->c[i].procs;
 	i = -1;
@@ -110,5 +110,5 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 		mvwprintw(g_scr_infos, line + 2, 37 + len, "] %d%%", procs);
 		line += 4;
 	}
-	print_color_infos(vm, all_procs, total_processes, p);
+	print_color_infos(vm, allprocs, total_processes, p);
 }
