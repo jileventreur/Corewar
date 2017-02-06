@@ -1,31 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_error_exit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbauguen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/03 17:25:57 by vbauguen          #+#    #+#             */
-/*   Updated: 2015/12/03 17:25:59 by vbauguen         ###   ########.fr       */
+/*   Created: 2017/01/31 20:51:33 by cadam             #+#    #+#             */
+/*   Updated: 2017/01/31 20:51:35 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstiter(t_list *lst, void (f)(t_list *elem))
+void	ft_error_exit(const char *exit_message)
 {
-	t_list *prev;
-	t_list *curr;
-
-	prev = NULL;
-	curr = lst;
-	while (curr != NULL)
-	{
-		if (prev)
-			(f)(prev);
-		prev = curr;
-		curr = curr->next;
-	}
-	if (prev)
-		(f)(prev);
+	ft_puterror(exit_message);
+	exit(1);
 }

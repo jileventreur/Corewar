@@ -30,9 +30,9 @@ int	two_oct(unsigned int a)
 	unsigned int tmp;
 
 	tmp = ((a >> 6) + 192);
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	tmp = (a ^ ((tmp - 192) << 6)) + 128;
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	return (2);
 }
 
@@ -41,12 +41,12 @@ int	three_oct(unsigned int a)
 	unsigned int tmp;
 
 	tmp = (a >> 12) + 224;
-	ft_putchar(tmp);
+	PUTCHAR(tmp);
 	a = a ^ ((tmp - 224) << 12);
 	tmp = (a >> 6) + 128;
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	tmp = (a ^ ((tmp - 128) << 6)) + 128;
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	return (3);
 }
 
@@ -55,15 +55,15 @@ int	four_oct(unsigned int a)
 	unsigned int tmp;
 
 	tmp = (a >> 18) + 240;
-	ft_putchar(tmp);
+	PUTCHAR(tmp);
 	a = a ^ ((tmp - 240) << 18);
 	tmp = (a >> 12) + 128;
-	ft_putchar(tmp);
+	PUTCHAR(tmp);
 	a = a ^ ((tmp - 128) << 12);
 	tmp = (a >> 6) + 128;
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	tmp = (a ^ ((tmp - 128) << 6)) + 128;
-	write(1, &tmp, 1);
+	PUTCHAR(tmp);
 	return (4);
 }
 

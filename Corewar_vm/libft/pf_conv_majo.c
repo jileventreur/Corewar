@@ -27,7 +27,8 @@ static void		min_width(t_flags flags, t_len lens, int *ret, unsigned long nb)
 		c = ' ';
 	while (i > 0)
 	{
-		pf_putchar(c, ret);
+		PUTCHAR(c);
+		++(*ret);
 		i--;
 	}
 }
@@ -53,7 +54,8 @@ static void		precision(t_flags flags, int len, unsigned long nb, int *ret)
 		i = flags.precision - len - ((nb != 0) ? flags.hash : 0);
 		while (i > 0)
 		{
-			pf_putchar('0', ret);
+			PUTCHAR('0');
+			++(*ret);
 			i--;
 		}
 	}
@@ -77,11 +79,13 @@ int				pf_conv_majo(va_list *args, t_flags flags)
 		min_width(flags, lens, &ret, nb);
 	precision(flags, len, nb, &ret);
 	if (flags.hash && (nb != 0 || (nb == 0 && flags.precision == 0)))
-		pf_putchar('0', &ret);
+	{
+		PUTCHAR('0');
+		++(ret);
+	}
 	if (len)
 		print_base_long(nb, 8, 0);
-	ret += len;
 	if (flags.minus)
 		min_width(flags, lens, &ret, nb);
-	return (ret);
+	return (ret += len);
 }

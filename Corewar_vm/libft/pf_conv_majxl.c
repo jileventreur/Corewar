@@ -24,7 +24,8 @@ static void	min_width(t_flags flags, int len, unsigned int nb, int *ret)
 		c = ' ';
 	while (i > 0)
 	{
-		pf_putchar(c, ret);
+		PUTCHAR(c);
+		++(*ret);
 		i--;
 	}
 }
@@ -46,12 +47,18 @@ static void	before_precision(t_flags flags, int *ret, int len_prc,
 {
 	if (flags.zero && !flags.minus && flags.precision == -1
 		&& flags.hash && nb > 0)
-		pf_putstr("0X", ret);
+	{
+		PUTSTR("0X");
+		*ret += 2;
+	}
 	if (!flags.minus)
 		min_width(flags, len_prc, nb, ret);
 	if (!(flags.zero && !flags.minus && flags.precision == -1)
 		&& flags.hash && nb > 0)
-		pf_putstr("0X", ret);
+	{
+		PUTSTR("0X");
+		*ret += 2;
+	}
 }
 
 static void	precision(t_flags flags, int len, int *ret)
@@ -63,7 +70,8 @@ static void	precision(t_flags flags, int len, int *ret)
 		i = flags.precision - len;
 		while (i > 0)
 		{
-			pf_putchar('0', ret);
+			PUTCHAR('0');
+			++(*ret);
 			i--;
 		}
 	}

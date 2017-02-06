@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pf_conv_c.c                                        :+:      :+:    :+:   */
+/*   ft_dprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/11 20:23:06 by cadam             #+#    #+#             */
-/*   Updated: 2015/05/11 20:23:08 by cadam            ###   ########.fr       */
+/*   Created: 2015/05/11 20:07:16 by cadam             #+#    #+#             */
+/*   Updated: 2015/10/09 17:52:27 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		pf_conv_c(va_list *args, t_flags flags)
+int			ft_dprintf(int fd, const char *format, ...)
 {
-	int		len;
-	int		ret;
-	char	c;
+	extern t_buf	g_buf;
+	va_list			args;
 
-	if (flags.l)
-		return (pf_conv_majc(args, flags));
-	c = va_arg(*args, int);
-	len = 1;
-	ret = 0;
-	pf_flag_min_width(flags, len, &ret, 0);
-	PUTCHAR(c);
-	ret += len;
-	pf_flag_min_width(flags, len, &ret, 1);
-	return (ret);
+	g_buf = (t_buf){0, {0}, 0};
+	g_char = &pf_putchar_buf;
+	g_str = &pf_putstr_buf;
+	g_end = &pf_putbuf;
+	g_buf.fd = fd;
+	va_start(args, format);
+	return (ft_general_print(format, &args));
 }

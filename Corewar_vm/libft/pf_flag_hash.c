@@ -18,10 +18,7 @@ int		pf_flag_hash(t_flags flags, int *ret, int nb)
 	{
 		if ((flags.conv == 'X' || flags.conv == 'x') && nb != 0)
 		{
-			if (flags.conv == 'X')
-				ft_putstr("0X");
-			else
-				ft_putstr("0x");
+			PUTSTR(flags.conv == 'X' ? "0X" : "0x");
 			(*ret) += 2;
 			return (2);
 		}
@@ -30,7 +27,7 @@ int		pf_flag_hash(t_flags flags, int *ret, int nb)
 			if (nb != 0 || (flags.precision > -1 && !flags.min_width
 				&& nb == 0))
 			{
-				ft_putchar('0');
+				PUTCHAR('0');
 				return (1);
 			}
 		}

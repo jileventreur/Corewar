@@ -21,7 +21,7 @@ int		pf_flag_precision_zero(t_flags flags)
 	if (flags.precision == 0 && flags.hash
 		&& (flags.conv == 'o' || flags.conv == 'O'))
 	{
-		ft_putchar('0');
+		PUTCHAR('0');
 		ret++;
 	}
 	else if (flags.hash)
@@ -29,7 +29,7 @@ int		pf_flag_precision_zero(t_flags flags)
 		i = 0;
 		while (i < flags.precision)
 		{
-			ft_putchar('0');
+			PUTCHAR('0');
 			ret++;
 			i++;
 		}
@@ -47,14 +47,14 @@ void	pf_flag_precision(t_flags flags, int len, int nb, int *ret)
 		{
 			if (flags.plus || (nb < 0 && len - 1 < flags.precision))
 			{
-				ft_putchar('0');
+				PUTCHAR('0');
 				(*ret)++;
 			}
 		}
 		i = 0;
 		while (i < flags.precision - len)
 		{
-			ft_putchar('0');
+			PUTCHAR('0');
 			(*ret)++;
 			i++;
 		}

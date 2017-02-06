@@ -27,7 +27,8 @@ static void	min_width(t_flags flags, t_len lens, int *ret, unsigned int nb)
 		c = ' ';
 	while (i > 0)
 	{
-		pf_putchar(c, ret);
+		PUTCHAR(c);
+		++(*ret);
 		i--;
 	}
 }
@@ -53,7 +54,8 @@ static void	precision(t_flags flags, int len, unsigned int nb, int *ret)
 		i = flags.precision - len - ((nb != 0) ? flags.hash : 0);
 		while (i > 0)
 		{
-			pf_putchar('0', ret);
+			PUTCHAR('0');
+			++(*ret);
 			i--;
 		}
 	}
@@ -65,7 +67,10 @@ static void	and_other(t_flags flags, int *ret, t_len lens, unsigned int nb)
 		min_width(flags, lens, ret, nb);
 	precision(flags, lens.old_len, nb, ret);
 	if (flags.hash && (nb != 0 || (nb == 0 && flags.precision == 0)))
-		pf_putchar('0', ret);
+	{
+		PUTCHAR('0');
+		++(*ret);
+	}
 }
 
 int			pf_conv_o(va_list *args, t_flags flags)

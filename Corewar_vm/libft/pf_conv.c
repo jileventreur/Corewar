@@ -30,8 +30,7 @@ t_conv	g_conv[CONV] =
 	{ 'C', &pf_conv_majc },
 	{ '%', &pf_conv_percent },
 	{ 'b', &pf_conv_b },
-	{ 'B', &pf_conv_majb },
-	{ 'r', &pf_conv_r }
+	{ 'B', &pf_conv_majb }
 };
 
 int		pf_is_conv(char c)
@@ -39,36 +38,31 @@ int		pf_is_conv(char c)
 	int	i;
 
 	i = 0;
-	while (g_conv[i].c)
+	while (STR_CONV[i])
 	{
-		if (g_conv[i].c == c)
-			return (1);
+		if (STR_CONV[i] == c)
+			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 int		pf_conv(va_list *args, const char *format, int *pos)
 {
 	int		i;
-	char	c;
 	int		ret;
 	t_flags	flags;
 
 	ret = 0;
 	flags = pf_flags_init();
 	while (format[*pos] && !pf_flags_check(args, &flags, format, pos))
-		(*pos)++;
-	c = format[*pos];
-	if (!pf_is_conv(c))
-		return (pf_conv_invalid(flags, c));
-	flags.conv = c;
-	i = 0;
-	while (g_conv[i].c)
+		++(*pos);
+	if (!(flags.conv = format[*pos]))
+		--(*pos);
+	if ((i = pf_is_conv(flags.conv)) == -1)
 	{
-		if (g_conv[i].c == c)
-			ret += g_conv[i].pf_conv_exec(args, flags);
-		i++;
+		return (pf_conv_invalid(flags, flags.conv));
 	}
+	ret += g_conv[i].pf_conv_exec(args, flags);
 	return (ret);
 }

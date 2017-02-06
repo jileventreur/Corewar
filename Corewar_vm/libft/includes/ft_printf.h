@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/11 20:08:08 by cadam             #+#    #+#             */
-/*   Updated: 2015/05/11 20:21:11 by cadam            ###   ########.fr       */
+/*   Created: 2016/12/11 07:41:02 by cadam             #+#    #+#             */
+/*   Updated: 2016/12/11 07:41:03 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,26 @@
 # include <stdarg.h>
 # include <limits.h>
 # include "libft.h"
+# include <stdio.h>
 
 # define CONV 18
 # define COLOR 23
+# define BUF_SIZE (256)
+# define LOWER_HEX_DIGITS "0123456789abcdef"
+# define UPPER_HEX_DIGITS "0123456789ABCDEF"
+# define STR_CONV "sSpdDioOuUxXcC%bB"
+# define CONV 18
+
+# define PUTCHAR(c)	(*g_char)(c);
+# define PUTSTR(str) (*g_str)(str);
+# define END (*g_end)();
+
+typedef struct	s_buf
+{
+	int			fd;
+	char		buf[BUF_SIZE];
+	size_t		len;
+}				t_buf;
 
 typedef struct	s_flags
 {
@@ -58,13 +75,28 @@ typedef struct	s_len
 	int			old_len;
 }				t_len;
 
+void			(*g_char) (char);
+void			(*g_str) (char *);
+void			(*g_end) (void);
+int				g_fd;
+char			*g_ret;
+t_buf			g_buf;
 t_conv			g_conv[CONV];
 t_color			g_color[COLOR];
 
-int				ft_printf(const char *format, ...);
+int				ft_general_print(const char *format, va_list *args);
 
-int				pf_is_color(char *color, int *ret);
-int				pf_color(const char *format, int *pos, int *ret);
+int				ft_printf(const char *format, ...);
+int				ft_dprintf(int fd, const char *format, ...);
+int				ft_asprintf(char **ret, const char *format, ...);
+
+void			pf_putbuf(void);
+void			pf_putchar_buf(char c);
+void			pf_putstr_buf(char *str);
+
+void			pf_malloc_put(void);
+void			pf_malloc_char(char c);
+void			pf_malloc_str(char *str);
 
 int				pf_is_conv(char c);
 int				pf_conv(va_list *args, const char *format, int *pos);
@@ -93,7 +125,6 @@ int				pf_conv_n(va_list *args, char c, int *n, int ret);
 int				pf_conv_o(va_list *args, t_flags flags);
 int				pf_conv_p(va_list *args, t_flags flags);
 int				pf_conv_percent(va_list *args, t_flags flags);
-int				pf_conv_r(va_list *args, t_flags flags);
 int				pf_conv_s(va_list *args, t_flags flags);
 int				pf_conv_u(va_list *args, t_flags flags);
 int				pf_conv_x(va_list *args, t_flags flags);
@@ -112,19 +143,17 @@ int				flag_is_number(t_flags flags);
 int				flag_is_char(t_flags flags);
 
 int				pf_is_flag(char c);
-void			pf_flags_check_min_width(t_flags *flags, const char *format,
-	int *pos);
-void			pf_flags_check_precision(t_flags *flags, const char *format,
-	int *pos);
-void			pf_flags_check_wildcard(t_flags *flags, const char *format,
-	int *pos, va_list *args);
+int				pf_flags_check_min_width(t_flags *flags, const char *format,
+				int *pos);
+int				pf_flags_check_precision(t_flags *flags, const char *format,
+				int *pos);
+int				pf_flags_check_wildcard(t_flags *flags, const char *format,
+				int *pos, va_list *args);
 int				pf_flags_check(va_list *args, t_flags *flags,
-	const char *format, int *pos);
+				const char *format, int *pos);
 
 int				ft_isanyof(char c, char *str);
 int				ft_wstrlen(wchar_t *str);
-void			pf_putchar(char c, int *ret);
-void			pf_putstr(char *str, int *ret);
 
 /*
 **	+------------ BITS OPT ------------+
@@ -135,18 +164,19 @@ void			pf_putstr(char *str, int *ret);
 **	|                                  |
 **	+----------------------------------+
 */
-void			print_base_int(unsigned int nb, unsigned int base,
-	unsigned int opt);
-int				len_base_int(unsigned int nb, unsigned int base, int cpt,
-	unsigned int opt);
-void			print_base_long(unsigned long nb, unsigned int base,
-	unsigned int opt);
-int				len_base_long(unsigned long nb, unsigned int base, int cpt,
-	unsigned int opt);
+void			print_base_int(unsigned int nb, const unsigned int base,
+				unsigned int opt);
+int				len_base_int(unsigned int nb, const unsigned int base, int cpt,
+				unsigned int opt);
+void			print_base_long(unsigned long nb, const unsigned int base,
+				unsigned int opt);
+int				len_base_long(unsigned long nb,
+				const unsigned int base, int cpt, unsigned int opt);
 
-void			activ_bit(unsigned int *data, unsigned int bit);
-void			desactiv_bit(unsigned int *data, unsigned int bit);
-int				bit_isactiv(unsigned int data, unsigned int bit);
 void			ft_putbasechar(char nb, unsigned int opt);
 
+void			ft_putlnbr_base(unsigned long int nb, const unsigned int base,
+				const char *digits);
+void			ft_putnbr_base(unsigned int nb, const unsigned int base,
+				const char *digits);
 #endif

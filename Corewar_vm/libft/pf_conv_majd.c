@@ -26,7 +26,8 @@ static void	min_width(t_flags flags, int len, long nb, int *ret)
 		c = ' ';
 	while (i > 0)
 	{
-		pf_putchar(c, ret);
+		PUTCHAR(c);
+		++(*ret);
 		i--;
 	}
 }
@@ -54,8 +55,10 @@ static void	sign_or_space(t_flags flags, long nb, int *ret)
 		c = '+';
 	else if (flags.space)
 		c = ' ';
-	if (c)
-		pf_putchar(c, ret);
+	else
+		return ;
+	PUTCHAR(c);
+	++(*ret);
 }
 
 static void	precision(t_flags flags, int len, int *ret)
@@ -67,7 +70,8 @@ static void	precision(t_flags flags, int len, int *ret)
 		i = flags.precision - len;
 		while (i > 0)
 		{
-			pf_putchar('0', ret);
+			PUTCHAR('0');
+			++(*ret);
 			i--;
 		}
 	}

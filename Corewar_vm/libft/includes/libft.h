@@ -13,8 +13,8 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 # define DEC(bit) (1 << bit)
-# define ACTIV_BIT(var, bit) var |= DEC(bit)
-# define DESACTIV_BIT(var, bit) var = (var | DEC(bit)) ^ DEC(bit)
+# define ACTIV_BIT(var, bit) (var |= DEC(bit))
+# define DESACTIV_BIT(var, bit) (var &= ~(DEC(bit)))
 # define ISACTIV(var, bit) (var & DEC(bit))
 
 # include <unistd.h>
@@ -62,7 +62,6 @@ int					ft_isprint(int c);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 int					ft_isspace(int c);
-
 void				*ft_memalloc(size_t size);
 void				ft_memdel(void **ap);
 char				*ft_strnew(size_t size);
@@ -110,5 +109,10 @@ void				ft_strtoupper(char *str);
 char				*ft_strsupchar(char *str, char c);
 float				ft_sqrt(float s);
 int					ft_int_div_round_up(int nb, int div);
+
+int					ft_strisint(char *arg);
+int					ft_strisuint(char *arg);
+int					ft_memisset(void *p, size_t n, char c);
+void				ft_error_exit(const char *exit_message);
 
 #endif

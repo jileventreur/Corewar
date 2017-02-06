@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pf_conv_c.c                                        :+:      :+:    :+:   */
+/*   ft_dprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/11 20:23:06 by cadam             #+#    #+#             */
-/*   Updated: 2015/05/11 20:23:08 by cadam            ###   ########.fr       */
+/*   Created: 2015/05/11 20:07:16 by cadam             #+#    #+#             */
+/*   Updated: 2015/10/09 17:52:27 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		pf_conv_c(va_list *args, t_flags flags)
+int			ft_asprintf(char **ret, const char *format, ...)
 {
-	int		len;
-	int		ret;
-	char	c;
+	extern t_buf	g_buf;
+	va_list			args;
+	int				ret_value;
 
-	if (flags.l)
-		return (pf_conv_majc(args, flags));
-	c = va_arg(*args, int);
-	len = 1;
-	ret = 0;
-	pf_flag_min_width(flags, len, &ret, 0);
-	PUTCHAR(c);
-	ret += len;
-	pf_flag_min_width(flags, len, &ret, 1);
-	return (ret);
+	g_buf = (t_buf){0, {0}, 0};
+	g_char = &pf_malloc_char;
+	g_str = &pf_malloc_str;
+	g_end = &pf_malloc_put;
+	g_ret = ft_strdup("");
+	va_start(args, format);
+	ret_value = ft_general_print(format, &args);
+	*ret = g_ret;
+	if (g_ret)
+		return (ret_value);
+	return (-1);
 }

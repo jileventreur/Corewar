@@ -21,7 +21,8 @@ int		pf_conv_percent(va_list *args, t_flags flags)
 	len = 1;
 	ret = 0;
 	pf_flag_min_width(flags, len, &ret, 0);
-	pf_putchar('%', &ret);
+	PUTCHAR('%');
+	++ret;
 	pf_flag_min_width(flags, len, &ret, 1);
 	return (ret);
 }

@@ -21,14 +21,14 @@ static void	pf_conv_s_inside(t_flags flags, char *str, int len, int *ret)
 		i = 0;
 		while (str[i] && i < flags.precision)
 		{
-			ft_putchar(str[i]);
+			PUTCHAR(str[i]);
 			i++;
 		}
 		(*ret) += i;
 	}
 	else
 	{
-		ft_putstr(str);
+		PUTSTR(str);
 		(*ret) += len;
 	}
 }

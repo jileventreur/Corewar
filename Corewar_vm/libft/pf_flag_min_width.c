@@ -23,6 +23,18 @@ static int	pf_flag_calc_nb(t_flags flags, int len)
 	return (nb);
 }
 
+static void	ma_bite(t_flags flags, int write)
+{
+	if (flags.precision > -1 && flag_is_number(flags))
+	{
+		PUTCHAR(' ');
+	}
+	else
+	{
+		PUTCHAR((flags.zero && !write) ? '0' : ' ');
+	}
+}
+
 void		pf_flag_min_width(t_flags flags, int len, int *ret, int write)
 {
 	int	i;
@@ -42,10 +54,7 @@ void		pf_flag_min_width(t_flags flags, int len, int *ret, int write)
 	nb = pf_flag_calc_nb(flags, len);
 	while (i < nb)
 	{
-		if (flags.precision > -1 && flag_is_number(flags))
-			ft_putchar(' ');
-		else
-			ft_putchar((flags.zero && !write) ? '0' : ' ');
+		ma_bite(flags, write);
 		(*ret)++;
 		i++;
 	}

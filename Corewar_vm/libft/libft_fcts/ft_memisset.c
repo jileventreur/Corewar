@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_memisset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbauguen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/03 17:25:57 by vbauguen          #+#    #+#             */
-/*   Updated: 2015/12/03 17:25:59 by vbauguen         ###   ########.fr       */
+/*   Created: 2017/01/31 20:50:45 by cadam             #+#    #+#             */
+/*   Updated: 2017/01/31 20:51:00 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
+int		ft_memisset(void *p, size_t n, char c)
 {
-	(*del)((*alst)->content, (*alst)->content_size);
-	free(*alst);
-	*alst = NULL;
+	char	*tmp;
+	int		i;
+
+	tmp = p;
+	i = n;
+	while (--i >= 0)
+		if (tmp[i] != c)
+			return (0);
+	return (1);
 }

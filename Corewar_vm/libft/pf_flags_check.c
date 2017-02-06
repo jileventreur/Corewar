@@ -12,23 +12,7 @@
 
 #include "ft_printf.h"
 
-int		pf_is_flag(char c)
-{
-	int		i;
-
-	if (!ft_isanyof(c, "#0-+ 123456789.hljz*"))
-		return (0);
-	i = 0;
-	while (g_conv[i].c)
-	{
-		if (g_conv[i].c == c)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-void	pf_flags_check_min_width(t_flags *flags, const char *format, int *pos)
+int		pf_flags_check_min_width(t_flags *flags, const char *format, int *pos)
 {
 	char	c;
 
@@ -37,10 +21,12 @@ void	pf_flags_check_min_width(t_flags *flags, const char *format, int *pos)
 	{
 		flags->min_width = ft_atoi(format + *pos);
 		*pos += ft_intlen(flags->min_width) - 1;
+		return (1);
 	}
+	return (0);
 }
 
-void	pf_flags_check_precision(t_flags *flags, const char *format, int *pos)
+int		pf_flags_check_precision(t_flags *flags, const char *format, int *pos)
 {
 	char	c;
 
@@ -50,10 +36,12 @@ void	pf_flags_check_precision(t_flags *flags, const char *format, int *pos)
 		flags->precision = ft_atoi(format + *pos + 1);
 		*pos -= (!ft_isdigit(format[*pos + 1])) ? 1 : 0;
 		*pos += ft_intlen(flags->precision);
+		return (1);
 	}
+	return (0);
 }
 
-void	pf_flags_check_wildcard(t_flags *flags, const char *format,
+int		pf_flags_check_wildcard(t_flags *flags, const char *format,
 	int *pos, va_list *args)
 {
 	char	c;
@@ -76,32 +64,57 @@ void	pf_flags_check_wildcard(t_flags *flags, const char *format,
 				flags->minus = 1;
 			flags->min_width = (wildcard < 0) ? -wildcard : wildcard;
 		}
+		return (1);
 	}
+	return (0);
+}
+
+int		pf_flags_inside(t_flags *flags, char c, char c1)
+{
+	if (c == '-')
+		flags->minus = 1;
+	else if (c == '+')
+		flags->plus = 1;
+	else if (c == '#')
+		flags->hash = 1;
+	else if (c == '0')
+		flags->zero = 1;
+	else if (c == ' ')
+		flags->space = 1;
+	else if (c == 'h')
+		if (c1 == 'h')
+			flags->hh = 1;
+		else
+			flags->h = 1;
+	else if (c == 'h')
+		flags->h = 1;
+	else if (c == 'l')
+		if (c1 == 'l')
+			flags->ll = 1;
+		else
+			flags->l = 1;
+	else
+		return (0);
+	return (1);
 }
 
 int		pf_flags_check(va_list *args, t_flags *flags, const char *format,
-	int *pos)
+		int *pos)
 {
 	char	c;
 	char	c1;
 
 	c = format[*pos];
 	c1 = (format[*pos + 1]) ? format[*pos + 1] : 0;
-	if (!pf_is_flag(c))
+	if (pf_flags_inside(flags, c, c1))
+		return (0);
+	else if (c == 'j')
+		flags->j = 1;
+	else if (c == 'z')
+		flags->z = 1;
+	else if ((pf_flags_check_min_width(flags, format, pos) +
+	pf_flags_check_precision(flags, format, pos) +
+	pf_flags_check_wildcard(flags, format, pos, args)) == 0)
 		return (1);
-	flags->minus = (flags->minus || c == '-') ? 1 : 0;
-	flags->plus = (flags->plus || c == '+') ? 1 : 0;
-	flags->hash = (flags->hash || c == '#') ? 1 : 0;
-	flags->zero = (flags->zero || c == '0') ? 1 : 0;
-	flags->space = (flags->space || c == ' ') ? 1 : 0;
-	flags->hh = (flags->hh || (c == 'h' && c1 == 'h')) ? 1 : 0;
-	flags->h = (flags->h || c == 'h') ? 1 : 0;
-	flags->l = (flags->l || c == 'l') ? 1 : 0;
-	flags->ll = (flags->ll || (c == 'l' && c1 == 'l')) ? 1 : 0;
-	flags->j = (flags->j || c == 'j') ? 1 : 0;
-	flags->z = (flags->z || c == 'z') ? 1 : 0;
-	pf_flags_check_min_width(flags, format, pos);
-	pf_flags_check_precision(flags, format, pos);
-	pf_flags_check_wildcard(flags, format, pos, args);
 	return (0);
 }

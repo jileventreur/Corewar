@@ -12,28 +12,76 @@
 
 #include "ft_printf.h"
 
-void	print_base_int(unsigned int nb, unsigned int base, unsigned int opt)
+void	ft_putbasechar(char nb, const unsigned int opt)
 {
-	if (bit_isactiv(opt, 1) && (int)nb < 0)
-		nb = (unsigned int)((int)(nb * -1));
-	if (nb < base)
+	if (nb <= 9)
 	{
-		ft_putbasechar(nb, opt);
-		return ;
+		PUTCHAR(nb + '0');
 	}
-	print_base_int(nb / base, base, opt);
-	nb = nb % base;
-	ft_putbasechar(nb, opt);
+	else if (ISACTIV(opt, 0))
+	{
+		PUTCHAR(nb - 10 + 'A');
+	}
+	else
+	{
+		PUTCHAR(nb - 10 + 'a');
+	}
+}
+
+int		len_base_int(unsigned int nb, const unsigned int base, int cpt,
+		const unsigned int opt)
+{
+	if (ISACTIV(opt, 1) && (int)nb < 0)
+		nb = (unsigned int)((int)(nb * -1));
+	if (nb < 9)
+		return (1);
+	cpt = 0;
+	while (nb)
+	{
+		nb /= base;
+		++cpt;
+	}
+	return (cpt);
+}
+
+void	print_base_int(unsigned int nb, const unsigned int base,
+		const unsigned int opt)
+{
+	if (ISACTIV(opt, 1) && (int)nb < 0)
+		nb = (unsigned int)((int)(nb * -1));
+	if (base != 16)
+		ft_putnbr_base(nb, base, NULL);
+	else
+		ft_putnbr_base(nb, base,
+		ISACTIV(opt, 0) ? UPPER_HEX_DIGITS : LOWER_HEX_DIGITS);
 	return ;
 }
 
-int		len_base_int(unsigned int nb, unsigned int base, int cpt,
-	unsigned int opt)
+int		len_base_long(unsigned long nb, const unsigned int base, int cpt,
+		const unsigned int opt)
 {
-	if (bit_isactiv(opt, 1) && (int)nb < 0)
-		nb = (unsigned int)((int)(nb * -1));
-	if (nb < base)
-		return (cpt + 1);
-	cpt = len_base_int(nb / base, base, cpt, opt);
-	return (cpt + 1);
+	if (ISACTIV(opt, 1) && (long)nb < 0)
+		nb = (unsigned long)((long)(nb * -1));
+	if (nb < 9)
+		return (1);
+	cpt = 0;
+	while (nb)
+	{
+		nb /= base;
+		++cpt;
+	}
+	return (cpt);
+}
+
+void	print_base_long(unsigned long nb,
+		const unsigned int base, const unsigned int opt)
+{
+	if (ISACTIV(opt, 1) && (long)nb < 0)
+		nb = (unsigned long)((long)(nb * -1));
+	if (base != 16)
+		ft_putlnbr_base(nb, base, NULL);
+	else
+		ft_putlnbr_base(nb, base,
+		ISACTIV(opt, 0) ? UPPER_HEX_DIGITS : LOWER_HEX_DIGITS);
+	return ;
 }

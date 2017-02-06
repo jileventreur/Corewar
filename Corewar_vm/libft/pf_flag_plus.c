@@ -22,7 +22,11 @@ void	pf_flag_plus(t_flags flags, int *ret, long nb)
 {
 	(void)*ret;
 	if (flags.plus && nb >= 0)
-		ft_putchar('+');
+	{
+		PUTCHAR('+');
+	}
 	else if (nb < 0)
-		ft_putchar('-');
+	{
+		PUTCHAR('-');
+	}
 }

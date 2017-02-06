@@ -19,7 +19,11 @@ int		pf_conv_invalid(t_flags flags, char c)
 	ret = 0;
 	flags.conv = '%';
 	pf_flag_min_width(flags, 1, &ret, 0);
-	pf_putchar(c, &ret);
+	if (c)
+	{
+		PUTCHAR(c);
+		++ret;
+	}
 	pf_flag_min_width(flags, 1, &ret, 1);
 	return (ret);
 }

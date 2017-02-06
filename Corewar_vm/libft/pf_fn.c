@@ -40,21 +40,3 @@ int		ft_wstrlen(wchar_t *str)
 	}
 	return (ret);
 }
-
-void	pf_putchar(char c, int *ret)
-{
-	ft_putchar(c);
-	(*ret)++;
-}
-
-void	pf_putstr(char *str, int *ret)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		pf_putchar(str[i], ret);
-		i++;
-	}
-}

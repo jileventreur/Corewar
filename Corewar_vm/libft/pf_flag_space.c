@@ -16,7 +16,7 @@ void	pf_flag_space(t_flags flags, int *ret)
 {
 	if (flags.space && !flags.plus)
 	{
-		ft_putchar(' ');
+		PUTCHAR(' ');
 		(*ret)++;
 	}
 }

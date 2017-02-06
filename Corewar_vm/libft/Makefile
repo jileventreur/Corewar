@@ -1,7 +1,9 @@
 NAME =	libft.a
 
 SRCS =	ft_printf.c \
-		pf_color.c \
+		ft_dprintf.c \
+		ft_asprintf.c \
+		ft_general_print.c\
 		pf_conv.c \
 		pf_conv_bonus_b.c \
 		pf_conv_c.c \
@@ -18,7 +20,6 @@ SRCS =	ft_printf.c \
 		pf_conv_o.c \
 		pf_conv_p.c \
 		pf_conv_percent.c \
-		pf_conv_r.c \
 		pf_conv_s.c \
 		pf_conv_u.c \
 		pf_conv_x.c \
@@ -31,9 +32,11 @@ SRCS =	ft_printf.c \
 		pf_flags.c \
 		pf_flags_check.c \
 		pf_fn.c \
-		pf_nb_base_int.c \
-		pf_nb_base_long.c \
-		pf_nb_bit.c
+		pf_buf.c \
+		pf_malloc_put.c \
+		ft_putnbr_base.c \
+		ft_putlnbr_base.c \
+		pf_nb_base_int.c 
 
 OBJS =	$(SRCS:.c=.o)
 
