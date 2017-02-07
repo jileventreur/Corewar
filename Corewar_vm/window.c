@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 18:01:48 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 16:34:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void		print_next_check(t_vm *vm, int line)
 	int		i;
 	int		next_live;
 
-	mvwprintw(g_scr_infos, 4, line / 2, "next live check : ");
+	mvwprintw(g_scr_infos, 4, line / 2, "next live check : [");
 	i = 0;
 	if (vm->next_live_check != 0 && vm->ctd != 0)
 		next_live = (vm->next_live_check * 10) / vm->ctd;
@@ -48,12 +48,13 @@ void		print_next_check(t_vm *vm, int line)
 	wattron(g_scr_infos, COLOR_PAIR(16));
 	while (i < next_live)
 	{
-		mvwprintw(g_scr_infos, 4, line / 2 + 19 + i, "=");
+		mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, "=");
 		i++;
 	}
 	wattroff(g_scr_infos, COLOR_PAIR(16));
 	while (++i < 10)
-		mvwprintw(g_scr_infos, 4, line / 2 + 19 + i, " ");
+		mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, " ");
+	mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, "]");
 }
 
 void		nprint_infos(t_vm *vm, int fps)
@@ -74,9 +75,10 @@ void		nprint_infos(t_vm *vm, int fps)
 	mvwprintw(g_scr_infos, 2, line / 2, "total cycle : %d", vm->total_cycle);
 	print_next_check(vm, line);
 	frames = (1000000 / (fps * 20));
-	mvwprintw(g_scr_infos, 8, line / 2, "fps - infos : %d ", frames);
+	mvwprintw(g_scr_infos, 8, line / 2, "frames per second :", frames);
+	mvwprintw(g_scr_infos, 10, line / 2, "- info window : %d ", frames);
 	frames = (1000000 / (fps * 50));
-	mvwprintw(g_scr_infos, 8, line / 2 + 17, "- visual : %d ", frames);
+	mvwprintw(g_scr_infos, 12, line / 2, "- processes window : %d ", frames);
 	wrefresh(g_scr_infos);
 }
 

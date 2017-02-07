@@ -9,6 +9,7 @@ SRC =	aff.c \
 		fork_and_lfork.c \
 		ft_lstadd.c \
 		ft_lstnew.c \
+		ft_strsub.c \
 		get_args.c \
 		get_opt.c \
 		get_players.c \

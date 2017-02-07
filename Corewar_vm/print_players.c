@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 16:01:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 17:59:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 17:36:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,26 @@ void		print_is_alive(t_vm *vm, int line, int col, int player)
 
 void		print_color_infos(t_vm *vm, int all_procs, int total, int *p)
 {
-	int i;
-	int	line;
-	int	prog_max_len;
+	int		i;
+	int		line;
+	int		prog_max_len;
+	char	*s;
 
+	(void)all_procs;
 	i = -1;
 	line = 2;
 	prog_max_len = get_prog_max_len(vm) + 5;
 	while (++i < (int)vm->n_players)
 	{
+		s = ft_strsub(vm->c[i].header.prog_name, 0, prog_max_len - 5);
 		wattron(g_scr_infos, COLOR_PAIR(i + 1));
-		mvwprintw(g_scr_infos, line, 4, "%s", vm->c[i].header.prog_name);
-		print_pourcent(p[i], all_procs, line, 17 + prog_max_len);
+		mvwprintw(g_scr_infos, line, 4, "%s", s);
+		print_pourcent(p[i], MEM_SIZE, line, 17 + prog_max_len);
 		print_pourcent(vm->c[i].procs, total, line + 2, 17 + prog_max_len);
 		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
 		print_is_alive(vm, line, 44 + prog_max_len, i + 1);
 		line += 4;
+		free(s);
 	}
 }
 
@@ -105,7 +109,7 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 		procs = vm->c[i].procs * 100 / total_processes;
 		mvwprintw(g_scr_infos, line, 0, "%d :", i + 1);
 		mvwprintw(g_scr_infos, line, len, "_ memory     : [");
-		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%", p[i] * 100 / allprocs);
+		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%", p[i] * 100 / MEM_SIZE);
 		mvwprintw(g_scr_infos, line + 2, len, "_ processes  : [");
 		mvwprintw(g_scr_infos, line + 2, 37 + len, "] %d%%", procs);
 		line += 4;

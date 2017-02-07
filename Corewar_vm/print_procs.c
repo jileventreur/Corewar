@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/26 17:40:44 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 18:00:16 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 17:28:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ int			valid_proc_window(int *col)
 	line = (INFO_HEIGHT < line) ? line - INFO_HEIGHT : 0;
 	if (line * (*col) < MEM_SIZE * CELL_LEN)
 	{
-		if (valid_window == TRUE)
-			clear();
+		if (valid_window == TRUE || old_col != *col || old_line != line)
+			wclear(stdscr);
 		valid_window = FALSE;
-		mvprintw(line / 2, (*col) / 2, "Window too small to print processes.");
+		mvprintw(line / 2, (*col) / 2, "Window too small to print processes. ");
 		refresh();
+		old_col = *col;
+		old_line = line;
 		return (FALSE);
 	}
 	valid_window = TRUE;

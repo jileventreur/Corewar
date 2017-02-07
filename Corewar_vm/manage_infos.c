@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 15:16:25 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 16:38:04 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 17:22:52 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,7 @@ int			get_prog_max_len(t_vm *vm)
 		if ((curr_len = ft_strlen(vm->c[i].header.prog_name)) > max)
 			max = curr_len;
 	}
+	if (max > 15)
+		return (15);
 	return (max);
 }
