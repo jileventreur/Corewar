@@ -96,7 +96,6 @@ static int	ocp_analyse(t_op *inst, unsigned char ocp, t_arg *args)
 	return (ret);
 }
 
-
 int			get_args(t_vm *vm, t_proc *proc, t_arg *args, t_op *inst)
 {
 	int					ptr;
@@ -118,12 +117,6 @@ int			get_args(t_vm *vm, t_proc *proc, t_arg *args, t_op *inst)
 	}
 	if (!valid_inst)
 	{
-		// if (args[0].size + args[1].size + args[2].size + 1 + inst->ocp == 2)
-		// {
-		// 	ft_printf("ocp == %d, pc = %#x\n", vm->mem[(proc->pc + 1) % MEM_SIZE], proc->pc);
-		// 	ft_printf("inst is %s\n", inst->name);
-		// 	print_line(vm->mem, proc->pc);
-		// }
 		moove_pc(vm, proc,
 		args[0].size + args[1].size + args[2].size + 1 + inst->ocp);
 		return (0);

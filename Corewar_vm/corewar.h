@@ -60,7 +60,7 @@ typedef enum	e_type_code
 # define NBR_LIVE (21)
 # define MAX_CHECKS (10)
 
-# define BYTE_LINE_NB (64) // to remove
+# define BYTE_LINE_NB (32)
 # define PC_INC (4u)
 
 # define REG(num) (*(int *)(proc->reg[num - 1]))
@@ -221,9 +221,6 @@ void							my_lld(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_lldi(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_lfork(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_aff(t_vm *vm, t_proc *proc, t_arg *args);
-
-// void							write_var(t_vm *vm, t_proc *proc,
-// 								unsigned char *var, int beg);
 
 void							checks_and_destroy(t_vm *vm);
 

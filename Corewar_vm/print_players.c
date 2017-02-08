@@ -109,7 +109,8 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 		procs = vm->c[i].procs * 100 / total_processes;
 		mvwprintw(g_scr_infos, line, 0, "%d :", i + 1);
 		mvwprintw(g_scr_infos, line, len, "_ memory     : [");
-		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%  ", p[i] * 100 / MEM_SIZE);
+		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%  ",
+		p[i] * 100 / MEM_SIZE);
 		mvwprintw(g_scr_infos, line + 2, len, "_ processes  : [");
 		mvwprintw(g_scr_infos, line + 2, 37 + len, "] %d%%  ", procs);
 		line += 4;

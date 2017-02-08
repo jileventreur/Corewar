@@ -29,8 +29,6 @@ void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value)
 		}
 		ft_printf("\n");
 	}
-	if (vm->proc_mem[proc->pc] > PC_INC)
-		vm->proc_mem[proc->pc] -= PC_INC;
 	i = 0;
 	while (proc->pc + i < MEM_SIZE && i < value)
 		vm->proc_mem[proc->pc + i++] = proc->player_num;
@@ -38,5 +36,4 @@ void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value)
 	while (i < tmp_value)
 		vm->proc_mem[i++] = proc->player_num;
 	proc->pc = (proc->pc + value) % MEM_SIZE;
-	vm->proc_mem[proc->pc] = proc->player_num + PC_INC;
 }

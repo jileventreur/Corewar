@@ -12,16 +12,6 @@
 
 #include "corewar.h"
 
-
-void		print_line(unsigned char *mem, size_t pc)
-{
-	ft_printf("line %#x: ", pc / 64 * 64);
-	while (++pc % 64) 
-		ft_printf("%2.2x ", mem[pc - 1]);
-	ft_printf("%2.2x ", mem[pc]);
-	ft_printf("\n\n");
-}
-
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
 	unsigned char	c;
@@ -48,10 +38,7 @@ void	instruction_manager(t_vm *vm, t_proc *proc)
 	*args = (t_arg){DIR_CODE, 0, 0, 0};
 	if ((proc->inst) > INSTR_NUMBER)
 	{
-		if (vm->proc_mem[proc->pc] > PC_INC)
-			vm->proc_mem[proc->pc] -= PC_INC;
 		proc->pc = (proc->pc + 1) % MEM_SIZE;
-		vm->proc_mem[proc->pc] = 0;
 		return ;
 	}
 	if (!get_args(vm, proc, args, g_op_tab + proc->inst))
@@ -70,16 +57,16 @@ void	exec_procs(t_vm *vm)
 	while (tmp)
 	{
 		p = (t_proc *)tmp->content;
-		if (p->cycle_to_wait <= 0)
-			get_proc_cycle(p, vm->mem);
+		if (--p->cycle_to_wait <= 0)
+			instruction_manager(vm, p);
 		tmp = tmp->next;
 	}
 	tmp = vm->plst;
 	while (tmp)
 	{
 		p = (t_proc *)tmp->content;
-		if (--p->cycle_to_wait <= 0)
-			instruction_manager(vm, p);
+		if (p->cycle_to_wait <= 0)
+			get_proc_cycle(p, vm->mem);
 		tmp = tmp->next;
 	}
 }

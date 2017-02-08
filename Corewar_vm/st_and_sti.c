@@ -12,7 +12,7 @@
 
 #include "corewar.h"
 
-void	write_var(t_vm *vm, t_proc *proc, unsigned char *var, int beg)
+static void	write_var(t_vm *vm, t_proc *proc, unsigned char *var, int beg)
 {
 	size_t	cpt;
 
@@ -59,9 +59,10 @@ void		my_sti(t_vm *vm, t_proc *proc, t_arg *args)
 
 void		my_st(t_vm *vm, t_proc *proc, t_arg *args)
 {
-	extern t_op			g_op_tab[INSTR_NUMBER + 1];
+	extern t_op	g_op_tab[INSTR_NUMBER + 1];
+	int			dest;
 
-	int dest = (proc->pc + ((short int)(args[1].data) % IDX_MOD)) % MEM_SIZE;
+	dest = (proc->pc + ((short int)(args[1].data) % IDX_MOD)) % MEM_SIZE;
 	if (args[1].type == T_REG)
 		REG(args[1].data) = args[0].data;
 	else

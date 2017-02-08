@@ -42,7 +42,6 @@ void	print_args(t_arg *args, unsigned int arg_number,
 	}
 }
 
-
 void	introducing_contestants(t_champion *c)
 {
 	int		i;
