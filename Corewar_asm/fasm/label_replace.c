@@ -40,7 +40,7 @@ int					in_a_array(char *str, char **tab)
 	return (0);
 }
 
-int					to_label(t_content *list, char *label, int total)
+int					to_label(t_content *list, char *label)
 {
 	int sum;
 
@@ -51,7 +51,7 @@ int					to_label(t_content *list, char *label, int total)
 		list = list->next;
 	}
 	if (!list)
-		return (total);
+		return (exit_with_message("Unknown Label"));
 	return (sum);
 }
 
@@ -69,7 +69,7 @@ int					looking_for(t_content **list, int i,\
 		in_a_array((*list)->label_octet[i], start->label) == 1)
 			return (to_label_octet(start, j, count));
 		else if (j == count)
-			return (to_label(start, start->label_octet[i], total));
+			return (to_label(start, start->label_octet[i]));
 		total = total - nb_octet(*list);
 		start = start->next;
 		++count;

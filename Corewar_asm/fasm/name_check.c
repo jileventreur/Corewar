@@ -27,6 +27,11 @@ int			good_len(char *str, int len, int ind)
 		++i;
 		++count;
 	}
+	++i;
+	while (ft_isspace(str[i]))
+		++i;
+	if (str[i] && str[i] != COMMENT_CHAR && str[i] != AFTER_COMMENT)
+		exit_with_message("Bad header");
 	if (count <= len)
 		return (1);
 	if (ind == 1)

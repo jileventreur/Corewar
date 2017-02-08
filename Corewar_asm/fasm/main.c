@@ -16,13 +16,19 @@
 int	main(int argc, char **argv)
 {
 	int fd;
+	int i;
 
-	if (argc != 2)
-		exit_with_message("Only one argument.");
-	fd = open(argv[1], O_RDWR);
-	if (fd <= 0)
-		exit_with_message("Problème fd");
-	checking_file(argv[1], fd);
-	close(fd);
+	i = 1;
+	if (argc == 1)
+		exit_with_message("We need .s files.");
+	while (i < argc)
+	{
+		fd = open(argv[i], O_RDWR);
+		if (fd <= 0)
+			exit_with_message("Filedescriptor problem");
+		checking_file(argv[i], fd);
+		close(fd);
+		++i;
+	}
 	return (1);
 }

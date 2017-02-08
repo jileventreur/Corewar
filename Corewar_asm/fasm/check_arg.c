@@ -61,5 +61,5 @@ int		check_arg(char *str, int *i, t_content **list, int count)
 		free(cpy);
 		return (j);
 	}
-	return (exit_with_message(strcat(str, "\nError with value.")));
+	return (exit_with_message(ft_strjoin(str, "\nERROR WITH VALUE")));
 }

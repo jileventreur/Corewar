@@ -34,11 +34,12 @@ void			copy_label(t_content **list, char **label)
 	(*list)->label[i] = NULL;
 }
 
-t_content		*only_label(char **tab)
+t_content		*only_label(char ***tab, int *count)
 {
 	t_content *new_c;
 
-	if (!tab)
+	*count = 0;
+	if (!*tab)
 		return (NULL);
 	new_c = malloc(sizeof(t_content));
 	new_c->type[0] = 0;
@@ -46,8 +47,9 @@ t_content		*only_label(char **tab)
 	new_c->label_octet[0] = NULL;
 	new_c->label_octet[1] = NULL;
 	new_c->label_octet[2] = NULL;
-	copy_label(&new_c, tab);
+	copy_label(&new_c, *tab);
 	free_tab(tab);
+	*tab = NULL;
 	new_c->next = NULL;
 	new_c->type[0] = 0;
 	return (new_c);

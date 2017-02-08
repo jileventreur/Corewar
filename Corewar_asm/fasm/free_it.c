@@ -12,17 +12,17 @@
 
 #include "asm.h"
 
-void	free_tab(char **tab)
+void	free_tab(char ***tab)
 {
 	int i;
 
 	i = 0;
-	while (tab && tab[i])
+	while (*tab && (*tab)[i])
 	{
-		free(tab[i]);
+		free((*tab)[i]);
 		++i;
 	}
-	free(tab);
+	free(*tab);
 }
 
 void	free_label_octet(char **tab, char *type)
@@ -44,10 +44,11 @@ void	free_it(t_content **list)
 	while (*list)
 	{
 		free((*list)->name);
-		free_tab((*list)->label);
+		free_tab(&((*list)->label));
 		free_label_octet((*list)->label_octet, (*list)->type);
 		next = (*list)->next;
 		free(*list);
 		*list = next;
 	}
+	free(*list);
 }

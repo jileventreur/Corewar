@@ -83,7 +83,7 @@ t_content	*check_instruct(char *str, int nb, int i)
 	static	int		count = 0;
 
 	if (!str)
-		return (only_label(label_tab));
+		return (only_label(&label_tab, &count));
 	label_tab = realloc(label_tab, (count + 2) * sizeof(char *));
 	label_tab[count] = check_label(str, &i);
 	label_tab[++count] = NULL;
@@ -95,7 +95,7 @@ t_content	*check_instruct(char *str, int nb, int i)
 	count = 0;
 	list = malloc(sizeof(t_content));
 	copy_label(&list, label_tab);
-	free_tab(label_tab);
+	free_tab(&label_tab);
 	label_tab = NULL;
 	check_common_instruct(str, &i, g_op_tab, &list);
 	list->next = NULL;
