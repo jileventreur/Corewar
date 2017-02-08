@@ -53,13 +53,6 @@ void		my_sti(t_vm *vm, t_proc *proc, t_arg *args)
 		ft_printf("\n");
 		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n",
 		args[1].value, args[2].value, args[1].value + args[2].value, dest);
-		// if (vm->total_cycle > 26561) // && ((int *)vm->mem)[3] != 0)
-		// {
-		// 	ft_printf("%d\n", ((unsigned int *)vm->mem)[3]);
-		// 	ft_printf("------------------ YO ------------------\n");
-		// 	ft_printf("dest = %lu (%#x)\n", dest, dest);
-		// 	exit(1);
-		// }
 	}
 	moove_pc(vm, proc, args[0].size + args[1].size + args[2].size + 2);
 }
@@ -79,13 +72,6 @@ void		my_st(t_vm *vm, t_proc *proc, t_arg *args)
 		ft_printf("P%5d | st r%d %d", proc->proc_num,
 		args[0].data, (short int)args[1].data);
 		ft_printf("\n");
-		// if (vm->total_cycle > 26561) // && ((int *)vm->mem)[3] != 0)
-		// {
-		// 	ft_printf("%d\n", ((unsigned int *)vm->mem)[3]);
-		// 	ft_printf("------------------ YO ------------------\n");
-		// 	ft_printf("dest = %lu (%#x)\n", dest, dest);
-		// 	exit(1);
-		// }
 	}
 	moove_pc(vm, proc, args[0].size + args[1].size + 2);
 }

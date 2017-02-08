@@ -60,8 +60,8 @@ typedef enum	e_type_code
 # define NBR_LIVE (21)
 # define MAX_CHECKS (10)
 
-# define BYTE_LINE_NB (64)
-# define PC_BIT (2u)
+# define BYTE_LINE_NB (64) // to remove
+# define PC_INC (4u)
 
 # define REG(num) (*(int *)(proc->reg[num - 1]))
 

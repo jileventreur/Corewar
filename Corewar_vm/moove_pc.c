@@ -15,8 +15,8 @@
 void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value)
 {
 	unsigned int i;
+	unsigned int tmp_value;
 
-	// if (proc->proc_num == 13)
 	if (!vm->opt.g && ISACTIV(vm->opt.v, 4))
 	{
 		i = 0;
@@ -28,12 +28,15 @@ void		moove_pc(t_vm *vm, t_proc *proc, unsigned int value)
 			++i;
 		}
 		ft_printf("\n");
-		// ft_printf("proc->pc = %x\n", vm->mem[(proc->pc + value) % MEM_SIZE]);
-		// i = (proc->pc + value) % MEM_SIZE;
-		// while (i % 64)
-		// 	ft_printf("%.2x ", vm->mem[i++]);
 	}
-	DESACTIV_BIT(vm->proc_mem[proc->pc], PC_BIT);
+	if (vm->proc_mem[proc->pc] > PC_INC)
+		vm->proc_mem[proc->pc] -= PC_INC;
+	i = 0;
+	while (proc->pc + i < MEM_SIZE && i < value)
+		vm->proc_mem[proc->pc + i++] = proc->player_num;
+	tmp_value = value - i;
+	while (i < tmp_value)
+		vm->proc_mem[i++] = proc->player_num;
 	proc->pc = (proc->pc + value) % MEM_SIZE;
-	ACTIV_BIT(vm->proc_mem[proc->pc], PC_BIT);
+	vm->proc_mem[proc->pc] = proc->player_num + PC_INC;
 }

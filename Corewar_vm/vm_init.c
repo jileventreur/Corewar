@@ -25,7 +25,7 @@ static void		mem_init(unsigned char *mem, unsigned char *proc_mem,
 		if (ft_memisset(&c[i], sizeof(t_champion), 0))
 			continue ;
 		ft_memcpy(mem, c[i].prog, c[i].header.prog_size);
-		*proc_mem = c[i].num | (1u << PC_BIT);
+		*proc_mem = c[i].num + 4;
 		ft_memset(proc_mem + 1, c[i].num, c[i].header.prog_size - 1);
 		mem += MEM_SIZE / player_number;
 		proc_mem += MEM_SIZE / player_number;

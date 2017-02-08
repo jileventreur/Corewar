@@ -12,6 +12,37 @@
 
 #include "corewar.h"
 
+static int		bad_extension(char *filename)
+{
+	char *tmp;
+
+	if (!(tmp = ft_strstr(filename, ".cor")))
+		return (1);
+	if (tmp[4])
+		return (1);
+	if (filename - tmp == 0 || filename[ft_strlen(filename) - 5] == '/')
+		ft_error_exit("Error: empty name before extension\n");
+	return (0);
+}
+
+static int		verifs(char *filename, char *buf, int *ret)
+{
+	int fd;
+
+	fd = 0;
+	if (bad_extension(filename))
+		ft_error_exit("Error: not a .cor\n");
+	if ((fd = open(filename, O_RDONLY)) == -1)
+		ft_error_exit("Error: unable to open\n");
+	if ((*ret = read(fd, buf, CHAMP_MAX_SIZE + sizeof(t_header))) == -1)
+		ft_error_exit("Error unable to read file\n");
+	if (read(fd, buf, CHAMP_MAX_SIZE + sizeof(t_header)) != 0)
+		ft_error_exit("Error: file is too large\n");
+	if ((unsigned long)*ret < sizeof(t_header))
+		ft_error_exit("Error: file is too small\n");
+	return (fd);
+}
+
 static void		get_champion(char *filename, t_champion *champ, int champ_num)
 {
 	int			fd;
@@ -19,14 +50,7 @@ static void		get_champion(char *filename, t_champion *champ, int champ_num)
 	char		buf[CHAMP_MAX_SIZE + sizeof(t_header) + 1];
 	t_header	*p;
 
-	if ((fd = open(filename, O_RDONLY)) == -1)
-		ft_error_exit("Error: unable to open\n");
-	if ((ret = read(fd, buf, CHAMP_MAX_SIZE + sizeof(t_header))) == -1)
-		ft_error_exit("Error unable to read file\n");
-	if (read(fd, buf, CHAMP_MAX_SIZE + sizeof(t_header)) != 0)
-		ft_error_exit("Error: file is too large\n");
-	if ((unsigned long)ret < sizeof(t_header))
-		ft_error_exit("Error: file is too small\n");
+	fd = verifs(filename, buf, &ret);
 	buf[ret] = 0;
 	p = (t_header *)buf;
 	p->magic = BSWAP_32(p->magic);

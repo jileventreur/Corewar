@@ -48,7 +48,10 @@ void	instruction_manager(t_vm *vm, t_proc *proc)
 	*args = (t_arg){DIR_CODE, 0, 0, 0};
 	if ((proc->inst) > INSTR_NUMBER)
 	{
+		if (vm->proc_mem[proc->pc] > PC_INC)
+			vm->proc_mem[proc->pc] -= PC_INC;
 		proc->pc = (proc->pc + 1) % MEM_SIZE;
+		vm->proc_mem[proc->pc] = 0;
 		return ;
 	}
 	if (!get_args(vm, proc, args, g_op_tab + proc->inst))
