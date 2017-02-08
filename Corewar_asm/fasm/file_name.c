@@ -48,8 +48,14 @@ void	new_file(char *file, t_content *list, t_header *header)
 	char	*str;
 
 	str = file_name(file);
-	new_fd = open(str, O_CREAT | O_WRONLY, S_IRUSR |\
+	new_fd = open(str, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR |\
 	S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+	if (new_fd == -1)
+	{
+		ft_printf("FD Error\n");
+		free(str);
+		return ;
+	}
 	print_all(list, new_fd, header);
 	ft_printf("Writing a %s file\n", str);
 	free(str);
