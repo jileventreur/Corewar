@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   corewar.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 22:40:53 by cadam             #+#    #+#             */
-/*   Updated: 2017/01/31 22:40:54 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/07 06:19:28 by jilano           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ typedef	struct					s_proc
 	t_lint						last_live;
 	unsigned int				player_num;
 	unsigned int				proc_num;
-	unsigned int				cycle_to_wait;
+	int							cycle_to_wait;
 	unsigned char				inst;
 }								t_proc;
 
@@ -222,8 +222,8 @@ void							my_lldi(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_lfork(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_aff(t_vm *vm, t_proc *proc, t_arg *args);
 
-void							write_var(t_vm *vm, t_proc *proc,
-								unsigned char *var, t_lint beg);
+// void							write_var(t_vm *vm, t_proc *proc,
+// 								unsigned char *var, int beg);
 
 void							checks_and_destroy(t_vm *vm);
 

@@ -17,6 +17,7 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len)
 	char			*new;
 	size_t			i;
 
+	ft_printf("coucou\n");
 	i = 0;
 	if (!s)
 	{

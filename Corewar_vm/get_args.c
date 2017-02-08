@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_args.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cadam <cadam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 20:52:38 by cadam             #+#    #+#             */
-/*   Updated: 2017/01/31 21:15:27 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/07 06:34:12 by jilano           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ static int	ocp_analyse(t_op *inst, unsigned char ocp, t_arg *args)
 	return (ret);
 }
 
+
 int			get_args(t_vm *vm, t_proc *proc, t_arg *args, t_op *inst)
 {
 	int					ptr;
@@ -117,6 +118,12 @@ int			get_args(t_vm *vm, t_proc *proc, t_arg *args, t_op *inst)
 	}
 	if (!valid_inst)
 	{
+		// if (args[0].size + args[1].size + args[2].size + 1 + inst->ocp == 2)
+		// {
+		// 	ft_printf("ocp == %d, pc = %#x\n", vm->mem[(proc->pc + 1) % MEM_SIZE], proc->pc);
+		// 	ft_printf("inst is %s\n", inst->name);
+		// 	print_line(vm->mem, proc->pc);
+		// }
 		moove_pc(vm, proc,
 		args[0].size + args[1].size + args[2].size + 1 + inst->ocp);
 		return (0);

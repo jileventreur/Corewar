@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 21:33:27 by cadam             #+#    #+#             */
-/*   Updated: 2017/01/31 21:33:28 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/07 00:15:23 by jilano           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	vm->ctd = CYCLE_TO_DIE;
 	vm->procs_death_nb = 0;
 	vm->live_num = 0;
-	vm->total_cycle = 1;
+	vm->total_cycle = 0;
 	vm->last_ctd_dec = 1;
 	vm->next_live_check = CYCLE_TO_DIE;
 	vm->list_len = player_number;

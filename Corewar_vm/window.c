@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/07 16:34:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/08 17:13:55 by cadam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void		print_next_check(t_vm *vm, int line)
 	wattroff(g_scr_infos, COLOR_PAIR(16));
 	while (++i < 10)
 		mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, " ");
-	mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, "]");
+	mvwprintw(g_scr_infos, 4, line / 2 + 20 + 10, "]");
 }
 
 void		nprint_infos(t_vm *vm, int fps)
@@ -124,5 +124,4 @@ void		nprint_vm(t_vm *vm)
 	clear();
 	nprint_procs(vm);
 	exec_vm(vm);
-	endwin();
 }

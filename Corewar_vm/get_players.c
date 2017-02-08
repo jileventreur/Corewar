@@ -33,6 +33,8 @@ static void		get_champion(char *filename, t_champion *champ, int champ_num)
 	p->prog_size = BSWAP_32(p->prog_size);
 	if (p->magic != COREWAR_EXEC_MAGIC)
 		ft_error_exit("Error: bad magic number\n");
+	if (p->prog_size == 0)
+		ft_error_exit("Error: empty source code\n");
 	if (p->prog_size != ret - sizeof(t_header))
 		ft_error_exit("Error: bad program size\n");
 	champ->header = *p;

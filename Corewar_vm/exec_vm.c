@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   exec_vm.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 15:01:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 17:57:04 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 08:30:52 by jilano           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+
+void		print_line(unsigned char *mem, size_t pc)
+{
+	ft_printf("line %#x: ", pc / 64 * 64);
+	while (++pc % 64) 
+		ft_printf("%2.2x ", mem[pc - 1]);
+	ft_printf("%2.2x ", mem[pc]);
+	ft_printf("\n\n");
+}
 
 void	get_proc_cycle(t_proc *proc, unsigned char *mem)
 {
@@ -38,7 +48,7 @@ void	instruction_manager(t_vm *vm, t_proc *proc)
 	*args = (t_arg){DIR_CODE, 0, 0, 0};
 	if ((proc->inst) > INSTR_NUMBER)
 	{
-		++proc->pc;
+		proc->pc = (proc->pc + 1) % MEM_SIZE;
 		return ;
 	}
 	if (!get_args(vm, proc, args, g_op_tab + proc->inst))
@@ -57,11 +67,16 @@ void	exec_procs(t_vm *vm)
 	while (tmp)
 	{
 		p = (t_proc *)tmp->content;
-		if (--p->cycle_to_wait <= 0)
-		{
-			instruction_manager(vm, p);
+		if (p->cycle_to_wait <= 0)
 			get_proc_cycle(p, vm->mem);
-		}
+		tmp = tmp->next;
+	}
+	tmp = vm->plst;
+	while (tmp)
+	{
+		p = (t_proc *)tmp->content;
+		if (--p->cycle_to_wait <= 0)
+			instruction_manager(vm, p);
 		tmp = tmp->next;
 	}
 }
@@ -96,17 +111,17 @@ void	exec_vm(t_vm *vm)
 	refresh_speed = 5000;
 	while (vm->plst)
 	{
+		if (vm->opt.d == vm->total_cycle)
+			dump_vm(vm);
+		++vm->total_cycle;
 		if (vm->opt.g)
 			get_input_and_fsp(&ch, &refresh_speed);
 		if (!vm->opt.g && ISACTIV(vm->opt.v, 1))
 			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		checks_and_destroy(vm);
-		if (vm->opt.d == vm->total_cycle)
-			dump_vm(vm);
 		if (vm->opt.g)
 			print_all(vm, refresh_speed);
-		++vm->total_cycle;
 	}
 	endwin();
 	win = vm->c[-vm->last_live - 1].header.prog_name;

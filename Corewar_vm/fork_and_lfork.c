@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_and_lfork.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cadam <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 22:03:16 by cadam             #+#    #+#             */
-/*   Updated: 2017/01/31 22:03:17 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/07 06:16:14 by jilano           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void		my_lfork(t_vm *vm, t_proc *proc, t_arg *args)
 	((t_proc *)new->content)->pc = new_pc;
 	((t_proc *)new->content)->proc_num = ++vm->list_len;
 	++vm->c[((t_proc *)new->content)->player_num - 1].procs;
-	get_proc_cycle(new->content, vm->mem);
 	ft_lstadd(&vm->plst, new);
 	if (!vm->opt.g && ISACTIV(vm->opt.v, 2))
 	{
@@ -52,7 +51,6 @@ void		my_fork(t_vm *vm, t_proc *proc, t_arg *args)
 	((t_proc *)new->content)->pc = new_pc;
 	((t_proc *)new->content)->proc_num = ++vm->list_len;
 	++vm->c[((t_proc *)new->content)->player_num - 1].procs;
-	get_proc_cycle(new->content, vm->mem);
 	ft_lstadd(&vm->plst, new);
 	if (!vm->opt.g && ISACTIV(vm->opt.v, 2))
 	{

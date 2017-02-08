@@ -42,30 +42,6 @@ void	print_args(t_arg *args, unsigned int arg_number,
 	}
 }
 
-void	write_var(t_vm *vm, t_proc *proc, unsigned char *var, t_lint beg)
-{
-	size_t	cpt;
-
-	cpt = 0;
-	if (beg < 0)
-		beg += MEM_SIZE;
-	if (beg + REG_SIZE >= MEM_SIZE)
-	{
-		while (beg + cpt < MEM_SIZE)
-		{
-			vm->mem[beg + cpt] = var[REG_SIZE - cpt - 1];
-			vm->proc_mem[beg + cpt] = proc->player_num;
-			++cpt;
-		}
-		beg = -cpt;
-	}
-	while (cpt < REG_SIZE)
-	{
-		vm->mem[beg + cpt] = var[REG_SIZE - cpt - 1];
-		vm->proc_mem[beg + cpt] = proc->player_num;
-		++cpt;
-	}
-}
 
 void	introducing_contestants(t_champion *c)
 {
