@@ -29,7 +29,6 @@ static int		verifs(char *filename, char *buf, int *ret)
 {
 	int fd;
 
-	fd = 0;
 	if (bad_extension(filename))
 		ft_error_exit("Error: not a .cor\n");
 	if ((fd = open(filename, O_RDONLY)) == -1)
@@ -69,7 +68,7 @@ static void		get_champion(char *filename, t_champion *champ, int champ_num)
 
 static int		create_champion(t_champion *tab, char **argv)
 {
-	int	num;
+	unsigned int	num;
 
 	if (ft_strcmp(*argv, "-n"))
 	{
@@ -84,9 +83,11 @@ static int		create_champion(t_champion *tab, char **argv)
 	}
 	if (!ft_strisuint(argv[1]))
 		ft_error_exit("Error: Argument after -n is not a unsigned number\n");
-	if ((num = ft_atoi(argv[1]) - 1) >= MAX_PLAYERS)
+	if ((num = ft_atou(argv[1])) > MAX_PLAYERS)
+	{
 		ft_error_exit("Error: Argument after -n is greater than max players\n");
-	if (num < 0)
+	}
+	if (num-- == 0)
 		ft_error_exit("Error: Argument after -n is smaller than 1\n");
 	if (!ft_memisset(&tab[num], sizeof(t_champion), 0))
 		ft_error_exit("Error: Player number already taken\n");

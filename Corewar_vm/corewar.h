@@ -105,9 +105,10 @@ enum							e_instruction
 typedef struct					s_opt
 {
 	char						a;
+	unsigned int				d;
 	char						g;
-	int							d;
-	int							s;
+	char						h;
+	unsigned int				s;
 	char						v;
 }								t_opt;
 
@@ -193,10 +194,6 @@ void							vm_init(t_vm *vm, int argc, char **argv);
 void							get_proc_cycle(t_proc *proc,
 								unsigned char *mem);
 
-void							print_memory(unsigned char *mem,
-								unsigned int size);
-void							print_champions(t_champion *tab);
-void							print_bits(unsigned int x);
 void							print_args(t_arg *args, unsigned int arg_number,
 								unsigned char long_inst, unsigned char dest);
 void							print_procs(t_vm *vm, t_list *lst,
@@ -221,6 +218,8 @@ void							my_lld(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_lldi(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_lfork(t_vm *vm, t_proc *proc, t_arg *args);
 void							my_aff(t_vm *vm, t_proc *proc, t_arg *args);
+
+void							print_usage();
 
 void							checks_and_destroy(t_vm *vm);
 

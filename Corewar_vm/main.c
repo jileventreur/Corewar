@@ -63,7 +63,7 @@ int		main(int argc, char **argv)
 	t_vm	vm;
 
 	if (argc == 1)
-		ft_error_exit("Error: not enough args\n");
+		ft_error_exit("Error: not enough args (use -h to see usage)\n");
 	--argc;
 	++argv;
 	vm_init(&vm, argc, argv);

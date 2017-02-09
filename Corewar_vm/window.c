@@ -60,7 +60,7 @@ void		print_next_check(t_vm *vm, int line)
 void		nprint_infos(t_vm *vm, int fps)
 {
 	int		line;
-	int		p[vm->n_players];
+	int		p[MAX_PLAYERS]; // fsanitize fix
 	int		all_procs;
 	int		frames;
 

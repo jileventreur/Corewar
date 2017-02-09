@@ -1,6 +1,7 @@
 NAME = libft.a
 
-SRC =	ft_atoi.c \
+SRC =	ft_atou.c \
+		ft_atoi.c \
 		ft_bzero.c \
 		ft_chrchrdup.c \
 		ft_epurspace.c \

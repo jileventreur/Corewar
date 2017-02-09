@@ -115,5 +115,5 @@ void	exec_vm(t_vm *vm)
 	}
 	endwin();
 	win = vm->c[-vm->last_live - 1].header.prog_name;
-	ft_printf("le joueur %u(%s) a gagne\n", -vm->last_live, win);
+	ft_printf("Contestant %u, \"%s\" has won !\n", -vm->last_live, win);
 }

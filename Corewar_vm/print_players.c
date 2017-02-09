@@ -64,6 +64,9 @@ void		print_is_alive(t_vm *vm, int line, int col, int player)
 	}
 }
 
+// Aux ligne commentee j'ai remplace i qui designe implicitement le numero du 
+// joueur par le numero du joueur a la case i
+
 void		print_color_infos(t_vm *vm, int all_procs, int total, int *p)
 {
 	int		i;
@@ -78,12 +81,12 @@ void		print_color_infos(t_vm *vm, int all_procs, int total, int *p)
 	while (++i < (int)vm->n_players)
 	{
 		s = ft_strsub(vm->c[i].header.prog_name, 0, prog_max_len - 5);
-		wattron(g_scr_infos, COLOR_PAIR(i + 1));
+		wattron(g_scr_infos, COLOR_PAIR(vm->c[i].num)); // modifs
 		mvwprintw(g_scr_infos, line, 4, "%s", s);
 		print_pourcent(p[i], MEM_SIZE, line, 17 + prog_max_len);
 		print_pourcent(vm->c[i].procs, total, line + 2, 17 + prog_max_len);
-		wattroff(g_scr_infos, COLOR_PAIR(i + 1));
-		print_is_alive(vm, line, 44 + prog_max_len, i + 1);
+		wattroff(g_scr_infos, COLOR_PAIR(vm->c[i].num)); // modifs 
+		print_is_alive(vm, line, 44 + prog_max_len, vm->c[i].num); // modifs
 		line += 4;
 		free(s);
 	}
@@ -107,7 +110,7 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 	while (++i < (int)vm->n_players)
 	{
 		procs = vm->c[i].procs * 100 / total_processes;
-		mvwprintw(g_scr_infos, line, 0, "%d :", i + 1);
+		mvwprintw(g_scr_infos, line, 0, "%d :", vm->c[i].num); // modifs
 		mvwprintw(g_scr_infos, line, len, "_ memory     : [");
 		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%  ",
 		p[i] * 100 / MEM_SIZE);

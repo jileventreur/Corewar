@@ -26,7 +26,7 @@ SRC =	aff.c \
 		vm_init.c \
 		window.c \
 		zjmp.c
-WFLAGS = -Wall -Werror -Wextra
+WFLAGS = -Wall -Werror -Wextra -fsanitize=address
 
 LFLAGS = -L libft/ -lft -lncurses
 
