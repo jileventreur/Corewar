@@ -4,7 +4,7 @@ WFLAGS = -Wall -Werror -Wextra -fsanitize=address
 
 LFLAGS = -L libft/ -lft -lncurses
 
-CC = gcc -g
+CC = gcc
 
 OBJ = $(SRC:.c=.o)
 
@@ -21,14 +21,14 @@ asm :
 	mv Corewar_asm/asm .
 vm :
 	make -C Corewar_vm
-	mv Corewar_vm/corewar .
+	mv Corewar_vm/corewar vm
 
 clean :
 	make -C Corewar_vm clean
 	make -C Corewar_asm clean
 
 fclean :
-	rm asm vm
+	rm -rf asm vm
 	make -C Corewar_vm fclean
 	make -C Corewar_asm fclean
 
