@@ -25,6 +25,8 @@ void			copy_label(t_content **list, char **label)
 	while (label[i])
 		++i;
 	(*list)->label = malloc((i + 1) * sizeof(char *));
+	if (!((*list)->label))
+		exit_with_message("Malloc error.");
 	i = 0;
 	while (label[i])
 	{
@@ -42,6 +44,8 @@ t_content		*only_label(char ***tab, int *count)
 	if (!*tab)
 		return (NULL);
 	new_c = malloc(sizeof(t_content));
+	if (!new_c)
+		exit_with_message("Malloc error.");
 	new_c->type[0] = 0;
 	new_c->name = ft_strdup("label");
 	new_c->label_octet[0] = NULL;
@@ -61,6 +65,8 @@ char			*add_label(char *str, int i)
 	char	*label;
 
 	label = malloc((1 + ft_strlen(str)) * sizeof(char));
+	if (!label)
+		exit_with_message("Malloc error.");
 	j = 0;
 	while (j < (i - 1))
 	{

@@ -44,7 +44,9 @@ int				checking_size(t_content *list, t_header *header)
 {
 	unsigned int i;
 
-	if ((i = total_octet(list)) <= CHAMP_MAX_SIZE)
+	if ((i = total_octet(list)) == 0)
+		exit_with_message("Not enough line.");
+	else if (i <= CHAMP_MAX_SIZE)
 		(*header).prog_size = bitswap_32(i);
 	else
 		exit_with_message("Prog is too long.");
@@ -55,7 +57,7 @@ void			initialize_var(t_content **list, char **line, int *i)
 {
 	ft_bzero(list, sizeof(t_content *));
 	*i = 0;
-	line = NULL;
+	*line = NULL;
 }
 
 void			checking_file(char *file, int fd)
@@ -73,13 +75,10 @@ void			checking_file(char *file, int fd)
 	header.magic = bitswap_32(COREWAR_EXEC_MAGIC);
 	while (get_next_line(fd, &line) > 0)
 	{
-		++i;
 		next_to(&list, check_this_line(line, 1));
 		free(line);
 		line = NULL;
 	}
-	if (i < 3)
-		exit_with_message("Not enough lines.");
 	next_to(&list, check_instruct(NULL, 1, 0));
 	label_replace(&list, list);
 	checking_size(list, &header);

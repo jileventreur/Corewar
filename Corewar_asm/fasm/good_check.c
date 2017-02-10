@@ -24,7 +24,7 @@ int			good_check_redirect_part2(char c, int mask, int size, char *str)
 	size = is_it_good(c, mask);
 	if (size == -1)
 	{
-		ft_printf("{red}%s{eoc}\n", str);
+		ft_putendl_fd(str, 2);
 		exit_with_message("Bad argument.");
 	}
 	return (1);
@@ -44,7 +44,7 @@ void		good_check_redirect_bad(char *str, int j, t_op tab)
 {
 	if ((unsigned int)j != tab.param_number)
 	{
-		ft_printf("{red}%s{eoc}\n", str);
+		ft_putendl_fd(str, 2);
 		exit_with_message("Wrong parameter.\n");
 	}
 }
@@ -74,6 +74,6 @@ int			good_check_redirect(char *str, t_op tab, int *i, t_content **list)
 	last_octet_update(j, octet, list);
 	if (!str[*i] || str[*i] == AFTER_COMMENT || str[*i] == COMMENT_CHAR)
 		return (1);
-	ft_printf("{red}%s{eoc}\n", str);
+	ft_putendl_fd(str, 2);
 	return (exit_with_message("Problem."));
 }
