@@ -1,6 +1,6 @@
 NAME =	corewar
 
-WFLAGS = -Wall -Werror -Wextra -fsanitize=address
+WFLAGS = -Wall -Werror -Wextra
 
 LFLAGS = -L libft/ -lft -lncurses
 

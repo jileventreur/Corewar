@@ -27,11 +27,11 @@ SRC =	aff.c \
 		vm_init.c \
 		window.c \
 		zjmp.c
-WFLAGS = -Wall -Werror -Wextra -fsanitize=address
+WFLAGS = -Wall -Werror -Wextra
 
 LFLAGS = -L libft/ -lft -lncurses
 
-CC = gcc -g
+CC = gcc
 
 OBJ = $(SRC:.c=.o)
 

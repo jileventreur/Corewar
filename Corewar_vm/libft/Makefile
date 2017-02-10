@@ -48,7 +48,7 @@ $(NAME): libft_fcts/libft.a $(OBJS)
 	@ranlib $(NAME)
 
 $(OBJS): %.o: %.c
-	@gcc -Wall -Wextra -Werror -g -I includes -c $<
+	@gcc -Wall -Wextra -Werror -I includes -c $<
 
 libft_fcts/libft.a:
 	@make -C libft_fcts

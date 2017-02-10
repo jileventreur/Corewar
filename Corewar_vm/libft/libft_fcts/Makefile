@@ -81,7 +81,7 @@ SRC =	ft_atou.c \
 
 OBJ = $(SRC:.c=.o)
 
-GCCF = -Wall -Werror -Wextra -g
+GCCF = -Wall -Werror -Wextra
 
 all: $(NAME)
 
