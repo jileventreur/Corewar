@@ -60,7 +60,7 @@ typedef enum	e_type_code
 # define NBR_LIVE (21)
 # define MAX_CHECKS (10)
 
-# define BYTE_LINE_NB (32)
+# define BYTE_LINE_NB (64) // to modif
 # define PC_INC (4u)
 
 # define REG(num) (*(int *)(proc->reg[num - 1]))
@@ -100,12 +100,12 @@ enum							e_instruction
 	AFF
 };
 
-# define OPTION "adgsv"
+# define OPTION "adghsv"
 
 typedef struct					s_opt
 {
 	char						a;
-	unsigned int				d;
+	long int					d;
 	char						g;
 	char						h;
 	unsigned int				s;

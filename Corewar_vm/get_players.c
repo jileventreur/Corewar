@@ -25,7 +25,7 @@ static int		bad_extension(char *filename)
 	return (0);
 }
 
-static int		verifs(char *filename, char *buf, int *ret)
+static void		verifs(char *filename, char *buf, int *ret)
 {
 	int fd;
 
@@ -39,17 +39,15 @@ static int		verifs(char *filename, char *buf, int *ret)
 		ft_error_exit("Error: file is too large\n");
 	if ((unsigned long)*ret < sizeof(t_header))
 		ft_error_exit("Error: file is too small\n");
-	return (fd);
 }
 
 static void		get_champion(char *filename, t_champion *champ, int champ_num)
 {
-	int			fd;
 	int			ret;
 	char		buf[CHAMP_MAX_SIZE + sizeof(t_header) + 1];
 	t_header	*p;
 
-	fd = verifs(filename, buf, &ret);
+	verifs(filename, buf, &ret);
 	buf[ret] = 0;
 	p = (t_header *)buf;
 	p->magic = BSWAP_32(p->magic);

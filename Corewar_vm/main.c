@@ -12,8 +12,8 @@
 
 #include "corewar.h"
 
-void	print_args(t_arg *args, unsigned int arg_number,
-		unsigned char long_inst, unsigned char dest)
+void		print_args(t_arg *args, unsigned int arg_number,
+			unsigned char long_inst, unsigned char dest)
 {
 	unsigned int	i;
 
@@ -42,7 +42,7 @@ void	print_args(t_arg *args, unsigned int arg_number,
 	}
 }
 
-void	introducing_contestants(t_champion *c)
+static void	introducing_contestants(t_champion *c)
 {
 	int		i;
 
@@ -58,7 +58,7 @@ void	introducing_contestants(t_champion *c)
 	}
 }
 
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_vm	vm;
 

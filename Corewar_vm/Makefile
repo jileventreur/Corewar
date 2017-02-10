@@ -22,6 +22,7 @@ SRC =	aff.c \
 		op.c \
 		print_players.c \
 		print_procs.c \
+		print_usage.c \
 		st_and_sti.c \
 		vm_init.c \
 		window.c \

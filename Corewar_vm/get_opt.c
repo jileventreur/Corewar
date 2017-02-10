@@ -14,12 +14,17 @@
 
 static void		get_opt_d(t_opt *opt, char ***argv, int argc, int i)
 {
+	unsigned int	tmp;
+
 	if (i + 1 >= argc)
 		ft_error_exit("Error: no argument after -d\n");
 	++*argv;
 	if (!ft_strisuint(**argv))
 		ft_error_exit("Error: argument after -d is not an unsigned number\n");
-	opt->d = ft_atou(**argv);
+	tmp = ft_atou(**argv);
+	opt->d = tmp;
+	if (opt->d != tmp)
+		ft_error_exit("Error: argument after -d is not an unsigned number\n");
 }
 
 static void		get_opt_s(t_opt *opt, char ***argv, int argc, int i)
@@ -36,6 +41,7 @@ static void		get_opt_s(t_opt *opt, char ***argv, int argc, int i)
 static void		get_opt_v(t_opt *opt, char ***argv, int argc, int i)
 {
 	unsigned int v;
+
 	if (i + 1 >= argc)
 		ft_error_exit("Error: no argument after -v\n");
 	++*argv;
@@ -50,7 +56,7 @@ static void		switch_opt(t_opt *opt, char ***argv, int argc, int *i)
 {
 	if (*(**argv + 1) == 'h' && (*(**argv + 2)) == '\0' && opt->h++ == 0)
 		print_usage();
-	if (*(**argv + 1) == 'a' && (*(**argv + 2)) == '\0')
+	else if (*(**argv + 1) == 'a' && (*(**argv + 2)) == '\0')
 		opt->a = 1;
 	else if (*(**argv + 1) == 'g' && (*(**argv + 2)) == '\0')
 		opt->g = 1;

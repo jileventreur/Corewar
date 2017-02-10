@@ -12,22 +12,38 @@
 
 #include "corewar.h"
 
-void	print_usage(void)
+static void		print_usage2(void)
 {
-	ft_printf("Usage: ../source/corewar [-d N -s N -v [0..31] | -g | -a] [-n] <champion1.cor> <...>\n");
-	ft_printf("    -a        : Prints output from \"aff\"");
+	ft_printf("#### NCURSES OUTPUT MODE #####################################");
+	ft_printf("##################\n");
+	ft_printf("    -g\t: Ncurses output mode\n");
+	ft_printf("############################################################");
+	ft_printf("####################\n");
+	ft_printf("\033[0m");
+}
+
+void			print_usage(void)
+{
+	ft_printf("\033[33;1m");
+	ft_printf("Usage: ./corewar [-d N -s N -v [0..31] | -g] [-h] [-a] ");
+	ft_printf(" [-n [1..4]] <champion1.cor> <...>\n");
+	ft_printf("    -a\t: Prints output from \"aff\"");
 	ft_printf("(Default is to hide it)\n");
 	ft_printf("#### TEXT OUTPUT MODE");
 	ft_printf(" ##########################################################\n");
-	ft_printf("    -d N      : Dumps memory after N cycles then exits\n");
-	ft_printf("
-	ft_printf("    -s N      : Runs N cycles, dumps memory, pauses, then repeats\n");
-	ft_printf("    -v N      : Verbosity levels, can be added together to enable several\n");
-	ft_printf("                - 0 : Show only essentials\n");
-	ft_printf("                - 1 : Show lives\n");
-	ft_printf("                - 2 : Show cycles\n");
-	ft_printf("                - 4 : Show operations (Params are NOT litteral ...)\n");
-	ft_printf("                - 8 : Show deaths\n");
-	ft_printf("                - 16 : Show PC movements (Except for jumps)\n");
-
+	ft_printf("    -d, -dump N\t:");
+	ft_printf("Dumps memory after N cycles then exits\n");
+	ft_printf("    -n N\t: Assign a number to the next champion\n");
+	ft_printf("    -s N\t: Runs N cycles, dumps memory, pauses,");
+	ft_printf(" then repeats\n");
+	ft_printf("    -v N\t: Verbosity levels, ");
+	ft_printf("can be added together to enable several\n");
+	ft_printf("\t\t\t- 0 : Show only essentials\n");
+	ft_printf("\t\t\t- 1 : Show lives\n");
+	ft_printf("\t\t\t- 2 : Show cycles\n");
+	ft_printf("\t\t\t- 4 : Show operations ");
+	ft_printf("(Params are NOT litteral ...)\n");
+	ft_printf("\t\t\t- 8 : Show deaths\n");
+	ft_printf("\t\t\t- 16 : Show PC movements (Except for jumps)\n");
+	print_usage2();
 }
