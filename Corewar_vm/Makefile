@@ -1,8 +1,11 @@
 NAME =	corewar
 
-INCLUDES = libft/includes/
+LIBFT_INC = libft/includes
+CORE_INC = includes
 
-SRC =	aff.c \
+DIR_SRC = src/
+
+FILES =	aff.c \
 		calculation_instructions.c \
 		check_and_destroy.c \
 		exec_vm.c \
@@ -29,6 +32,8 @@ SRC =	aff.c \
 		zjmp.c
 WFLAGS = -Wall -Werror -Wextra
 
+SRC := $(addprefix $(DIR_SRC), $(FILES))
+
 LFLAGS = -L libft/ -lft -lncurses
 
 CC = gcc
@@ -39,7 +44,7 @@ OBJ = $(SRC:.c=.o)
 all : $(NAME)
 
 %.o: %.c
-	$(CC) -c $(WFLAGS) -I $(INCLUDES) $< -o $@
+	$(CC) -c $(WFLAGS) -I $(LIBFT_INC) -I $(CORE_INC) $< -o $@
 
 $(NAME) : $(OBJ)
 	make -C libft

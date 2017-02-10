@@ -24,7 +24,7 @@ SRC =	fasm/main.c\
 
 OBJ = $(SRC:.c=.o)
 
-GCCF = -Wall -Werror -Wextra -g
+GCCF = -Wall -Werror -Wextra
 
 all: $(NAME)
 
