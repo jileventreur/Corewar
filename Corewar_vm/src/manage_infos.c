@@ -72,7 +72,7 @@ int			get_prog_max_len(t_vm *vm)
 
 	i = -1;
 	max = 0;
-	while (++i < (int)vm->n_players)
+	while (++i < MAX_PLAYERS) // modifs
 	{
 		if ((curr_len = ft_strlen(vm->c[i].header.prog_name)) > max)
 			max = curr_len;
