@@ -76,23 +76,23 @@ void			print_champions(t_champion *c) // to rm
 	ft_printf("\n");
 }
 
-static void		reorder_champions(t_champion *c)
-{
-	int i;
-	int	max;
+// static void		reorder_champions(t_champion *c)
+// {
+// 	int i;
+// 	int	max;
 
-	i = 0;
-	while (i < MAX_PLAYERS && !ft_memisset(c + i, sizeof(t_champion), 0))
-		++i;
-	max = i;
-	while (i < MAX_PLAYERS && ft_memisset(c + i, sizeof(t_champion), 0))
-		++i;
-	if (i == MAX_PLAYERS)
-		return ;
-	ft_memcpy(c + max, c + i, sizeof(t_champion));
-	ft_bzero(c + i, sizeof(t_champion));
-	reorder_champions(c);
-}
+// 	i = 0;
+// 	while (i < MAX_PLAYERS && !ft_memisset(c + i, sizeof(t_champion), 0))
+// 		++i;
+// 	max = i;
+// 	while (i < MAX_PLAYERS && ft_memisset(c + i, sizeof(t_champion), 0))
+// 		++i;
+// 	if (i == MAX_PLAYERS)
+// 		return ;
+// 	ft_memcpy(c + max, c + i, sizeof(t_champion));
+// 	ft_bzero(c + i, sizeof(t_champion));
+// 	reorder_champions(c);
+// }
 
 void			vm_init(t_vm *vm, int argc, char **argv)
 {
@@ -104,7 +104,7 @@ void			vm_init(t_vm *vm, int argc, char **argv)
 	get_opt(&argv, &argc, &vm->opt);
 	if ((player_number = get_players(argv, argc, vm->c)) == 0)
 		ft_error_exit("Error: No champion\n");
-	reorder_champions(vm->c);
+	// reorder_champions(vm->c); NIQUE BIEN TA MERE
 	vm->plst = proc_init(vm->c, player_number);
 	mem_init(vm->mem, vm->proc_mem, vm->c, player_number);
 	proc_cycle_init(vm->plst, vm->mem);
