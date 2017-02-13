@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 16:01:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/08 17:23:51 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/13 14:50:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void		print_pourcent(int curr_value, int max_value, int line, int col)
 	int	total;
 
 	j = 0;
-	total = curr_value * 20 / max_value;
+	total = curr_value * 20 / ((max_value > 0) ? max_value : 1);
 	while (j < total)
 	{
 		mvwprintw(g_scr_infos, line, col + j, "=");
@@ -106,6 +106,8 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 	len = get_prog_max_len(vm) + 5;
 	while (++i < (int)vm->n_players)
 		total_processes += vm->c[i].procs;
+	if (total_processes == 0)
+		total_processes = 1;
 	i = -1;
 	while (++i < (int)vm->n_players)
 	{

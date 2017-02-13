@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 18:18:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/08 17:13:55 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/13 15:15:04 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		print_next_check(t_vm *vm, int line)
 void		nprint_infos(t_vm *vm, int fps)
 {
 	int		line;
-	int		p[MAX_PLAYERS]; // fsanitize fix
+	int		p[MAX_PLAYERS];
 	int		all_procs;
 	int		frames;
 
@@ -74,10 +74,10 @@ void		nprint_infos(t_vm *vm, int fps)
 	print_players(vm, all_procs, p);
 	mvwprintw(g_scr_infos, 2, line / 2, "total cycle : %d", vm->total_cycle);
 	print_next_check(vm, line);
-	frames = (1000000 / (fps * 20));
+	frames = fps > 0 ? (1000000 / (fps * 20)) : 0;
 	mvwprintw(g_scr_infos, 8, line / 2, "frames per second :", frames);
 	mvwprintw(g_scr_infos, 10, line / 2, "- info window : %d ", frames);
-	frames = (1000000 / (fps * 50));
+	frames = fps > 0 ? (1000000 / (fps * 50)) : 0;
 	mvwprintw(g_scr_infos, 12, line / 2, "- processes window : %d ", frames);
 	wrefresh(g_scr_infos);
 }
@@ -114,14 +114,22 @@ void		nprint_vm(t_vm *vm)
 {
 	int		col;
 	int		line;
+	int		ch;
 
+	ch = ' ';
 	col = 0;
 	line = 0;
 	init_ncurses();
 	getmaxyx(stdscr, col, line);
 	g_scr_infos = newwin(INFO_HEIGHT, line, col - INFO_HEIGHT, 0);
-	getmaxyx(g_scr_infos, col, line);
 	clear();
 	nprint_procs(vm);
+	nprint_infos(vm, 0);
+	while ((ch = getch()) != ' ')
+	{
+		nprint_procs(vm);
+		nprint_infos(vm, 0);
+		is_end_corewar(ch);
+	}
 	exec_vm(vm);
 }
