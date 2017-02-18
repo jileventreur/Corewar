@@ -14,7 +14,7 @@
 
 int	exit_with_message(char *str)
 {
-	ft_printf("%s\n", str);
+	ft_putendl_fd(str, 2);
 	exit(0);
 	return (-1);
 }

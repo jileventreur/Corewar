@@ -52,7 +52,7 @@ void	new_file(char *file, t_content *list, t_header *header)
 	S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (new_fd == -1)
 	{
-		ft_printf("FD Error\n");
+		ft_putendl_fd(str, 2);
 		free(str);
 		return ;
 	}

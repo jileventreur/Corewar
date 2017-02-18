@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 16:01:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/08 17:23:51 by cadam            ###   ########.fr       */
+/*   Updated: 2017/02/13 14:50:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void		print_pourcent(int curr_value, int max_value, int line, int col)
 	int	total;
 
 	j = 0;
-	total = curr_value * 20 / max_value;
+	total = curr_value * 20 / ((max_value > 0) ? max_value : 1);
 	while (j < total)
 	{
 		mvwprintw(g_scr_infos, line, col + j, "=");
@@ -64,8 +64,6 @@ void		print_is_alive(t_vm *vm, int line, int col, int player)
 	}
 }
 
-// Aux ligne commentee j'ai remplace i qui designe implicitement le numero du 
-// joueur par le numero du joueur a la case i
 
 void		print_color_infos(t_vm *vm, int all_procs, int total, int *p)
 {
@@ -78,8 +76,10 @@ void		print_color_infos(t_vm *vm, int all_procs, int total, int *p)
 	i = -1;
 	line = 2;
 	prog_max_len = get_prog_max_len(vm) + 5;
-	while (++i < (int)vm->n_players)
+	while (++i < MAX_PLAYERS)
 	{
+		if (!vm->c[i].num)
+			continue ;
 		s = ft_strsub(vm->c[i].header.prog_name, 0, prog_max_len - 5);
 		wattron(g_scr_infos, COLOR_PAIR(vm->c[i].num)); // modifs
 		mvwprintw(g_scr_infos, line, 4, "%s", s);
@@ -97,19 +97,17 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 	int i;
 	int	line;
 	int	len;
-	int	total_processes;
 	int	procs;
 
 	i = -1;
-	total_processes = 0;
 	line = 2;
 	len = get_prog_max_len(vm) + 5;
-	while (++i < (int)vm->n_players)
-		total_processes += vm->c[i].procs;
 	i = -1;
-	while (++i < (int)vm->n_players)
+	while (++i < MAX_PLAYERS)
 	{
-		procs = vm->c[i].procs * 100 / total_processes;
+		if (!vm->c[i].num)
+			continue ;
+		procs = vm->c[i].procs * 100 / vm->list_len;
 		mvwprintw(g_scr_infos, line, 0, "%d :", vm->c[i].num); // modifs
 		mvwprintw(g_scr_infos, line, len, "_ memory     : [");
 		mvwprintw(g_scr_infos, line, 37 + len, "] %d%%  ",
@@ -118,5 +116,5 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 		mvwprintw(g_scr_infos, line + 2, 37 + len, "] %d%%  ", procs);
 		line += 4;
 	}
-	print_color_infos(vm, allprocs, total_processes, p);
+	print_color_infos(vm, allprocs, vm->list_len, p);
 }

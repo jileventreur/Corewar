@@ -57,7 +57,6 @@ int		hexa_atoi(char *str)
 		mult = mult * 16;
 		--j;
 	}
-	ft_printf("{green}%s{eoc} {red}%d{eoc}\n", str, count);
 	return (count);
 }
 

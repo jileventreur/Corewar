@@ -6,7 +6,7 @@
 /*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 22:40:53 by cadam             #+#    #+#             */
-/*   Updated: 2017/02/07 06:19:28 by jilano           ###   ########.fr       */
+/*   Updated: 2017/02/13 14:56:03 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,5 +234,7 @@ void							get_opt(char ***argv_source,
 void							print_vm(t_vm *vm);
 
 void							exec_vm(t_vm *vm);
+void							is_end_corewar(int ch);
+void							print_wait_end(t_vm *vm);
 
 #endif

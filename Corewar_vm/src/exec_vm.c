@@ -6,7 +6,7 @@
 /*   By: jilano <jilano@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 15:01:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/07 08:30:52 by jilano           ###   ########.fr       */
+/*   Updated: 2017/02/13 14:56:24 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	exec_vm(t_vm *vm)
 		if (vm->opt.g)
 			print_all(vm, refresh_speed);
 	}
+	print_wait_end(vm);
 	endwin();
 	win = vm->c[-vm->last_live - 1].header.prog_name;
 	ft_printf("Contestant %u, \"%s\" has won !\n", -vm->last_live, win);

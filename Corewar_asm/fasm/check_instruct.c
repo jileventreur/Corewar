@@ -59,7 +59,7 @@ int			check_good_instruct(char *str, int *i, t_op *tab)
 		j = 0;
 		++nb;
 	}
-	ft_printf("{red}%s{eoc}\n", str);
+	ft_putendl_fd(str, 2);
 	exit_with_message("Bad command.");
 	return (1);
 }
@@ -94,6 +94,8 @@ t_content	*check_instruct(char *str, int nb, int i)
 		return (NULL);
 	count = 0;
 	list = malloc(sizeof(t_content));
+	if (!list)
+		exit_with_message("Malloc error.");
 	copy_label(&list, label_tab);
 	free_tab(&label_tab);
 	label_tab = NULL;

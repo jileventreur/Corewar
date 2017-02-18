@@ -19,7 +19,6 @@
 
 # define AFTER_COMMENT			';'
 # define BSWAP_16(num) ((num>>8) | (num<<8))
-
 typedef struct			s_content
 {
 	char				*name;

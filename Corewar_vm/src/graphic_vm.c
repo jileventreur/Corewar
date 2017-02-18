@@ -6,13 +6,13 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/31 15:01:46 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/01/31 17:55:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/13 15:08:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-static void	is_end_corewar(int ch)
+void		is_end_corewar(int ch)
 {
 	if (ch == 'q')
 	{
@@ -53,4 +53,16 @@ void		print_all(t_vm *vm, int refresh_speed)
 	if (vm->total_cycle % 20 == 0)
 		nprint_infos(vm, refresh_speed);
 	usleep(refresh_speed);
+}
+
+void		print_wait_end(t_vm *vm)
+{
+	int		ch;
+
+	ch = -1;
+	while ((ch = getch()) != 'q' && ch != ' ')
+	{
+		nprint_procs(vm);
+		nprint_infos(vm, 0);
+	}
 }
