@@ -22,7 +22,7 @@
 # include <limits.h>
 # include <inttypes.h>
 
-# define BUFF_SIZE 4096
+# define BUFF_SIZE 5096
 
 typedef struct		s_list
 {
