@@ -21,6 +21,7 @@ SRC =	fasm/main.c\
 		fasm/hexa_check.c\
 		fasm/nb_octet.c\
 		fasm/op.c\
+		fasm/list_func.c\
 
 OBJ = $(SRC:.c=.o)
 

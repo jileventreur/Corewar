@@ -22,7 +22,7 @@
 # include <limits.h>
 # include <inttypes.h>
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 4096
 
 typedef struct		s_list
 {
@@ -30,6 +30,15 @@ typedef struct		s_list
 	size_t			content_size;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct		s_gnl
+{
+	char			buf[BUFF_SIZE + 1];
+	char			*tmp;
+	char			**line;
+}					t_gnl;
+
+int					nget_next_line(int const fd, char **line, size_t n);
 
 int					ft_issign(char c);
 int					get_next_line(int const fd, char **line);

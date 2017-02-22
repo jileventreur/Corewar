@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 int	eob_find_line(char **eob, char **line, size_t n)
 {
@@ -42,25 +42,25 @@ int	last_line(t_gnl *gnl, char **eob)
 		*gnl->line = ft_strjoin(*eob, gnl->tmp);
 		ft_strdel(eob);
 		free(gnl->tmp);
-		return (0);
+		return (1);
 	}
 	if (*eob)
 	{
 		*gnl->line = ft_strdup(*eob);
 		ft_strdel(eob);
-		return (0);
+		return (1);
 	}
 	return (0);
 }
 
-int	check_newline(t_gnl *gnl, char **eob, size_t n)
+int	check_newline(t_gnl *gnl, char **eob, size_t n, size_t ret)
 {
 	size_t		i;
 	char		*tmp_free;
 	char		*tmp_str;
 
 	i = 0;
-	while (gnl->buf[i])
+	while (i < ret)
 	{
 		if (gnl->buf[i] == '\n' || i == n)
 		{
@@ -99,7 +99,7 @@ int	nget_next_line(int const fd, char **line, size_t n)
 		gnl.buf[ret] = '\0';
 		if (ret == -1)
 			return (-1);
-		if ((ret = check_newline(&gnl, &eob, n)))
+		if ((ret = check_newline(&gnl, &eob, n, ret)))
 			return (ret);
 		tmp_free = gnl.tmp;
 		gnl.tmp = ft_strjoin(gnl.tmp, gnl.buf);
@@ -107,29 +107,5 @@ int	nget_next_line(int const fd, char **line, size_t n)
 	}
 	if (last_line(&gnl, &eob))
 		return (1);
-	return (0);
-}
-
-int main(int ac, char **av)
-{
-	if (ac != 2)
-	{
-		printf("NO FILENAME\n");
-		return (1);
-	}
-	int fd;
-	char *str;
-	if ((fd = open(av[1	], O_RDONLY)) == -1)
-	{
-		printf("BAD FILENAME\n");
-		return (1);
-	}
-	int ret;
-	while ((ret = nget_next_line(fd, &str, 5)) != 0)
-	{
-		printf("ret = %d, str = [%s] (len = %lu)\n", ret, str, ft_strlen(str));
-		free(str);
-	}
-	// printf("ret = %d, str = %s\n", ret, str);
 	return (0);
 }

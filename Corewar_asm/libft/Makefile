@@ -25,7 +25,7 @@ SRCS = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 	   ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 	   ft_int_size.c ft_recursive_power.c ft_swap.c ft_strrev.c ft_list_last.c \
 	   ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c ft_lstmap.c \
-	   ft_lstnew.c ft_puttab.c get_next_line.c \
+	   ft_lstnew.c ft_puttab.c get_next_line.c nget_next_line.c \
 	   ft_watoi.c ft_strwdup.c \
 	   ft_printf.c \
 		precision.c mask_unicode.c width.c null_char.c wstr_precision.c\

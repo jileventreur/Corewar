@@ -19,6 +19,7 @@
 
 # define AFTER_COMMENT			';'
 # define BSWAP_16(num) ((num>>8) | (num<<8))
+
 typedef struct			s_content
 {
 	char				*name;
@@ -72,4 +73,5 @@ void					starting_cmp(char *str, char *cmp, int *i, int *j);
 int						check_arg_hexa(int j, char **cpy,
 						t_content **list, int count);
 int						good_len(char *str, int len, int ind);
+void					list_modif(t_content **list);
 #endif
