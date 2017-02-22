@@ -16,6 +16,7 @@ int	eob_find_line(char **eob, char **line, size_t n)
 {
 	size_t	i;
 	char	*tmp;
+	char	is_end_of_line;
 
 	tmp = *eob;
 	i = 0;
@@ -23,10 +24,11 @@ int	eob_find_line(char **eob, char **line, size_t n)
 	{
 		if (tmp[i] == '\n' || n == i)
 		{
+			is_end_of_line = (tmp[i] == '\n');
 			*line = ft_strsub(tmp, 0, i);
-			*eob = ft_strdup(tmp + i + (tmp[i] == '\n'));
+			*eob = ft_strdup(tmp + i + is_end_of_line);
 			ft_strdel(&tmp);
-			return (1 + (n == i));
+			return (1 + !is_end_of_line);
 		}
 		i++;
 	}
@@ -72,7 +74,7 @@ int	check_newline(t_gnl *gnl, char **eob, size_t n)
 			tmp_free = *eob;
 			*eob = ft_strdup(gnl->buf + i + (gnl->buf[i] == '\n'));
 			ft_strdel(&tmp_free);
-			return (1 + (i == n));
+			return (1 + !(gnl->buf[i] == '\n'));
 		}
 		i++;
 	}
