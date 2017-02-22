@@ -100,7 +100,6 @@ t_content	*check_instruct(char *str, int nb, int i)
 	free_tab(&label_tab);
 	label_tab = NULL;
 	check_common_instruct(str, &i, g_op_tab, &list);
-	list->next = NULL;
-	list->name = ft_strdup("instruc");
+	list_modif(&list);
 	return (list);
 }

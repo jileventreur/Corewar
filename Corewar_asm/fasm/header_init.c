@@ -35,7 +35,7 @@ int		header_initialize(t_header *header, int *i, int fd)
 	char *line;
 
 	line = NULL;
-	while (*i < 3 && get_next_line(fd, &line) > 0)
+	while (*i < 3 && nget_next_line(fd, &line, MAX_LINE_SIZE) == 1)
 	{
 		while (!check_blank_line(line))
 		{

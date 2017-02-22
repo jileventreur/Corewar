@@ -73,7 +73,7 @@ void			checking_file(char *file, int fd)
 	ft_bzero(&header, sizeof(header));
 	header_initialize(&header, &i, fd);
 	header.magic = bitswap_32(COREWAR_EXEC_MAGIC);
-	while (get_next_line(fd, &line) > 0)
+	while (nget_next_line(fd, &line, MAX_LINE_SIZE) == 1)
 	{
 		next_to(&list, check_this_line(line, 1));
 		free(line);

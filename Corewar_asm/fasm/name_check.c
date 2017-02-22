@@ -66,7 +66,7 @@ void		starting_cmp(char *str, char *cmp, int *i, int *j)
 
 char		*another_loop_name(char **str, char **line, int fd)
 {
-	if (get_next_line(fd, line) <= 0)
+	if (nget_next_line(fd, line, MAX_LINE_SIZE) == 1)
 		exit_with_message("Name problem");
 	*str = realloc(*str, (3 + ft_strlen(*line) +\
 	ft_strlen(*str)) * sizeof(char));

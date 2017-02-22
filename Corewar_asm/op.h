@@ -50,6 +50,7 @@
 
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
+# define MAX_LINE_SIZE			(4096)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
 typedef char		t_arg_type;
