@@ -116,5 +116,4 @@ int					ft_memisset(void *p, size_t n, char c);
 void				ft_error_exit(const char *exit_message);
 int					ft_atou(const char *str);
 
-
 #endif

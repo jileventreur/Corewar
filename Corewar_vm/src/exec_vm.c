@@ -106,14 +106,15 @@ void	exec_vm(t_vm *vm)
 		++vm->total_cycle;
 		if (vm->opt.g)
 			get_input_and_fsp(&ch, &refresh_speed);
-		if (!vm->opt.g && ISACTIV(vm->opt.v, 1))
+		else if (ISACTIV(vm->opt.v, 1))
 			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		checks_and_destroy(vm);
 		if (vm->opt.g)
 			print_all(vm, refresh_speed);
 	}
-	print_wait_end(vm);
+	if (vm->opt.g)
+		print_wait_end(vm);
 	endwin();
 	win = vm->c[-vm->last_live - 1].header.prog_name;
 	ft_printf("Contestant %u, \"%s\" has won !\n", -vm->last_live, win);

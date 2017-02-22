@@ -14,9 +14,9 @@
 
 int				ft_atou(const char *str)
 {
-	int i;
-	unsigned int temp;
-	unsigned int nb;
+	int				i;
+	unsigned int	temp;
+	unsigned int	nb;
 
 	i = 0;
 	temp = 0;
