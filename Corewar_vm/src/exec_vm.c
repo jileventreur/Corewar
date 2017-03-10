@@ -110,7 +110,7 @@ void	exec_vm(t_vm *vm)
 			ft_printf("It is now cycle %lld\n", vm->total_cycle);
 		exec_procs(vm);
 		checks_and_destroy(vm);
-		if (vm->opt.g)
+		if (vm->opt.g || vm->opt.s)
 			print_all(vm, refresh_speed);
 	}
 	if (vm->opt.g)

@@ -37,12 +37,13 @@ void		process_per_player(t_vm *vm, int *p, int *all_procs)
 void		print_next_check(t_vm *vm, int line)
 {
 	int		i;
-	int		next_live;
+	float	next_live;
 
 	mvwprintw(g_scr_infos, 4, line / 2, "next live check : [");
 	i = 0;
 	if (vm->next_live_check != 0 && vm->ctd != 0)
-		next_live = (vm->next_live_check * 10) / vm->ctd;
+		next_live = ft_round(
+		(float)(vm->next_live_check * 10) / (float)vm->ctd);
 	else
 		next_live = 0;
 	wattron(g_scr_infos, COLOR_PAIR(16));
@@ -52,9 +53,9 @@ void		print_next_check(t_vm *vm, int line)
 		i++;
 	}
 	wattroff(g_scr_infos, COLOR_PAIR(16));
-	while (++i < 10)
+	while (++i < 11)
 		mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, " ");
-	mvwprintw(g_scr_infos, 4, line / 2 + 20 + 10, "]");
+	mvwprintw(g_scr_infos, 4, line / 2 + 20 + i, "]");
 }
 
 void		nprint_infos(t_vm *vm, int fps)
@@ -116,9 +117,6 @@ void		nprint_vm(t_vm *vm)
 	int		line;
 	int		ch;
 
-	ch = ' ';
-	col = 0;
-	line = 0;
 	init_ncurses();
 	getmaxyx(stdscr, col, line);
 	g_scr_infos = newwin(INFO_HEIGHT, line, col - INFO_HEIGHT, 0);

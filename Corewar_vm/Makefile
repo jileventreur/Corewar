@@ -23,9 +23,11 @@ FILES =	aff.c \
 		manage_infos.c \
 		moove_pc.c \
 		op.c \
+		print_args.c \
 		print_players.c \
 		print_procs.c \
 		print_usage.c \
+		print_wait_end.c \
 		st_and_sti.c \
 		vm_init.c \
 		window.c \

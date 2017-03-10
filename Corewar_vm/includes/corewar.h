@@ -60,7 +60,7 @@ typedef enum	e_type_code
 # define NBR_LIVE (21)
 # define MAX_CHECKS (10)
 
-# define BYTE_LINE_NB (64) // to modif
+# define BYTE_LINE_NB (32)
 # define PC_INC (4u)
 
 # define REG(num) (*(int *)(proc->reg[num - 1]))
@@ -236,5 +236,7 @@ void							print_vm(t_vm *vm);
 void							exec_vm(t_vm *vm);
 void							is_end_corewar(int ch);
 void							print_wait_end(t_vm *vm);
+
+int								ft_round(double nb);
 
 #endif

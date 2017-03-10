@@ -98,7 +98,6 @@ void		print_players(t_vm *vm, int allprocs, int *p)
 	int	len;
 	int	procs;
 
-	i = -1;
 	line = 2;
 	len = get_prog_max_len(vm) + 5;
 	i = -1;

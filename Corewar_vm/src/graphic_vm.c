@@ -24,45 +24,37 @@ void		is_end_corewar(int ch)
 void		get_input_and_fsp(int *ch, int *refresh_speed)
 {
 	wtimeout(stdscr, 0);
-	if ((*ch = getch()) != ERR)
+	if ((*ch = getch()) == ERR)
+		return ;
+	is_end_corewar(*ch);
+	if (*ch == ' ')
 	{
-		is_end_corewar(*ch);
-		if (*ch == ' ')
-		{
-			while ((*ch = getch()) != ' ')
-				is_end_corewar(*ch);
-		}
-		else if (*ch == '=' && *refresh_speed > 1000)
-			*refresh_speed -= 100;
-		else if (*ch == '-' && *refresh_speed < 10000)
-			*refresh_speed += 100;
+		while ((*ch = getch()) != ' ')
+			is_end_corewar(*ch);
 	}
+	else if (*ch == '=' && *refresh_speed > 1000)
+		*refresh_speed -= 100;
+	else if (*ch == '-' && *refresh_speed < 10000)
+		*refresh_speed += 100;
 }
 
 void		print_all(t_vm *vm, int refresh_speed)
 {
-	if (vm->opt.d == vm->total_cycle)
+	char	c;
+
+	if (vm->opt.s && !vm->opt.g)
 	{
-		endwin();
-		exit(1);
+		if (vm->total_cycle % vm->opt.s != 0)
+			return ;
+		while ((c = getch()) != ' ')
+			is_end_corewar(c);
+		nprint_procs(vm);
+		nprint_infos(vm, refresh_speed);
+		return ;
 	}
-	if (vm->opt.s && vm->total_cycle % vm->opt.s == 0)
+	else if (vm->total_cycle % 50 == 0)
 		nprint_procs(vm);
-	if (vm->total_cycle % 50 == 0)
-		nprint_procs(vm);
-	if (vm->total_cycle % 20 == 0)
+	else if (vm->total_cycle % 20 == 0)
 		nprint_infos(vm, refresh_speed);
 	usleep(refresh_speed);
-}
-
-void		print_wait_end(t_vm *vm)
-{
-	int		ch;
-
-	ch = -1;
-	while ((ch = getch()) != 'q' && ch != ' ')
-	{
-		nprint_procs(vm);
-		nprint_infos(vm, 0);
-	}
 }

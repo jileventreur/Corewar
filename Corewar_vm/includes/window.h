@@ -12,7 +12,6 @@
 
 #ifndef WINDOW_H
 # define WINDOW_H
-# define WINDOW_H
 # define CELL_LEN		4
 # define INFO_HEIGHT	18
 # define INFO_WIDTH		150
@@ -30,5 +29,6 @@ void					print_all(t_vm *vm, int refresh_speed);
 int						valid_infos_window(int *line);
 int						get_prog_max_len(t_vm *vm);
 void					print_players(t_vm *vm, int all_procs, int *p);
+void					print_wait_end(t_vm *vm);
 
 #endif

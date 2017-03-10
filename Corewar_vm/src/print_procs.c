@@ -119,7 +119,7 @@ void		nprint_procs(t_vm *vm)
 	int		*color_array;
 
 	board = MEM_SIZE * CELL_LEN;
-	if (!valid_proc_window(&col))
+	if (!valid_proc_window(&col) || col == 0)
 		return ;
 	else
 	{

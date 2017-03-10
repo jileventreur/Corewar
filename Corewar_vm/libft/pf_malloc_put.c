@@ -39,6 +39,7 @@ void		pf_malloc_put(void)
 			ft_memcpy(tmp, g_ret, ret_len);
 		ft_memcpy(tmp + ret_len, g_buf.buf, g_buf.len);
 		tmp[ret_len + g_buf.len] = 0;
+		free(g_ret);
 		g_ret = tmp;
 		g_buf.len = 0;
 	}

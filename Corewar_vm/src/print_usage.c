@@ -14,12 +14,9 @@
 
 static void		print_usage2(void)
 {
-	ft_printf("#### NCURSES OUTPUT MODE #####################################");
-	ft_printf("##################\n");
 	ft_printf("    -g\t: Ncurses output mode\n");
-	ft_printf("############################################################");
-	ft_printf("####################\n");
 	ft_printf("\033[0m");
+	exit(0);
 }
 
 void			print_usage(void)
@@ -29,9 +26,7 @@ void			print_usage(void)
 	ft_printf(" [-n [1..4]] <champion1.cor> <...>\n");
 	ft_printf("    -a\t: Prints output from \"aff\"");
 	ft_printf("(Default is to hide it)\n");
-	ft_printf("#### TEXT OUTPUT MODE");
-	ft_printf(" ##########################################################\n");
-	ft_printf("    -d, -dump N\t:");
+	ft_printf("    -d, -dump N\t: ");
 	ft_printf("Dumps memory after N cycles then exits\n");
 	ft_printf("    -n N\t: Assign a number to the next champion\n");
 	ft_printf("    -s N\t: Runs N cycles, dumps memory, pauses,");
