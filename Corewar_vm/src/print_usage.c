@@ -22,7 +22,7 @@ static void		print_usage2(void)
 void			print_usage(void)
 {
 	ft_printf("\033[33;1m");
-	ft_printf("Usage: ./corewar [-d N -s N -v [0..31] | -g] [-h] [-a] ");
+	ft_printf("Usage: ./corewar [-d N -s N -v [0..31] | -g] [-h] [-a]");
 	ft_printf(" [-n [1..4]] <champion1.cor> <...>\n");
 	ft_printf("    -a\t: Prints output from \"aff\"");
 	ft_printf("(Default is to hide it)\n");
