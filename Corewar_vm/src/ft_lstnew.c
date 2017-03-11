@@ -17,12 +17,16 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	t_list		*new;
 
 	if ((new = (t_list *)malloc(sizeof(t_list))) == NULL)
+	{
+		ft_error_exit("Error: allocation error\n");
 		return (NULL);
+	}
 	if (content)
 	{
 		if (!(new->content = malloc(content_size)))
 		{
 			free(new);
+			ft_error_exit("Error: allocation error\n");
 			return (NULL);
 		}
 		ft_memcpy(new->content, content, content_size);

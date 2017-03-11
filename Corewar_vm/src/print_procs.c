@@ -124,7 +124,7 @@ void		nprint_procs(t_vm *vm)
 	else
 	{
 		if (!(color_array = (int *)malloc(sizeof(int) * MEM_SIZE)))
-			return ;
+			ft_error_exit("Error: allocation error\n");
 		init_color_array(vm, color_array);
 		col -= col % CELL_LEN;
 		y_max = board / col;
